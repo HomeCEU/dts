@@ -14,7 +14,7 @@ class TemplateCompilerTest extends TestCase {
   public function testCompileTemplate(): void {
     $data = ['placeholder' => 'password'];
     $template = $this->compile('{{ placeholder }}');
-    $this->assertEquals($data['placeholder'], $this->render($template, $data));
+    $this->assertEquals($data['placeholder'], $this->renderHTML($template, $data));
   }
 
   public function testExpectedPartialNotProvided(): void {
@@ -25,17 +25,17 @@ class TemplateCompilerTest extends TestCase {
   public function testDisablePartialNotProvidedException(): void {
     $this->compiler->ignoreMissingPartials();
     $template = $this->compiler->compile('This, {{>expected_partial}}is a test');
-    Assert::assertEquals('This, is a test', $this->render($template));
+    Assert::assertEquals('This, is a test', $this->renderHTML($template));
   }
 
   public function testProvidedPartialNotExpected(): void {
     $this->compiler->addPartial(new Partial('a_partial', 'some text'));
-    $this->assertEquals('a template', $this->render($this->compiler->compile('a template')));
+    $this->assertEquals('a template', $this->renderHTML($this->compiler->compile('a template')));
   }
 
   public function testCompileWithPartial(): void {
     $this->compiler->setPartials([new Partial('expected_partial', 'text')]);
-    $this->assertEquals('text', $this->render($this->compile('{{> expected_partial }}')));
+    $this->assertEquals('text', $this->renderHTML($this->compile('{{> expected_partial }}')));
   }
 
   public function testCompileWithHelper(): void {
@@ -44,6 +44,6 @@ class TemplateCompilerTest extends TestCase {
           return strtoupper($val);
         })
     ]);
-    $this->assertEquals('TEXT', $this->render($this->compile('{{upper var}}'), ['var' => 'text']));
+    $this->assertEquals('TEXT', $this->renderHTML($this->compile('{{upper var}}'), ['var' => 'text']));
   }
 }
