@@ -6,7 +6,6 @@ namespace HomeCEU\DTS\UseCase\Render;
 
 use HomeCEU\DTS\Entity\DocData;
 use HomeCEU\DTS\Entity\Template;
-use HomeCEU\DTS\Render\RenderFactory;
 use HomeCEU\DTS\Render\RenderInterface;
 use HomeCEU\DTS\Repository\DocDataRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
