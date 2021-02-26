@@ -3,22 +3,18 @@
 
 namespace HomeCEU\DTS\Api\Template;
 
-use Exception;
 use HomeCEU\DTS\Api\ResponseHelper;
 use HomeCEU\DTS\Entity\Template;
-use HomeCEU\DTS\UseCase\ListTemplates as ListTemplatesUseCase;
 use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Repository\TemplateRepository;
-use Slim\Http\Response;
+use HomeCEU\DTS\UseCase\ListTemplates as ListTemplatesUseCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Http\Response;
 
 class ListTemplates {
-
-  /** @var ListTemplatesUseCase */
   private $useCase;
-
 
   public function __construct(ContainerInterface $diContainer) {
     $db = $diContainer->dbConnection;
@@ -26,7 +22,6 @@ class ListTemplates {
         new TemplatePersistence($db),
         new CompiledTemplatePersistence($db)
     );
-
     $this->useCase = new ListTemplatesUseCase($repo);
   }
 
