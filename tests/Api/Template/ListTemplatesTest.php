@@ -70,7 +70,6 @@ class ListTemplatesTest extends TestCase {
   public function testTemplateResponseFormat() {
     $data = $this->httpGetTemplatesFromUri(self::ROUTE."?filter[type]=example");
     $actualStruct = $data['items'][0];
-    dump([$actualStruct, $this->expectedExampleResponse]);
     $this->assertEquals($this->expectedExampleResponse, $actualStruct);
   }
 
