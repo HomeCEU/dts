@@ -4,16 +4,14 @@
 namespace HomeCEU\Tests\DTS\Render;
 
 
-use HomeCEU\DTS\Render\Renderer;
+use HomeCEU\DTS\Render\RenderFactory;
 use HomeCEU\DTS\Render\TemplateCompiler;
 use HomeCEU\Tests\DTS\TestCase as dtsTestCase;
 
 class TestCase extends dtsTestCase {
-  protected $renderer;
   protected $compiler;
 
   protected function setUp(): void {
-    $this->renderer = Renderer::create();
     $this->compiler = TemplateCompiler::create();
   }
 
@@ -21,11 +19,12 @@ class TestCase extends dtsTestCase {
     return $this->compiler->compile($template);
   }
 
-  protected function render($compiledTemplate, $data = []): string {
-    return $this->renderer->render($compiledTemplate, $data);
+  protected function renderHTML($compiledTemplate, $data = []): string {
+    $path = RenderFactory::createHTML()->render($compiledTemplate, $data);
+    return file_get_contents($path);
   }
 
-  public function renderPDF($compiledTemplate, $data = [], $options = []) {
-    return $this->renderer->pdf($compiledTemplate, $data, $options);
+  public function renderPDF($compiledTemplate, $data = []): string {
+    return RenderFactory::createPDF()->render($compiledTemplate, $data);
   }
 }
