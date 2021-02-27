@@ -31,7 +31,7 @@ class AddTemplate {
       /** @var AddTemplateRequest $addRequest */
       $addRequest = AddTemplateRequest::fromState($request->getParsedBody());
       $template = $this->useCase->addTemplate($addRequest);
-      $route = "/template/{$template->templateId}";
+      $route = "/api/v1/template/{$template->templateId}";
 
       return $response->withStatus(201)
           ->withHeader('Location', $route)

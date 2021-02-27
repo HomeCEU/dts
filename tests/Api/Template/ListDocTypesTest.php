@@ -40,7 +40,7 @@ class ListDocTypesTest extends TestCase {
         "docType" => 'A',
         "templateCount" => 3,
         "links" => [
-            "templates" => "/template?filter[type]=A"
+            "templates" => "/api/v1/template?filter[type]=A"
         ]
     ];
     $p = $this->templatePersistence();
