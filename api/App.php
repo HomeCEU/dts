@@ -19,7 +19,7 @@ class App extends \Slim\App {
       $this->devMode();
     }
     parent::__construct($this->_di);
-    $this->loadRoutes('v1', self::ROUTES_V1);
+    $this->loadRoutesForVersion('v1', self::ROUTES_V1);
   }
 
   private function devMode() {
@@ -33,18 +33,29 @@ class App extends \Slim\App {
     return new DiContainer();
   }
 
-  private function loadRoutes(string $version, string $routesPath) {
+  private function loadRoutesForVersion(string $version, string $routesPath) {
     $routes = include $routesPath;
     foreach ($routes as $route) {
-      $this->mapRoute($route, $version);
+      $this->mapRouteForVersion($route, $version);
     }
   }
 
-  private function mapRoute(Route $route, string $version): void {
+  private function mapRouteForVersion(Route $route, string $version): void {
     $this->group('/api', function () use ($route, $version) {
       $this->group('/' . $version, function () use ($route) {
         $this->map($route->methods, $route->uri, $route->function);
       });
     });
+    $this->mapLegacyRoute($route);
+  }
+
+  /**
+   * Map routes without the /api/v* prefix
+   *
+   * @param Route $route
+   * @deprecated to be removed in v1.2.0
+   */
+  private function mapLegacyRoute(Route $route): void {
+    $this->map($route->methods, $route->uri, $route->function);
   }
 }
