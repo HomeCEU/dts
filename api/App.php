@@ -46,14 +46,5 @@ class App extends \Slim\App {
         $this->map($route->methods, $route->uri, $route->function);
       });
     });
-    $this->mapDeprecatedRoute($route);
-  }
-
-  /**
-   * @param Route $route
-   * @deprecated these routes do not begin with /api/v*, and will be deprecated before the next major release
-   */
-  private function mapDeprecatedRoute(Route $route): void {
-    $this->map($route->methods, $route->uri, $route->function);
   }
 }
