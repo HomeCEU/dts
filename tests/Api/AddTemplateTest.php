@@ -7,9 +7,11 @@ namespace HomeCEU\Tests\Api;
 use PHPUnit\Framework\Assert;
 
 class AddTemplateTest extends TestCase {
+  const ROUTE = '/api/v1/template';
+
   public function testBadRequest(): void {
     $request = [];
-    $response = $this->post('/template', $request);
+    $response = $this->post(self::ROUTE, $request);
     $this->assertStatus(400, $response);
   }
 
@@ -20,7 +22,7 @@ class AddTemplateTest extends TestCase {
         'author' => 'Test Author',
         'body' => 'Hello, {{ name }}!'
     ];
-    $response = $this->post('/template', $request);
+    $response = $this->post(self::ROUTE, $request);
     $this->assertStatus(201, $response);
 
     $responseData = json_decode((string) $response->getBody(), true);

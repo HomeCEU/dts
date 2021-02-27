@@ -8,6 +8,7 @@ use HomeCEU\DTS\Entity\DocData;
 use HomeCEU\DTS\Entity\Template;
 
 class ResponseHelper {
+  private const ROUTE = '/api/v1';
 
   public static function templateDetailModel(Template $t): array {
     return [
@@ -16,7 +17,7 @@ class ResponseHelper {
         'templateKey' => $t->templateKey,
         'author' => $t->author,
         'createdAt' => $t->createdAt->format(\DateTime::W3C),
-        'bodyUri' => "/template/{$t->templateId}"
+        'bodyUri' => self::ROUTE."/template/{$t->templateId}"
     ];
   }
 
@@ -26,7 +27,7 @@ class ResponseHelper {
         'docType' => $d->docType,
         'dataKey' => $d->dataKey,
         "createdAt" => $d->createdAt->format(\DateTime::W3C),
-        "link" => "/docdata/{$d->dataId}"
+        "link" => self::ROUTE."/docdata/{$d->dataId}"
     ];
   }
 

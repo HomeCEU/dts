@@ -7,12 +7,13 @@ use HomeCEU\Tests\Api\TestCase;
 use PHPUnit\Framework\Assert;
 
 class ListVersionsTest extends TestCase {
+  const ROUTE = "/api/v1/docdata";
 
   public function testListVersions() {
     $dataKey = __FUNCTION__; // just in case it doesnt cleanup, you will know where it came from.
     $this->addFixtureData($dataKey);
 
-    $uri = "/docdata/{$this->docType}/{$dataKey}/history";
+    $uri = self::ROUTE."/{$this->docType}/{$dataKey}/history";
     $response = $this->get($uri);
     $responseData = json_decode($response->getBody(), true);
 
@@ -45,12 +46,12 @@ class ListVersionsTest extends TestCase {
                 'docType' => $this->docType,
                 'dataKey' => $key,
                 "createdAt" => "2020-10-13T23:47:07+00:00",
-                "link" => "/docdata/{$id}"
+                "link" => self::ROUTE."/{$id}"
             ]
         ]
     ];
 
-    $uri = "/docdata/{$this->docType}/{$key}/history";
+    $uri = self::ROUTE."/{$this->docType}/{$key}/history";
     $response = $this->get($uri);
     $responseData = json_decode($response->getBody(), true);
     Assert::assertEquals($expected, $responseData);

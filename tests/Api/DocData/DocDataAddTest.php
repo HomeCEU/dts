@@ -7,12 +7,12 @@ use HomeCEU\Tests\Api\TestCase;
 use PHPUnit\Framework\Assert;
 
 class DocDataAddTest extends TestCase {
-
   const EXPECTED_KEYS = ['dataId', 'docType', 'dataKey', 'createdAt'];
+  const ROUTE = '/api/v1/docdata';
 
   public function testPostNewDocData(): void {
     $requestArray = $this->makeRequestArray($this->docType, __FUNCTION__, ['someid'=>uniqid()]);
-    $response = $this->post('/docdata', $requestArray);
+    $response = $this->post(self::ROUTE, $requestArray);
     $this->assertStatus(201, $response);
     $this->assertContentType('application/json', $response);
     $responseData = json_decode($response->getBody(), true);
@@ -28,7 +28,7 @@ class DocDataAddTest extends TestCase {
    */
   public function testPostNewDocDataInvalidData($type, $key): void {
     $requestArray = $this->makeRequestArray($type, $key, '');
-    $response = $this->post('/docdata', $requestArray);
+    $response = $this->post(self::ROUTE, $requestArray);
     $this->assertStatus(400, $response);
   }
 

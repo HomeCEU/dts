@@ -6,6 +6,8 @@ namespace HomeCEU\Tests\Api;
 use PHPUnit\Framework\Assert;
 
 class RenderTest extends TestCase {
+  const ROUTE = '/api/v1/render';
+
   protected function setUp(): void {
     parent::setUp();
   }
@@ -14,7 +16,7 @@ class RenderTest extends TestCase {
     $templateKey = __FUNCTION__;
     $dataKey = __FUNCTION__;
 
-    $this->assertStatus(404, $this->get("/render/{$this->docType}/{$templateKey}/{$dataKey}"));
+    $this->assertStatus(404, $this->get(self::ROUTE."/{$this->docType}/{$templateKey}/{$dataKey}"));
   }
 
   public function testRenderFromKeys(): void {
@@ -22,7 +24,7 @@ class RenderTest extends TestCase {
     $dataKey = __FUNCTION__;
     $this->addDocDataFixture($dataKey);
     $this->addTemplateFixture($templateKey);
-    $response = $this->get("/render/{$this->docType}/{$templateKey}/{$dataKey}");
+    $response = $this->get(self::ROUTE."/{$this->docType}/{$templateKey}/{$dataKey}");
 
     $this->assertStatus(200, $response);
     $this->assertContentType('text/html', $response);
@@ -34,7 +36,7 @@ class RenderTest extends TestCase {
     $dataKey = __FUNCTION__;
     $this->addDocDataFixture($dataKey);
     $this->addTemplateFixture($templateKey);
-    $response = $this->get("/render/{$this->docType}/{$templateKey}/{$dataKey}?format=pdf");
+    $response = $this->get(self::ROUTE."/{$this->docType}/{$templateKey}/{$dataKey}?format=pdf");
 
     $this->assertStatus(200, $response);
     $this->assertContentType('application/pdf', $response);
@@ -47,7 +49,7 @@ class RenderTest extends TestCase {
     $this->addTemplateFixture($templateKey);
 
     $response = $this->get(
-        "/render/{$this->docType}/{$templateKey}/{$dataKey}",
+        self::ROUTE."/{$this->docType}/{$templateKey}/{$dataKey}",
         ['Accept' => 'application/pdf,text/html;q=0.9,*/*;q=0.8']
     );
 
@@ -59,7 +61,7 @@ class RenderTest extends TestCase {
     $this->loadFixtures();
     $templateKey = 'T';
     $dataKey = 'D';
-    $uri = "/render?docType={$this->docType}&templateKey={$templateKey}&dataKey={$dataKey}";
+    $uri = self::ROUTE."?docType={$this->docType}&templateKey={$templateKey}&dataKey={$dataKey}";
     $responseBody = $this->httpGetRender($uri);
     Assert::assertEquals("Hi Smith, Jane", $responseBody);
   }
@@ -68,7 +70,7 @@ class RenderTest extends TestCase {
     $fixtures = $this->loadFixtures();
     $templateKey = 'T';
     $dataId = $fixtures['docData'][0]['dataId'];
-    $uri = "/render?docType={$this->docType}&templateKey={$templateKey}&dataId={$dataId}";
+    $uri = self::ROUTE."?docType={$this->docType}&templateKey={$templateKey}&dataId={$dataId}";
     $responseBody = $this->httpGetRender($uri);
     Assert::assertEquals("Hi Doe, Jane", $responseBody);
   }
@@ -77,7 +79,7 @@ class RenderTest extends TestCase {
     $fixtures = $this->loadFixtures();
     $dataKey = 'D';
     $templateId = $fixtures['template'][0]['id'];
-    $uri = "/render?docType={$this->docType}&templateId={$templateId}&dataKey={$dataKey}";
+    $uri = self::ROUTE."?docType={$this->docType}&templateId={$templateId}&dataKey={$dataKey}";
     $responseBody = $this->httpGetRender($uri);
     Assert::assertEquals("Hi Jane Smith", $responseBody);
   }
@@ -86,7 +88,7 @@ class RenderTest extends TestCase {
     $fixtures = $this->loadFixtures();
     $templateId = $fixtures['template'][0]['id'];
     $dataId = $fixtures['docData'][0]['dataId'];
-    $uri = "/render?docType={$this->docType}&templateId={$templateId}&dataId={$dataId}";
+    $uri = self::ROUTE."?docType={$this->docType}&templateId={$templateId}&dataId={$dataId}";
     $responseBody = $this->httpGetRender($uri);
     Assert::assertEquals("Hi Jane Doe", $responseBody);
   }
@@ -95,7 +97,7 @@ class RenderTest extends TestCase {
     $this->loadFixtures();
     $templateKey = 'T';
     $dataKey = 'D';
-    $uri = "/render?docType={$this->docType}&templateKey={$templateKey}&dataKey={$dataKey}";
+    $uri = self::ROUTE."?docType={$this->docType}&templateKey={$templateKey}&dataKey={$dataKey}";
     $response = $this->get($uri."&format=pdf");
     $this->assertStatus(200, $response);
     $this->assertContentType('application/pdf', $response);
@@ -129,11 +131,11 @@ class RenderTest extends TestCase {
     $templateKey = 'T';
     $dataKey = 'D';
     $uris = [
-        "/render?docType={$this->docType}&templateKey={$templateKey}", // data Key or Id required
-        "/render?docType={$this->docType}&dataKey={$dataKey}",         // template Key or Id required
-        "/render?docType={$this->docType}&templateId={$templateId}",   // data Key or Id required
-        "/render?docType={$this->docType}&dataId={$dataId}",           // template Key or Id required
-        "/render?templateKey={$templateKey}&dataKey={$dataKey}",       // docType required
+        self::ROUTE."?docType={$this->docType}&templateKey={$templateKey}", // data Key or Id required
+        self::ROUTE."?docType={$this->docType}&dataKey={$dataKey}",         // template Key or Id required
+        self::ROUTE."?docType={$this->docType}&templateId={$templateId}",   // data Key or Id required
+        self::ROUTE."?docType={$this->docType}&dataId={$dataId}",           // template Key or Id required
+        self::ROUTE."?templateKey={$templateKey}&dataKey={$dataKey}",       // docType required
     ];
     foreach ($uris as $uri) {
       $response = $this->get($uri);
