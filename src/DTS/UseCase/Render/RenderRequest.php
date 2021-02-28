@@ -25,11 +25,6 @@ class RenderRequest extends AbstractEntity {
     ];
   }
 
-  public function withFormat($format): RenderRequest {
-    $this->format = $format;
-    return $this;
-  }
-
   public function isValid() {
     return $this->isValidTemplate() && $this->isValidDocData();
   }
