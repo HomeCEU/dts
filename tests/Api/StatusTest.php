@@ -6,7 +6,7 @@ namespace HomeCEU\Tests\Api;
 
 class StatusTest extends TestCase {
   public function testStatusReturnsOk(): void {
-    $response = $this->get('/status');
+    $response = $this->get('/api/v1/status');
     $this->assertStatus(200, $response);
   }
 }

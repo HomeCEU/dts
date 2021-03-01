@@ -8,7 +8,7 @@ use HomeCEU\Tests\Api\TestCase;
 use PHPUnit\Framework\Assert;
 
 class AddHotRenderTest extends TestCase {
-  const ROUTE = "/hotrender";
+  const ROUTE = "/api/v1/hotrender";
 
   public function testInvalidRequest(): void {
     $data = ['name' => 'example'];

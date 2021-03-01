@@ -30,15 +30,11 @@ use PHPUnit\Framework\Assert;
  * }
  */
 class ListTemplatesTest extends TestCase {
+  const ROUTE = '/api/v1/template';
 
   protected $data = [];
-
   protected $expectedResults = [];
-
-  /**
-   * @var array
-   */
-  private $expectedExampleResponse;
+  private $expectedExampleResponse = [];
 
   protected function setUp(): void {
     parent::setUp();
@@ -52,14 +48,14 @@ class ListTemplatesTest extends TestCase {
   }
 
   public function testListAllTemplates() {
-    $data = $this->httpGetTemplatesFromUri('/template');
+    $data = $this->httpGetTemplatesFromUri(self::ROUTE);
     $this->assertExpectedResults($data, 'all');
   }
 
   public function testListTemplatesByDoctype() {
     $types = ['type 1', 'type 2'];
     foreach ($types as $type) {
-      $data = $this->httpGetTemplatesFromUri("/template?filter[type]={$type}");
+      $data = $this->httpGetTemplatesFromUri(self::ROUTE."?filter[type]={$type}");
       $this->assertExpectedResults($data, $type);
     }
   }
@@ -67,12 +63,12 @@ class ListTemplatesTest extends TestCase {
   public function testListTemplatesBySearchString() {
     $searchString = "certificate to name bob";
 
-    $data = $this->httpGetTemplatesFromUri("/template?filter[search]={$searchString}");
+    $data = $this->httpGetTemplatesFromUri(self::ROUTE."?filter[search]={$searchString}");
     $this->assertExpectedResults($data, "find");
   }
 
   public function testTemplateResponseFormat() {
-    $data = $this->httpGetTemplatesFromUri("/template?filter[type]=example");
+    $data = $this->httpGetTemplatesFromUri(self::ROUTE."?filter[type]=example");
     $actualStruct = $data['items'][0];
     $this->assertEquals($this->expectedExampleResponse, $actualStruct);
   }
@@ -201,7 +197,7 @@ class ListTemplatesTest extends TestCase {
         "templateKey" => "default-ce",
         "author" => "Robert Martin",
         "createdAt" => "2020-10-13T23:47:07+00:00",
-        "bodyUri" => "/template/{$exampleId}"
+        "bodyUri" => self::ROUTE."/{$exampleId}"
     ];
 
     $p = $this->templatePersistence();

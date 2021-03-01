@@ -32,7 +32,7 @@ class ListDocTypes {
               'docType' => $row['docType'],
               'templateCount' => $row['templateCount'],
               'links' => [
-                  'templates' => "/template?filter[type]={$row['docType']}"
+                  'templates' => "/api/v1/template?filter[type]={$row['docType']}"
               ]
           ];
         }, $docTypes)

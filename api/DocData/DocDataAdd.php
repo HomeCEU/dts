@@ -51,6 +51,7 @@ class DocDataAdd {
               'createdAt'
           ]
       );
+      $savedDocData['bodyUri'] = '/api/v1/docdata/' . $docData['dataId'];
       return $response->withStatus(201)->withJson($savedDocData);
     } catch (InvalidDocDataAddRequestException $e) {
       return $response->withStatus(400)->withJson(

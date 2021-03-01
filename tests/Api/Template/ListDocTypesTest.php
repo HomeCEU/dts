@@ -7,6 +7,7 @@ namespace HomeCEU\Tests\Api\Template;
 use PHPUnit\Framework\Assert;
 
 class ListDocTypesTest extends TestCase {
+  const ROUTE = '/api/v1/doctype';
 
   protected function setUp(): void {
     parent::setUp();
@@ -39,7 +40,7 @@ class ListDocTypesTest extends TestCase {
         "docType" => 'A',
         "templateCount" => 3,
         "links" => [
-            "templates" => "/template?filter[type]=A"
+            "templates" => "/api/v1/template?filter[type]=A"
         ]
     ];
     $p = $this->templatePersistence();
@@ -76,7 +77,7 @@ class ListDocTypesTest extends TestCase {
 
   protected function httpGetDocTypes() {
 
-    $response = $this->get('/doctype');
+    $response = $this->get(self::ROUTE);
     $responseData = json_decode($response->getBody(), true);
 
     // Assertions

@@ -62,11 +62,9 @@ class Render {
 
   protected function renderRequestFromArgs(Request $request, $args): RenderRequest {
     $params = array_merge($request->getQueryParams(), $args);
-
     if (empty($params['format'])) {
       $params['format'] = $this->determineFormat($request);
     }
-
     return RenderRequest::fromState($params);
   }
 

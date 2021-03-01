@@ -4,9 +4,6 @@
 namespace HomeCEU\DTS\UseCase\Render;
 
 
-use HomeCEU\DTS\Entity\DocData;
-use HomeCEU\DTS\Entity\Template;
-use HomeCEU\DTS\Render\RenderInterface;
 use HomeCEU\DTS\Repository\DocDataRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
 
@@ -36,18 +33,14 @@ class Render {
     }
     $this->originalRequest = $request;
     $this->completeRequest = $this->buildRequestOfIds($request);
-
-    return $this->renderTemplate(
-        $this->getRenderService($request->format),
-        $this->templateRepo->getTemplateById($this->completeRequest->templateId),
-        $this->docDataRepo->getByDocDataId($this->completeRequest->dataId)
-    );
+    return $this->renderTemplate();
   }
 
   protected function buildRequestOfIds(RenderRequest $request): RenderRequest {
     return RenderRequest::fromState([
         'dataId' => $this->getDataIdFromRequest($request),
-        'templateId' => $this->getTemplateIdFromRequest($request)
+        'templateId' => $this->getTemplateIdFromRequest($request),
+        'format' => $request->format,
     ]);
   }
 
@@ -65,12 +58,14 @@ class Render {
     return $this->templateRepo->lookupId($request->docType, $request->templateKey);
   }
 
-  private function renderTemplate(RenderInterface $renderer, Template $template, DocData $docData): RenderResponse {
-    $template = $this->templateRepo->getCompiledTemplateById($template->templateId);
+  private function renderTemplate(): RenderResponse {
+    $service = $this->getRenderService($this->completeRequest->format);
+    $template = $this->templateRepo->getCompiledTemplateById($this->completeRequest->templateId);
+    $docData = $this->docDataRepo->getByDocDataId($this->completeRequest->dataId);
 
     return RenderResponse::fromState([
-        'path' => $renderer->render($template->body, $docData->data),
-        'contentType' => $renderer->getContentType()
+        'path' => $service->render($template->body, $docData->data),
+        'contentType' => $service->getContentType()
     ]);
   }
 }

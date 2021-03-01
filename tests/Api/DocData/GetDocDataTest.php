@@ -7,6 +7,8 @@ use DateTime;
 use PHPUnit\Framework\Assert;
 
 class GetDocDataTest extends TestCase {
+  const ROUTE = "/api/v1/docdata";
+
   /**
    * @var array
    */
@@ -29,32 +31,32 @@ class GetDocDataTest extends TestCase {
 
   public function testGetById() {
     $dataId = $this->fixtureData['example']['dataId'];
-    $responseData = $this->httpGet("/docdata/{$dataId}");
+    $responseData = $this->httpGet(self::ROUTE."/{$dataId}");
     Assert::assertEquals($this->expectedExampleResponse, $responseData);
   }
 
   public function testGetById_Expect404() {
-    $uri = "/docdata/no-such-id";
+    $uri = self::ROUTE."/no-such-id";
     $response = $this->get($uri);
     $this->assertStatus(404, $response);
   }
 
   public function testGetByKey() {
-    $responseData = $this->httpGet("/docdata/{$this->docType}/A");
+    $responseData = $this->httpGet(self::ROUTE."/{$this->docType}/A");
     // expect the most recent id from dataKey A
     $expectedId = $this->fixtureData['A2']['dataId'];
     Assert::assertEquals($expectedId, $responseData['dataId']);
   }
 
   public function testGetByKey_Expect404() {
-    $uri = "/docdata/{$this->docType}/no-such-key";
+    $uri = self::ROUTE."/{$this->docType}/no-such-key";
     $response = $this->get($uri);
     $this->assertStatus(404, $response);
   }
 
   public function testGetByKey_responseFormat() {
     $example = $this->fixtureData['example'];
-    $responseData = $this->httpGet("/docdata/{$example["docType"]}/{$example['dataKey']}");
+    $responseData = $this->httpGet(self::ROUTE."/{$example["docType"]}/{$example['dataKey']}");
     Assert::assertEquals($this->expectedExampleResponse, $responseData);
   }
 

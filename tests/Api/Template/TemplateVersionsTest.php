@@ -7,6 +7,7 @@ use DateTime;
 use PHPUnit\Framework\Assert;
 
 class TemplateVersionsTest extends TestCase {
+  const ROUTE = '/api/v1/template';
 
   protected $type = 'TemplateVersionsTest';
   protected $key;
@@ -34,12 +35,12 @@ class TemplateVersionsTest extends TestCase {
 
   // test GET /template/{type}/{key}/history
   public function testGetTemplateHistory() {
-    $data = $this->httpGetTemplatesFromUri("/template/{$this->type}/{$this->key}/history");
+    $data = $this->httpGetTemplatesFromUri(self::ROUTE."/{$this->type}/{$this->key}/history");
     $this->assertExpectedResults($data, "versions");
   }
 
   public function testTemplateResponseFormat() {
-    $data = $this->httpGetTemplatesFromUri("/template/{$this->type}/{$this->exampleKey}/history");
+    $data = $this->httpGetTemplatesFromUri(self::ROUTE."/{$this->type}/{$this->exampleKey}/history");
     $actualStruct = $data['items'][0];
     $this->assertEquals($this->expectedExampleResponse, $actualStruct);
   }
@@ -116,7 +117,7 @@ class TemplateVersionsTest extends TestCase {
         "templateKey" => $this->exampleKey,
         "author" => "Robert Martin",
         "createdAt" => "2020-10-13T23:47:07+00:00",
-        "bodyUri" => "/template/{$exampleId}"
+        "bodyUri" => self::ROUTE."/{$exampleId}"
     ];
 
     foreach ($this->data as $row) {
