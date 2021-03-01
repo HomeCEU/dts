@@ -127,7 +127,6 @@ class TemplatePersistenceTest extends TestCase {
 
     foreach ($foundTypes as $foundType) {
       Assert::assertArrayHasKey('docType', $foundType);
-      Assert::assertArrayHasKey('templateCount', $foundType);
       if (in_array($foundType, $foundTypeConstants)) {
         Assert::assertEquals($expectedDoctypeCounts[$foundType], $foundType['templateCount']);
       }
