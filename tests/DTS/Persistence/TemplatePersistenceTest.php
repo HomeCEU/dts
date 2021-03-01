@@ -122,13 +122,12 @@ class TemplatePersistenceTest extends TestCase {
     ];
     $this->loadTemplateFixtures($fixtureData);
 
-    $foundTypes = $this->p->listDocTypes();
-    $foundTypeConstants = array_column($foundTypes, 'docType');
+    $foundDocTypeObjs = $this->p->listDocTypes();
+    $docTypes = array_column($foundDocTypeObjs, 'docType');
 
-    foreach ($foundTypes as $foundType) {
-      Assert::assertArrayHasKey('docType', $foundType);
-      if (in_array($foundType, $foundTypeConstants)) {
-        Assert::assertEquals($expectedDoctypeCounts[$foundType], $foundType['templateCount']);
+    foreach ($docTypes as $k => $docType) {
+      if (isset($expectedDoctypeCounts[$docType])) {
+        Assert::assertEquals($expectedDoctypeCounts[$docType], $foundDocTypeObjs[$k]['templateCount']);
       }
     }
   }
