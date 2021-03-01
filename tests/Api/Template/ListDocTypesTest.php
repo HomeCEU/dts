@@ -36,43 +36,16 @@ class ListDocTypesTest extends TestCase {
         'B' => 2,
         'C' => 1
     ];
-    $expectedResponseForA = [
-        "docType" => 'A',
-        "templateCount" => 3,
-        "links" => [
-            "templates" => "/api/v1/template?filter[type]=A"
-        ]
-    ];
-    $p = $this->templatePersistence();
-    foreach ($fixtureData as $data) {
-      $p->persist($this->templateArray($data));
-    }
+    $this->loadTemplateFixtures($fixtureData);
 
-    // Action
     $responseData = $this->httpGetDocTypes();
-    $docTypes = $responseData['items'];
-
-    // Asserts
-    Assert::assertSameSize($expectedDoctypeCounts, $docTypes);
-    foreach ($docTypes as $row) {
-      Assert::assertArrayHasKey($row['docType'], $expectedDoctypeCounts);
-      Assert::assertEquals(
-          $expectedDoctypeCounts[$row['docType']],
-          $row['templateCount']
-      );
-      if ($row['docType'] == 'A') {
-        Assert::assertEquals($expectedResponseForA, $row);
+    $foundDocTypeObjs = $responseData['items'];
+    foreach (array_column($foundDocTypeObjs, 'docType') as $k => $docType) {
+      if (isset($expectedDoctypeCounts[$docType])) {
+        Assert::assertEquals($expectedDoctypeCounts[$docType], $foundDocTypeObjs[$k]['templateCount']);
       }
     }
-  }
-
-  public function testNoDocTypes() {
-    $responseData = $this->httpGetDocTypes();
-    $expected = [
-        "total" => 0,
-        "items" => []
-    ];
-    $this->assertEquals($expected, $responseData);
+    $this->assertProperObjectStructures($foundDocTypeObjs);
   }
 
   protected function httpGetDocTypes() {
@@ -89,5 +62,21 @@ class ListDocTypesTest extends TestCase {
     Assert::assertCount($responseData['total'], $responseData['items']);
 
     return $responseData;
+  }
+
+  private function loadTemplateFixtures(array $fixtureData): void {
+    $p = $this->templatePersistence();
+    foreach ($fixtureData as $data) {
+      $p->persist($this->templateArray($data));
+    }
+  }
+
+  private function assertProperObjectStructures($foundDocTypeObjs): void {
+    foreach ($foundDocTypeObjs as $foundDocTypeObj) {
+      Assert::assertArrayHasKey('docType', $foundDocTypeObj);
+      Assert::assertArrayHasKey('templateCount', $foundDocTypeObj);
+      Assert::assertArrayHasKey('links', $foundDocTypeObj);
+      Assert::assertArrayHasKey('templates', $foundDocTypeObj['links']);
+    }
   }
 }
