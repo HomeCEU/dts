@@ -79,11 +79,11 @@ class ListTemplatesTest extends TestCase {
       array_push($expectedIds, $this->data[$k]['templateId']);
     }
 
-    Assert::assertSameSize($expectedIds, $data['items']);
-
-    foreach ($data['items'] as $row) {
-      Assert::assertContains($row['templateId'], $expectedIds);
-      Assert::assertArrayNotHasKey('body', $row);
+    Assert::assertGreaterThan(count($expectedIds) - 1, $data['items']);
+    
+    $foundIds = array_column($data['items'], 'templateId');
+    foreach ($expectedIds as $id) {
+      Assert::assertContains($id, $foundIds);
     }
   }
 
