@@ -100,40 +100,39 @@ class TemplatePersistenceTest extends TestCase {
   }
 
   public function testListDocTypes() {
+    $dtA = uniqid('A_');
+    $dtB = uniqid('B_');
+    $dtC = uniqid('C_');
+
     // Load Fixture Data
     $fixtureData = [
-        [ 'docType' => 'A', 'templateKey' => 'k1' ], // 3 versions of k1
-        [ 'docType' => 'A', 'templateKey' => 'k1' ],
-        [ 'docType' => 'A', 'templateKey' => 'k1' ],
-        [ 'docType' => 'A' ], // will be unique key
-        [ 'docType' => 'A' ], // so should be 3 A's
-        [ 'docType' => 'B' ],
-        [ 'docType' => 'B' ], // 2 B's
-        [ 'docType' => 'C' ], // 1 C
+        [ 'docType' => $dtA, 'templateKey' => 'k1' ], // 3 versions of k1
+        [ 'docType' => $dtA, 'templateKey' => 'k1' ],
+        [ 'docType' => $dtA, 'templateKey' => 'k1' ],
+        [ 'docType' => $dtA ], // will be unique key
+        [ 'docType' => $dtA ], // so should be 3 A's
+        [ 'docType' => $dtB],
+        [ 'docType' => $dtB], // 2 B's
+        [ 'docType' => $dtC], // 1 C
     ];
     $expectedDoctypeCounts = [
-        'A' => 3,
-        'B' => 2,
-        'C' => 1
+        $dtA => 3,
+        $dtB => 2,
+        $dtC => 1
     ];
-    foreach ($fixtureData as $data) {
-      $this->newPersistedTemplate($data);
-    }
+    $this->loadTemplateFixtures($fixtureData);
 
-    // Thing we are actually testing...
-    $docTypes = $this->p->listDocTypes();
+    $foundTypes = $this->p->listDocTypes();
+    $foundTypeConstants = array_column($foundTypes, 'docType');
 
-    // Assertions
-    Assert::assertSameSize($expectedDoctypeCounts, $docTypes);
-    foreach ($docTypes as $row) {
-      Assert::assertArrayHasKey($row['docType'], $expectedDoctypeCounts);
-      Assert::assertEquals(
-          $expectedDoctypeCounts[$row['docType']],
-          $row['templateCount']
-      );
+    foreach ($foundTypes as $foundType) {
+      Assert::assertArrayHasKey('docType', $foundType);
+      Assert::assertArrayHasKey('templateCount', $foundType);
+      if (in_array($foundType, $foundTypeConstants)) {
+        Assert::assertEquals($expectedDoctypeCounts[$foundType], $foundType['templateCount']);
+      }
     }
   }
-
 
   protected function assertSearchMatches($results, Template $t) {
     Assert::assertCount(1, $results);
@@ -161,5 +160,20 @@ class TemplatePersistenceTest extends TestCase {
     $this->p->persist($record);
     $this->expectException(Exception::class);
     $this->p->delete($record['templateId']);
+  }
+
+  /**
+   * @param string $k
+   * @param array $gatheredTypes
+   * @return bool
+   */
+  private function hasType(string $k, array $gatheredTypes): bool {
+    return in_array($k, $gatheredTypes);
+  }
+
+  private function loadTemplateFixtures(array $fixtureData): void {
+    foreach ($fixtureData as $data) {
+      $this->newPersistedTemplate($data);
+    }
   }
 }
