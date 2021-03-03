@@ -11,7 +11,7 @@ class DocDataPersistence extends AbstractPersistence implements Persistence {
   const TABLE = 'docdata';
   const ID_COL = 'data_id';
 
-  private $map = [
+  private array $map = [
       'dataId' => 'data_id',
       'docType' => 'doc_type',
       'dataKey' => 'data_key',

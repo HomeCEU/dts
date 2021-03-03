@@ -4,7 +4,6 @@
 namespace HomeCEU\DTS\Api\Render;
 
 
-use HomeCEU\DTS\Api\ApiHelper;
 use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;
 use HomeCEU\DTS\Persistence\HotRenderPersistence;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
@@ -19,8 +18,7 @@ use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class AddHotRender {
-  /** @var \HomeCEU\DTS\UseCase\Render\AddHotRender */
-  private $useCase;
+  private AddHotRenderUseCase $useCase;
 
   public function __construct(ContainerInterface $container) {
     $conn = $container->dbConnection;

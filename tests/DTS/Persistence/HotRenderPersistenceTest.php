@@ -10,11 +10,8 @@ use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
 
 class HotRenderPersistenceTest extends TestCase {
-  /** @var HotRenderPersistence */
-  private $persistence;
-
-  /** @var Db\Connection */
-  private $db;
+  private HotRenderPersistence $persistence;
+  private Db\Connection $db;
 
   protected function setUp(): void {
     parent::setUp();
@@ -43,7 +40,7 @@ class HotRenderPersistenceTest extends TestCase {
 
   protected function fakeHotRenderRequestArray(): array {
     return [
-        'requestId' => $this->persistence->generateId()->toString(),
+        'requestId' => $this->persistence->generateId(),
         'template' => '<?php /* a compiled template */ ?>',
         'data' => ['name' => 'test'],
         'createdAt' => new \DateTime('yesterday')

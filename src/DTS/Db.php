@@ -7,12 +7,10 @@ use HomeCEU\DTS\Db\Config as DbConfig;
 use HomeCEU\DTS\Db\Connection;
 
 class Db {
-
-  /** @var Connection */
-  private static $connection;
+  private static Connection $connection;
 
   public static function connection(): Connection {
-    return self::$connection ?: self::$connection = self::newConnection();
+    return self::$connection ?? self::newConnection();
   }
 
   public static function newConnection(array $options = null):  Connection {

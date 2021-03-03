@@ -8,6 +8,7 @@ use HomeCEU\DTS\Entity\CompiledTemplate;
 use HomeCEU\Tests\DTS\TestCase;
 use HomeCEU\Tests\Faker;
 use PHPUnit\Framework\Assert;
+use Ramsey\Uuid\Uuid;
 
 class CompiledTemplateTest extends TestCase {
   public $iso8601;
@@ -20,7 +21,7 @@ class CompiledTemplateTest extends TestCase {
 
   public function testBuildFromState(): void {
       $state = [
-          'templateId' => 1,
+          'templateId' => Uuid::uuid1()->toString(),
           'body' => '<?php /* compiled template */ ?>',
           'createdAt' => new \DateTime($this->iso8601)
       ];

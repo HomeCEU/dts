@@ -9,18 +9,20 @@ use HomeCEU\DTS\Api\DiContainer;
 use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Repository\TemplateRepository;
+use HomeCEU\DTS\UseCase\ListTemplates as ListTemplatesUseCase;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response;
 
 class ListDocTypes {
-  private $useCase;
+  private ListTemplatesUseCase $useCase;
+
   public function __construct(DiContainer $di) {
     $db = $di->dbConnection;
     $repo = new TemplateRepository(
         new TemplatePersistence($db),
         new CompiledTemplatePersistence($db)
     );
-    $this->useCase = new \HomeCEU\DTS\UseCase\ListTemplates($repo);
+    $this->useCase = new ListTemplatesUseCase($repo);
   }
 
   public function __invoke(Request $request, Response $response, $args) {

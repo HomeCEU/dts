@@ -16,8 +16,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response;
 
 class ListVersions {
-
-  private $useCase;
+  private TemplateVersionList $useCase;
 
   public function __construct(ContainerInterface $diContainer) {
     $db = $diContainer->dbConnection;

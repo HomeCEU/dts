@@ -15,18 +15,10 @@ use Slim\Http\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class ListVersions {
-
-  /** @var  Persistence */
-  private $persistence;
-
-  /** @var  DocDataRepository */
-  private $repository;
-
-  /** @var DocDataVersionList */
-  private $useCase;
-
-  /** @var ContainerInterface */
-  private $di;
+  private Persistence $persistence;
+  private DocDataRepository $repository;
+  private DocDataVersionList $useCase;
+  private ContainerInterface $di;
 
   public function __construct(ContainerInterface $diContainer) {
     $this->di = $diContainer;

@@ -21,18 +21,9 @@ use Slim\Exception\NotFoundException;
 use Slim\Http\Stream;
 
 class Render {
-  /**
-   * @var DocDataRepository
-   */
-  private $dataRepo;
-  /**
-   * @var RenderUseCase
-   */
-  private $useCase;
-  /**
-   * @var TemplateRepository
-   */
-  private $templateRepo;
+  private DocDataRepository $dataRepo;
+  private RenderUseCase $useCase;
+  private TemplateRepository $templateRepo;
 
   public function __construct(DiContainer $di) {
     $db = $di->dbConnection;

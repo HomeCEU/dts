@@ -8,14 +8,13 @@ use HomeCEU\DTS\Repository\RecordNotFoundException;
 use Ramsey\Uuid\Uuid;
 
 abstract class InMemory implements Persistence {
-  private $data = [];
+  private array $data = [];
 
   abstract public function getTable();
   abstract public function idColumns(): array;
 
   public function generateId() {
     return $this->uuid1()->toString();
-
   }
 
   public function persist($data) {

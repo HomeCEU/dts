@@ -7,10 +7,10 @@ namespace HomeCEU\DTS\Entity;
 use HomeCEU\DTS\AbstractEntity;
 
 class HotRenderRequest extends AbstractEntity {
-  public $requestId;
-  public $template;
-  public $data;
-  public $createdAt;
+  public string $requestId;
+  public string $template;
+  public array $data;
+  public \DateTime $createdAt;
 
   protected static function keys(): array {
     return [

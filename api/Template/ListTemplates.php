@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response;
 
 class ListTemplates {
-  private $useCase;
+  private ListTemplatesUseCase $useCase;
 
   public function __construct(ContainerInterface $diContainer) {
     $db = $diContainer->dbConnection;

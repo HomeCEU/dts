@@ -9,7 +9,6 @@ use Nette\Database\ResultSet;
 use PDOStatement;
 
 class Connection  extends \Nette\Database\Connection {
-
   public static function buildFromConfig(DbConfig $config, array $options = null) {
     return new static(
         $config->dsn(),
@@ -19,23 +18,12 @@ class Connection  extends \Nette\Database\Connection {
     );
   }
 
-  /**
-   * @param  string $sql
-   * @param  array  $binds
-   * @return PDOStatement
-   * @throws Exception
-   */
-  public function pdoQuery($sql, array $binds=[]) {
+  public function pdoQuery(string $sql, array $binds=[]) {
     $sth = $this->_prepare($sql);
     return $this->_execute($sth, $binds);
   }
 
-  /**
-   * @param $sql
-   * @return PDOStatement
-   * @throws Exception
-   */
-  private function _prepare($sql) {
+  private function _prepare(string $sql) {
     try {
       $sth = $this->getPdo()->prepare($sql);
       return $sth;
@@ -45,12 +33,6 @@ class Connection  extends \Nette\Database\Connection {
     }
   }
 
-  /**
-   * @param PDOStatement $sth
-   * @param array        $binds
-   * @return PDOStatement
-   * @throws Exception
-   */
   private function _execute(PDOStatement $sth, array $binds=[]) {
     try {
       $this->_bindParams($sth, $binds);
@@ -93,8 +75,6 @@ class Connection  extends \Nette\Database\Connection {
     return preg_match("/^:.+/", $name) ? $name : ":{$name}";
   }
 
-
-
   public function selectFirst($table, $itemString, array $where) {
     return $this->selectWhere($table, $itemString, $where)->fetch();
   }
@@ -112,26 +92,14 @@ class Connection  extends \Nette\Database\Connection {
     return $this->query("DELETE FROM {$table} WHERE ?", $where);
   }
 
-  /**
-   * @param       $table
-   * @param       $whereString
-   * @param array $binds
-   * @return mixed
-   * @throws Exception
-   */
-  public function count($table, $whereString, $binds=[]) {
+  public function count(string $table, string $whereString, array $binds=[]) {
     return $this->pdoQuery(
         "SELECT count(1) FROM {$table} WHERE {$whereString}",
         $binds
     )->fetchColumn();
   }
 
-  /**
-   * @param       $table
-   * @param array ...$params
-   * @throws Exception
-   */
-  public function createTable($table, ...$params) {
+  public function createTable(string $table, ...$params) {
     $data = "\n  ".implode(",\n  ", $params)."\n";
     $sql = "CREATE TABLE {$table} ({$data})";
     $this->pdoQuery($sql);

@@ -8,9 +8,9 @@ use LightnCandy\Flags;
 use LightnCandy\LightnCandy;
 
 class TemplateCompiler {
-  private $flags = Flags::FLAG_HANDLEBARS;
-  private $helpers = [];
-  private $partials = [];
+  private int $flags = Flags::FLAG_HANDLEBARS;
+  private array $helpers = [];
+  private array $partials = [];
 
   public static function create(): self {
     $tc = new self();

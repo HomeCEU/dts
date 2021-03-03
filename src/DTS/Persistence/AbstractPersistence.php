@@ -10,20 +10,16 @@ use HomeCEU\DTS\Repository\RecordNotFoundException;
 use Ramsey\Uuid\Uuid;
 
 abstract class AbstractPersistence implements Persistence {
-  /** @var array */
-  private $hydratedToDbMap;
-  /** @var array */
-  private $dbToHydratedMap;
-
-  /** @var Connection */
-  protected $db;
+  private array $hydratedToDbMap;
+  private array $dbToHydratedMap;
+  protected Connection $db;
 
   public function __construct(Connection $db) {
     $this->db = $db;
   }
 
   public function generateId() {
-    return Uuid::uuid1();
+    return Uuid::uuid1()->toString();
   }
 
   public function persist($entity) {

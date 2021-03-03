@@ -15,17 +15,10 @@ use Slim\Http\Response;
 
 
 class DocDataAdd {
-  /** @var  Persistence */
-  private $persistence;
-
-  /** @var  DocDataRepository */
-  private $repository;
-
-  /** @var AddDocData */
-  private $useCase;
-
-  /** @var ContainerInterface */
-  private $di;
+  private Persistence $persistence;
+  private DocDataRepository $repository;
+  private AddDocData $useCase;
+  private ContainerInterface $di;
 
   public function __construct(ContainerInterface $diContainer) {
     $this->di = $diContainer;

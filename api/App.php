@@ -8,10 +8,7 @@ use Psr\Container\ContainerInterface;
 
 class App extends \Slim\App {
   private const ROUTES_V1 = APP_ROOT . '/api/routes_v1.php';
-  private const SERVICES_FILE = APP_ROOT . '/api/services.php';
-
-  /** @var DiContainer */
-  private $_di;
+  private DiContainer $_di;
 
   public function __construct(ContainerInterface $diContainer = null) {
     $this->_di = $diContainer ?: $this->diContainer();

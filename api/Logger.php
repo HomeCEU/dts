@@ -10,8 +10,7 @@ use Monolog\Handler\StreamHandler;
 use Psr\Log\LoggerInterface;
 
 class Logger {
-  /** @var \Monolog\Logger */
-  private static $instance;
+  private static \Monolog\Logger $instance;
 
   public static function instance(): LoggerInterface {
     if (empty(self::$instance)) {
