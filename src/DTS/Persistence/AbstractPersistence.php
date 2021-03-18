@@ -18,15 +18,15 @@ abstract class AbstractPersistence implements Persistence {
     $this->db = $db;
   }
 
-  public function generateId() {
+  public function generateId(): string {
     return Uuid::uuid1()->toString();
   }
 
-  public function persist($entity) {
-    $this->db->insert(static::TABLE, $this->flatten($entity));
+  public function persist($entity): string {
+    return $this->db->insert(static::TABLE, $this->flatten($entity));
   }
 
-  public function retrieve($id, array $cols=['*']) {
+  public function retrieve($id, array $cols=['*']): array {
     $row = $this->db->selectWhere(
         static::TABLE,
         $this->selectColumns(...$cols),
@@ -37,7 +37,7 @@ abstract class AbstractPersistence implements Persistence {
     return $this->hydrate($row);
   }
 
-  public function find(array $filter, $cols=['*']) {
+  public function find(array $filter, $cols=['*']): array {
     $where = $this->flatten($filter); // changes keys to snake_case
     $rows = $this->db->selectWhere(
         static::TABLE,

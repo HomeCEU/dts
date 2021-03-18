@@ -6,10 +6,11 @@ namespace HomeCEU\DTS\Db;
 use Exception;
 use HomeCEU\DTS\Db\Config as DbConfig;
 use Nette\Database\ResultSet;
+use Nette\Database\Row;
 use PDOStatement;
 
 class Connection  extends \Nette\Database\Connection {
-  public static function buildFromConfig(DbConfig $config, array $options = null) {
+  public static function buildFromConfig(DbConfig $config, array $options = null): Connection {
     return new static(
         $config->dsn(),
         $config->user,
@@ -18,7 +19,7 @@ class Connection  extends \Nette\Database\Connection {
     );
   }
 
-  public function pdoQuery(string $sql, array $binds=[]) {
+  public function pdoQuery(string $sql, array $binds=[]): PDOStatement {
     $sth = $this->_prepare($sql);
     return $this->_execute($sth, $binds);
   }
@@ -33,7 +34,7 @@ class Connection  extends \Nette\Database\Connection {
     }
   }
 
-  private function _execute(PDOStatement $sth, array $binds=[]) {
+  private function _execute(PDOStatement $sth, array $binds=[]): PDOStatement {
     try {
       $this->_bindParams($sth, $binds);
 
@@ -47,7 +48,7 @@ class Connection  extends \Nette\Database\Connection {
     }
   }
 
-  private function executeFailed(PDOStatement $sth, array $binds, \PDOException $prev=null) {
+  private function executeFailed(PDOStatement $sth, array $binds, \PDOException $prev=null): Exception {
     $sql = $sth->queryString;
     $bindParams = json_encode($binds);
     return new Exception(
@@ -57,7 +58,7 @@ class Connection  extends \Nette\Database\Connection {
     );
   }
 
-  private function prepareFailed($sql, \PDOException $e) {
+  private function prepareFailed($sql, \PDOException $e): Exception {
     return new Exception(
         "Failed to prepare \"{$sql}\"\n  Error: {$e->getMessage()}",
         0,
@@ -71,11 +72,11 @@ class Connection  extends \Nette\Database\Connection {
     }
   }
 
-  private function bindParamName($name) {
+  private function bindParamName($name): string {
     return preg_match("/^:.+/", $name) ? $name : ":{$name}";
   }
 
-  public function selectFirst($table, $itemString, array $where) {
+  public function selectFirst($table, $itemString, array $where): ?Row {
     return $this->selectWhere($table, $itemString, $where)->fetch();
   }
 
@@ -83,12 +84,12 @@ class Connection  extends \Nette\Database\Connection {
     return $this->query("SELECT {$itemString} FROM {$table} WHERE", $where);
   }
 
-  public function insert($table, array ...$rows) {
+  public function insert($table, array ...$rows): string {
     $this->query("INSERT INTO {$table}", $rows);
     return $this->getInsertId();
   }
 
-  public function deleteWhere($table, array $where) {
+  public function deleteWhere($table, array $where): ResultSet {
     return $this->query("DELETE FROM {$table} WHERE ?", $where);
   }
 

@@ -31,7 +31,7 @@ class CompiledTemplatePersistence extends AbstractPersistence {
     return !empty($row) ? $this->hydrate($row) : null;
   }
 
-  public function generateId(): void {
+  public function generateId(): string {
     $this->notImplemented(__METHOD__);
   }
 

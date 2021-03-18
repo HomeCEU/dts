@@ -2,12 +2,13 @@
 namespace HomeCEU\Tests\DTS;
 
 use DateTime;
+use HomeCEU\DTS\AbstractEntity;
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Persistence;
 
 class TestCase extends \HomeCEU\Tests\TestCase {
 
-  protected function fakeTemplate($docType = null, $key = null): Template {
+  protected function fakeTemplate($docType = null, $key = null): AbstractEntity {
     return Template::fromState($this->fakeTemplateArray($docType, $key));
   }
 
@@ -19,17 +20,17 @@ class TestCase extends \HomeCEU\Tests\TestCase {
     ];
   }
 
-  protected function fakePersistence($table, $idCol) {
+  protected function fakePersistence($table, $idCol): Persistence\InMemory {
     return new class($table, $idCol) extends Persistence\InMemory {
-      private $table;
-      private $idCol;
+      private string $table;
+      private string $idCol;
 
       public function __construct($table, $idCol) {
         $this->table = $table;
         $this->idCol = $idCol;
       }
 
-      public function getTable() {
+      public function getTable(): string {
         return $this->table;
       }
 

@@ -87,7 +87,7 @@ class ListTemplatesTest extends TestCase {
   protected function compiledTemplatePersistence(): Persistence {
     return new class extends Persistence\InMemory {
 
-      public function getTable() {
+      public function getTable(): string {
         return Persistence\CompiledTemplatePersistence::TABLE;
       }
 
