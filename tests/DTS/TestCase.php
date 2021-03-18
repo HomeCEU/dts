@@ -39,45 +39,6 @@ class TestCase extends \HomeCEU\Tests\TestCase {
     };
   }
 
-
-  protected function persistenceSpy() {
-    return new class implements Persistence {
-
-      public $spiedFindFilter;
-      public $spiedFindCols;
-
-      public $spiedRetrieveId;
-      public $spiedRetrieveCols;
-
-      public $spiedPersistData;
-
-      public function generateId() {}
-
-      public function persist($data) {
-        $this->spiedPersistData = $data;
-      }
-
-      public function retrieve($id, array $cols = ['*']) {
-        $this->spiedRetrieveId = $id;
-        $this->spiedRetrieveCols = $cols;
-      }
-
-      public function find(array $filter, array $cols = ['*']) {
-        $this->spiedFindFilter = $filter;
-        $this->spiedFindCols = $cols;
-        return [];
-      }
-
-      public function search(array $searchCols, string $searchSearchString, array $cols = ['*']) {
-        return [];
-      }
-
-      public function delete($id) {}
-    };
-  }
-
-
-
   protected function uniqueName($prefix, $substring) {
     return implode('-',[$prefix, $substring, uniqid()]);
   }

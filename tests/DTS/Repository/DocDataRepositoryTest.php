@@ -14,11 +14,8 @@ use PHPUnit\Framework\Assert;
 class DocDataRepositoryTest extends TestCase {
   const ENTITY_TYPE = 'person';
 
-  /** @var Persistence */
-  protected $persistence;
-
-  /** @var DocDataRepository */
-  protected $repo;
+  protected Persistence $persistence;
+  protected DocDataRepository $repo;
 
   protected function setUp(): void {
     parent::setUp();
@@ -63,17 +60,18 @@ class DocDataRepositoryTest extends TestCase {
   }
 
   public function testDocDataHistory() {
-    $persistence = $this->persistenceSpy();
-    $repo = new DocDataRepository($persistence);
-    $docType = 'd';
-    $dataKey = 'k';
-    $repo->allVersions($docType, $dataKey);
-    Assert::assertEquals(['docType'=>$docType, 'dataKey'=>$dataKey], $persistence->spiedFindFilter);
-    Assert::assertContains('dataId', $persistence->spiedFindCols);
-    Assert::assertContains('docType', $persistence->spiedFindCols);
-    Assert::assertContains('dataKey', $persistence->spiedFindCols);
-    Assert::assertContains('createdAt', $persistence->spiedFindCols);
-    Assert::assertNotContains('data', $persistence->spiedFindCols);
+    $type = 'dt1';
+    $key = 'key';
+
+    $d = $this->fakeDocDataArray();
+    $d2 = $this->fakeDocDataArray();
+    $d['docType'] = $type;
+    $d['dataKey'] = $key;
+    $d2['docType'] = $type;
+    $d2['dataKey'] = $key;
+    $this->persistence->persist($d);
+    $this->persistence->persist($d2);
+    $this->assertAllVersions($type, $key);
   }
 
   public function testLookupIdFromKey() {
@@ -111,5 +109,9 @@ class DocDataRepositoryTest extends TestCase {
         "address"   => $fake->address,
         "email"     => $fake->email
     ];
+  }
+
+  private function assertAllVersions(string $docType, string $dataKey): void {
+    $this->assertCount(2, $this->repo->allVersions($docType, $dataKey));
   }
 }
