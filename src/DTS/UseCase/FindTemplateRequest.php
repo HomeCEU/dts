@@ -7,9 +7,9 @@ namespace HomeCEU\DTS\UseCase;
 use HomeCEU\DTS\AbstractEntity;
 
 class FindTemplateRequest extends AbstractEntity {
-  public $type;
-  public $key;
-  public $search;
+  public string $type;
+  public ?string $key;
+  public ?string $search;
 
   public function isValid(): bool {
     return !empty($this->type);
