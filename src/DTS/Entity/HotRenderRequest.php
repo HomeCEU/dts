@@ -11,13 +11,4 @@ class HotRenderRequest extends AbstractEntity {
   public string $template;
   public array $data;
   public \DateTime $createdAt;
-
-  protected static function keys(): array {
-    return [
-        'requestId',
-        'template',
-        'data',
-        'createdAt',
-    ];
-  }
 }

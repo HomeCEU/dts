@@ -13,16 +13,4 @@ class Template extends AbstractEntity {
   public string $author;
   public \DateTime $createdAt;
   public string $body;
-
-  protected static function keys(): array {
-    return [
-        'templateId',
-        'docType',
-        'templateKey',
-        'createdAt',
-        'name',
-        'author',
-        'body'
-    ];
-  }
 }

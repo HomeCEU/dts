@@ -10,12 +10,4 @@ class CompiledTemplate extends AbstractEntity {
   public string $templateId;
   public string $body;
   public \DateTime $createdAt;
-
-  protected static function keys(): array {
-    return [
-        'templateId',
-        'body',
-        'createdAt',
-    ];
-  }
 }
