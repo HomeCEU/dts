@@ -2,13 +2,12 @@
 namespace HomeCEU\Tests\DTS;
 
 use DateTime;
-use HomeCEU\DTS\AbstractEntity;
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Persistence;
 
 class TestCase extends \HomeCEU\Tests\TestCase {
 
-  protected function fakeTemplate($docType = null, $key = null): AbstractEntity {
+  protected function fakeTemplate($docType = null, $key = null): Template {
     return Template::fromState($this->fakeTemplateArray($docType, $key));
   }
 

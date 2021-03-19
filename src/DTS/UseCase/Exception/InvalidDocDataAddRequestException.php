@@ -5,5 +5,5 @@ namespace HomeCEU\DTS\UseCase\Exception;
 
 
 
-class InvalidDocDataAddRequestException extends \RuntimeException {
+class InvalidDocDataAddRequestException extends InvalidRequestException {
 }

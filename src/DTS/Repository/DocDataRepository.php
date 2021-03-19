@@ -23,11 +23,11 @@ class DocDataRepository {
     $this->persistence->persist($docData->toArray());
   }
 
-  public function getByDocDataId($dataId): AbstractEntity {
+  public function getByDocDataId($dataId): DocData {
     return DocData::fromState($this->persistence->retrieve($dataId));
   }
 
-  public function newDocData(string $type, string $key, $data): AbstractEntity {
+  public function newDocData(string $type, string $key, $data): DocData {
     return DocData::fromState(
         [
             'dataId' => $this->persistence->generateId(),

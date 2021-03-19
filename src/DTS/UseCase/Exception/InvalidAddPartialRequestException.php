@@ -4,5 +4,6 @@
 namespace HomeCEU\DTS\UseCase\Exception;
 
 
-class InvalidGetTemplateRequestException extends InvalidRequestException {
+
+class InvalidAddPartialRequestException extends InvalidRequestException {
 }

@@ -8,7 +8,7 @@ use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Persistence\DocDataPersistence;
 use HomeCEU\DTS\Repository\DocDataRepository;
 use HomeCEU\DTS\UseCase\AddDocData;
-use HomeCEU\DTS\UseCase\InvalidDocDataAddRequestException;
+use HomeCEU\DTS\UseCase\Exception\InvalidDocDataAddRequestException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response;

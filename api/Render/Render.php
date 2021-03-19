@@ -10,7 +10,7 @@ use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Repository\DocDataRepository;
 use HomeCEU\DTS\Repository\RecordNotFoundException;
 use HomeCEU\DTS\Repository\TemplateRepository;
-use HomeCEU\DTS\UseCase\Render\InvalidRenderRequestException;
+use HomeCEU\DTS\UseCase\Exception\InvalidRenderRequestException;
 use HomeCEU\DTS\UseCase\Render\Render as RenderUseCase;
 use HomeCEU\DTS\UseCase\Render\RenderRequest;
 use Negotiation\Accept;

@@ -8,7 +8,7 @@ use HomeCEU\DTS\Persistence\InMemory;
 use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\AddTemplate;
 use HomeCEU\DTS\UseCase\AddTemplateRequest;
-use HomeCEU\DTS\UseCase\InvalidAddTemplateRequestException;
+use HomeCEU\DTS\UseCase\Exception\InvalidAddTemplateRequestException;
 use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
 

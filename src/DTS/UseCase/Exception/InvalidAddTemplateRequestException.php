@@ -4,5 +4,5 @@
 namespace HomeCEU\DTS\UseCase\Exception;
 
 
-class InvalidAddTemplateRequestException extends \Exception {
+class InvalidAddTemplateRequestException extends InvalidRequestException {
 }

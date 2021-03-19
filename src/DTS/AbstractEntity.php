@@ -17,6 +17,10 @@ abstract class AbstractEntity implements Entity {
     return $result;
   }
 
+  /**
+   * @param array $state
+   * @return static (because 'static' isn't a valid return type in PHP7.4, we need this docblock for the IDE)
+   */
   public static function fromState(array $state): self {
     $entity = new static();
     foreach ($entity->keys() as $k) {

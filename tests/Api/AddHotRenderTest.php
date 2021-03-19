@@ -4,7 +4,6 @@
 namespace HomeCEU\Tests\Api;
 
 
-use HomeCEU\Tests\Api\TestCase;
 use PHPUnit\Framework\Assert;
 
 class AddHotRenderTest extends TestCase {

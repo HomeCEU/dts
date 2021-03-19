@@ -4,7 +4,6 @@
 namespace HomeCEU\DTS\Api\Template;
 
 
-use Exception;
 use HomeCEU\DTS\Api\ResponseHelper;
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;

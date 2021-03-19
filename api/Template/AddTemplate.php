@@ -9,7 +9,7 @@ use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\AddTemplate as AddTemplateUseCase;
 use HomeCEU\DTS\UseCase\AddTemplateRequest;
-use HomeCEU\DTS\UseCase\InvalidAddTemplateRequestException;
+use HomeCEU\DTS\UseCase\Exception\InvalidAddTemplateRequestException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

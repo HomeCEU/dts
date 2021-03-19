@@ -4,7 +4,6 @@
 namespace HomeCEU\DTS\Api\Template;
 
 
-use Exception;
 use HomeCEU\DTS\Api\DiContainer;
 use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
