@@ -1,7 +1,7 @@
 <?php
 
 
-namespace HomeCEU\DTS\UseCase\Render;
+namespace HomeCEU\DTS\UseCase\Exception\Render;
 
 use Throwable;
 
