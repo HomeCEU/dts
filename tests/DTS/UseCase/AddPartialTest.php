@@ -4,8 +4,8 @@
 namespace HomeCEU\Tests\DTS\UseCase;
 
 
-use HomeCEU\DTS\Entity\Partial;
 use HomeCEU\DTS\Persistence\InMemory;
+use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\UseCase\AddPartial;
 use HomeCEU\DTS\UseCase\AddPartialRequest;
 use HomeCEU\Tests\DTS\TestCase;
@@ -16,8 +16,8 @@ class AddPartialTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->persistence = $this->fakePersistence('partial', 'partialId');
-    $this->service = new AddPartial();
+    $this->persistence = $this->fakePersistence('partial', 'id');
+    $this->service = new AddPartial(new PartialRepository($this->persistence));
   }
 
   public function testAddPartialFromRequest(): void {
@@ -27,10 +27,8 @@ class AddPartialTest extends TestCase {
         'body' => 'Here is a {{ body }}',
         'author' => 'an_author'
     ];
-    $request = AddPartialRequest::fromState($state);
-
-    $partial = $this->service->newPartial($request);
-    $this->assertInstanceOf(Partial::class, $partial);
-    $this->assertNotEmpty($partial->get('id'));
+    $saved = $this->service->add(AddPartialRequest::fromState($state));
+    $found = $this->persistence->retrieve($saved);
+    $this->assertEquals($found['id'], $saved);
   }
 }
