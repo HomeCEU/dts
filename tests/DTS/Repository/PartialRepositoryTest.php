@@ -4,6 +4,7 @@
 namespace HomeCEU\Tests\DTS\Repository;
 
 
+use HomeCEU\DTS\Db;
 use HomeCEU\DTS\Entity\Partial;
 use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Repository\PartialRepository;
@@ -28,8 +29,8 @@ class PartialRepositoryTest extends TestCase {
 
   public function testSavePartial(): void {
     $partial = $this->createSamplePartial();
-    $savedId = $this->repo->save($partial);
-    $this->assertEquals($partial->toArray(), $this->persistence->retrieve($savedId));
+    $this->repo->save($partial);
+    $this->assertEquals($partial->toArray(), $this->persistence->retrieve($partial->id));
   }
 
   public function testGetPartialById(): void {
