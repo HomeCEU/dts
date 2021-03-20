@@ -13,7 +13,7 @@ class AddPartialRequest extends AbstractEntity {
   public string $name;
   public string $author;
 
-  public static function fromState(array $state): AbstractEntity {
+  public static function fromState(array $state): self {
     return parent::fromState($state)->validate();
   }
 
