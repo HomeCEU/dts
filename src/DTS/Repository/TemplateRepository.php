@@ -8,7 +8,6 @@ use DateTime;
 use HomeCEU\DTS\Entity\CompiledTemplate;
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Persistence;
-use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Render\Image;
 use HomeCEU\DTS\Render\Partial;
 use Nette\Database\ForeignKeyConstraintViolationException;
@@ -29,7 +28,6 @@ class TemplateRepository {
   }
 
   public function createNewTemplate(string $docType, string $key, string $author, string $body): Template {
-    $x = 1;
     return Template::fromState([
         'templateId' => $this->persistence->generateId(),
         'docType' => $docType,
