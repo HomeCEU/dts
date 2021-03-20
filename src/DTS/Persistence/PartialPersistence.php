@@ -7,7 +7,7 @@ namespace HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Db\Connection;
 
 class PartialPersistence extends AbstractPersistence {
-  const TABLE = 'partials';
+  const TABLE = 'partial';
   const ID_COL = 'partial_id';
 
   private array $map = [
