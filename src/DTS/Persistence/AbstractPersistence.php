@@ -120,4 +120,7 @@ abstract class AbstractPersistence implements Persistence {
     }
     return implode(', ', $selectedCols);
   }
+
+  public function delete($id) {
+  }
 }
