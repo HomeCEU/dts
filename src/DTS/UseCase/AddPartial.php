@@ -13,6 +13,12 @@ class AddPartial {
     $this->repository = $repository;
   }
 
+  /**
+   * Add a new partial to the database
+   *
+   * @param AddPartialRequest $request
+   * @return string New Partial ID
+   */
   public function add(AddPartialRequest $request): string {
     $partial = $this->repository->create(
         $request->docType,
