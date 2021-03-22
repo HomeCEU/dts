@@ -15,7 +15,6 @@ class TestCase extends \PHPUnit\Framework\TestCase {
     if (!defined('APP_ROOT')) {
       define('APP_ROOT', self::$APP_ROOT);
     }
-    putenv("APP_LOG_DIR=/var/log/app/tests");
   }
 
   public static function faker() {
