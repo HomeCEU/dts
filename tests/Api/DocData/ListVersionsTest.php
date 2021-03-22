@@ -3,10 +3,11 @@
 
 namespace HomeCEU\Tests\Api\DocData;
 
-use HomeCEU\Tests\Api\TestCase;
+use DateTime;
+use HomeCEU\Tests\Api\ApiTestCase;
 use PHPUnit\Framework\Assert;
 
-class ListVersionsTest extends TestCase {
+class ListVersionsTest extends ApiTestCase {
   const ROUTE = "/api/v1/docdata";
 
   public function testListVersions() {
@@ -35,7 +36,7 @@ class ListVersionsTest extends TestCase {
         'dataId' => $id,
         'docType' => $this->docType,
         'dataKey' => $key,
-        "createdAt" => new \DateTime("2020-10-13 23:47:07"),
+        "createdAt" => new DateTime("2020-10-13 23:47:07"),
         'data' => ['name'=>'Fred']
     ]);
     $expected = [

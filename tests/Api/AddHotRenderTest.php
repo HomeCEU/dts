@@ -6,7 +6,7 @@ namespace HomeCEU\Tests\Api;
 
 use PHPUnit\Framework\Assert;
 
-class AddHotRenderTest extends TestCase {
+class AddHotRenderTest extends ApiTestCase {
   const ROUTE = "/api/v1/hotrender";
 
   public function testInvalidRequest(): void {

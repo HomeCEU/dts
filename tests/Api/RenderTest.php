@@ -5,7 +5,7 @@ namespace HomeCEU\Tests\Api;
 
 use PHPUnit\Framework\Assert;
 
-class RenderTest extends TestCase {
+class RenderTest extends ApiTestCase {
   const ROUTE = '/api/v1/render';
 
   protected function setUp(): void {
