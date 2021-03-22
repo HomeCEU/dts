@@ -24,13 +24,12 @@ class AddPartial {
   }
 
   public function __invoke(Request $request, Response $response): ResponseInterface {
-    $pRequest = AddPartialRequest::fromState($request->getParsedBody());
-    $partial = $this->service->add($pRequest);
+    $req = AddPartialRequest::fromState($request->getParsedBody());
+    $partial = $this->service->add($req);
 
-    $ret = $partial->toArray();
-    $ret['bodyUri'] = "/api/v1/partial/{$partial->id}";
+    $res = AddPartialResponse::fromState($partial->toArray());
+    $res->bodyUri = "/api/v1/partial/{$partial->id}";
 
-    return $response->withStatus(201)
-        ->withJson($ret);
+    return $response->withStatus(201)->withJson($res);
   }
 }

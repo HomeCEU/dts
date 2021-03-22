@@ -6,6 +6,7 @@ namespace HomeCEU\Tests\Api\Partial;
 
 use HomeCEU\DTS\Persistence;
 use HomeCEU\Tests\Api\ApiTestCase;
+use Psr\Http\Message\ResponseInterface;
 
 class AddPartialTest extends ApiTestCase {
   private Persistence $persistence;
@@ -23,20 +24,35 @@ class AddPartialTest extends ApiTestCase {
         'author' => 'Test Author'
     ];
     $response = $this->post('/api/v1/partial', $request);
-    $contentObj = $this->getResponseJsonAsObj($response);
-
-    $this->assertStatus(201, $response);
-    $this->assertContentType('application/json', $response);
-    $this->assertObjectHasAttribute('id', $contentObj);
-    $this->assertEquals("/api/v1/partial/{$contentObj->id}", $contentObj->bodyUri);
-    $this->assertPartialWasCreated($contentObj->id);
+    $this->assertPartialWasCreated($response);
+    $this->assertResponseHasCorrectJsonSchema($response, $this->expectedKeys());
   }
 
   public function testInvalidRequests(): void {
     $this->markTestIncomplete('Not implemented');
   }
 
-  private function assertPartialWasCreated(string $id): void {
-    $this->assertNotEmpty($this->persistence->retrieve($id));
+  private function expectedKeys(): array {
+    return ['id', 'docType', 'author', 'createdAt', 'bodyUri', 'name'];
+  }
+
+  private function assertPartialWasCreated(ResponseInterface $response): void {
+    $this->assertStatus(201, $response);
+
+    $content = $this->getResponseJsonAsArray($response);
+    $this->assertNotEmpty($this->persistence->retrieve($content['id']));
+  }
+
+  protected function assertResponseHasCorrectJsonSchema(ResponseInterface $response, array $expectedKeys): void {
+    $content = $this->getResponseJsonAsArray($response);
+
+    $this->assertContentType('application/json', $response);
+    foreach ($expectedKeys as $key) {
+      $this->assertArrayHasKey($key, $content);
+    }
+    foreach ($content as $k => $v) {
+      $this->assertContains($k, $expectedKeys, "Response Returned a Key that it shouldn't have");
+    }
+    $this->assertEquals("/api/v1/partial/{$content['id']}", $content['bodyUri']);
   }
 }
