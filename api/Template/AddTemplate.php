@@ -18,7 +18,7 @@ class AddTemplate {
   private AddTemplateUseCase $useCase;
 
   public function __construct(ContainerInterface $container) {
-    $conn = $container->dbConnection;
+    $conn = $container->get('dbConnection');
 
     $repo = new TemplateRepository(
         new TemplatePersistence($conn),
