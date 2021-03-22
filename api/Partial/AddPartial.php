@@ -8,6 +8,7 @@ use HomeCEU\DTS\Persistence\PartialPersistence;
 use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\UseCase\AddPartial as AddPartialService;
 use HomeCEU\DTS\UseCase\AddPartialRequest;
+use HomeCEU\DTS\UseCase\Exception\InvalidRequestException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -24,12 +25,16 @@ class AddPartial {
   }
 
   public function __invoke(Request $request, Response $response): ResponseInterface {
-    $req = AddPartialRequest::fromState($request->getParsedBody());
-    $partial = $this->service->add($req);
+    try {
+      $req = AddPartialRequest::fromState($request->getParsedBody());
+      $partial = $this->service->add($req);
 
-    $res = AddPartialResponse::fromState($partial->toArray());
-    $res->bodyUri = "/api/v1/partial/{$partial->id}";
+      $res = AddPartialResponse::fromState($partial->toArray());
+      $res->bodyUri = "/api/v1/partial/{$partial->id}";
 
-    return $response->withStatus(201)->withJson($res);
+      return $response->withStatus(201)->withJson($res);
+    } catch (InvalidRequestException $e) {
+      return $response->withStatus(400)->withJson(['message' => $e->getMessage()]);
+    }
   }
 }

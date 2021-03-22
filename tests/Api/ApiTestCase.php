@@ -187,7 +187,7 @@ class ApiTestCase extends HomeCEUTestCase {
     return json_decode((string) $response->getBody());
   }
 
-  protected function getResponseJsonAsArray(ResponseInterface $response): array {
+  protected function getResponseJsonAsArray(ResponseInterface $response): ?array {
     return json_decode((string) $response->getBody(), $associative = true);
   }
 

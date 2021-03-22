@@ -24,16 +24,18 @@ class AddPartialTest extends ApiTestCase {
         'author' => 'Test Author'
     ];
     $response = $this->post('/api/v1/partial', $request);
+    $this->assertResponseIsJson($response);
     $this->assertPartialWasCreated($response);
-    $this->assertResponseHasCorrectJsonSchema($response, $this->expectedKeys());
   }
 
   public function testInvalidRequests(): void {
-    $this->markTestIncomplete('Not implemented');
+    $response = $this->post('/api/v1/partial', []);
+    $this->assertStatus(400, $response);
   }
 
-  private function expectedKeys(): array {
-    return ['id', 'docType', 'author', 'createdAt', 'bodyUri', 'name'];
+  private function assertResponseIsJson(ResponseInterface $response): void {
+    $this->assertContentType('application/json', $response);
+    $this->assertIsArray($this->getResponseJsonAsArray($response));
   }
 
   private function assertPartialWasCreated(ResponseInterface $response): void {
@@ -41,18 +43,5 @@ class AddPartialTest extends ApiTestCase {
 
     $content = $this->getResponseJsonAsArray($response);
     $this->assertNotEmpty($this->persistence->retrieve($content['id']));
-  }
-
-  protected function assertResponseHasCorrectJsonSchema(ResponseInterface $response, array $expectedKeys): void {
-    $content = $this->getResponseJsonAsArray($response);
-
-    $this->assertContentType('application/json', $response);
-    foreach ($expectedKeys as $key) {
-      $this->assertArrayHasKey($key, $content);
-    }
-    foreach ($content as $k => $v) {
-      $this->assertContains($k, $expectedKeys, "Response Returned a Key that it shouldn't have");
-    }
-    $this->assertEquals("/api/v1/partial/{$content['id']}", $content['bodyUri']);
   }
 }
