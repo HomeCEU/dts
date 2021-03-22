@@ -28,7 +28,7 @@ class AddPartialTest extends TestCase {
         'author' => 'an_author'
     ];
     $saved = $this->service->add(AddPartialRequest::fromState($state));
-    $found = $this->persistence->retrieve($saved);
-    $this->assertEquals($found['id'], $saved);
+    $found = $this->persistence->retrieve($saved->id);
+    $this->assertEquals($found, $saved->toArray());
   }
 }
