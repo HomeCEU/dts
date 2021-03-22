@@ -7,8 +7,10 @@ namespace HomeCEU\DTS\UseCase\Exception;
 class InvalidRequestException extends \Exception {
   public function __construct($message = "", array $keys = [], $code = 0) {
     parent::__construct($message, $code);
-    $this->message = empty($keys)
-        ? $message
-        : $message . "Required Keys: " . implode(', ', $keys);
+
+    if (!empty($keys)) {
+      $keyStr = "Required Keys: " . implode(', ', $keys);
+      $this->message = empty($message) ? $keyStr : "{$message} | {$keyStr}";
+    }
   }
 }

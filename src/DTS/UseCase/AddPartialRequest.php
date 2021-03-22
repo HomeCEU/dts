@@ -22,7 +22,7 @@ class AddPartialRequest extends AbstractEntity {
         || empty($this->body)
         || empty($this->name)
         || empty($this->author)) {
-      throw new InvalidAddPartialRequestException('Cannot Create Partial Request', self::keys());
+      throw new InvalidAddPartialRequestException('Cannot Create Partial', self::keys());
     }
     return $this;
   }
