@@ -187,6 +187,10 @@ class ApiTestCase extends HomeCEUTestCase {
     return json_decode((string) $response->getBody());
   }
 
+  protected function getResponseJsonAsArray(ResponseInterface $response): array {
+    return json_decode((string) $response->getBody(), $associative = true);
+  }
+
   protected function assertContentType($contentType, ResponseInterface $response): void {
     $headers = $response->getHeaders();
     Assert::assertStringContainsString($contentType, $headers['Content-Type'][0]);
