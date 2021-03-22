@@ -4,14 +4,14 @@
 namespace HomeCEU\Tests\DTS\UseCase;
 
 
-use HomeCEU\DTS\Persistence\InMemory;
+use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\UseCase\AddPartial;
 use HomeCEU\DTS\UseCase\AddPartialRequest;
 use HomeCEU\Tests\DTS\TestCase;
 
 class AddPartialTest extends TestCase {
-  private InMemory $persistence;
+  private Persistence $persistence;
   private AddPartial $service;
 
   protected function setUp(): void {
