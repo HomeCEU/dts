@@ -7,6 +7,8 @@ namespace HomeCEU\Tests\Api;
 use DateTime;
 use HomeCEU\DTS\Api\App;
 use HomeCEU\DTS\Api\DiContainer;
+use HomeCEU\DTS\Db\Connection;
+use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;
 use HomeCEU\DTS\Persistence\DocDataPersistence;
 use HomeCEU\DTS\Persistence\HotRenderPersistence;
@@ -20,66 +22,54 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 
 class ApiTestCase extends HomeCEUTestCase {
-  /** @var DiContainer */
-  protected $di;
+  private Persistence $templatePersistence;
+  private Persistence $compiledTemplatePersistence;
 
-  /** @var App */
-  protected $app;
-
-  /** @var TemplatePersistence */
-  private $templatePersistence;
-
-  /** @var CompiledTemplatePersistence */
-  private $compiledTemplatePersistence;
-
-  /** @var DocDataPersistence */
-  protected $docDataPersistence;
-
-  /** @var string */
-  protected $docType;
-
-  /** @var HotRenderPersistence */
-  protected $hotRenderPersistence;
+  protected DiContainer $di;
+  protected Connection $db;
+  protected App $app;
+  protected DocDataPersistence $docDataPersistence;
+  protected Persistence $hotRenderPersistence;
+  protected string $docType;
 
   protected function setUp(): void {
     parent::setUp();
     $this->di = new DiContainer();
-    $this->di->dbConnection->beginTransaction();
+    $this->db = $this->di->get('dbConnection');
+    $this->db->beginTransaction();
     $this->app = new App($this->di);
-
-    $this->docType = (new ReflectionClass($this))->getShortName().'-'.time();
+    $this->docType = uniqid('type_');
   }
 
   protected function tearDown(): void {
-    $db = $this->di->dbConnection;
-    $db->rollBack();
+    $this->db->rollback();
     parent::tearDown();
   }
 
   protected function docDataPersistence(): DocDataPersistence {
     if (empty($this->docDataPersistence)) {
-      $this->docDataPersistence = new DocDataPersistence($this->di->dbConnection);
+      $this->docDataPersistence = new DocDataPersistence($this->db);
     }
     return $this->docDataPersistence;
   }
 
   protected function templatePersistence(): TemplatePersistence {
     if (empty($this->templatePersistence)) {
-      $this->templatePersistence = new TemplatePersistence($this->di->dbConnection);
+      $this->templatePersistence = new TemplatePersistence($this->db);
     }
     return $this->templatePersistence;
   }
 
   protected function compiledTemplatePersistence(): CompiledTemplatePersistence {
     if (empty($this->compiledTemplatePersistence)) {
-      $this->compiledTemplatePersistence = new CompiledTemplatePersistence($this->di->dbConnection);
+      $this->compiledTemplatePersistence = new CompiledTemplatePersistence($this->db);
     }
     return $this->compiledTemplatePersistence;
   }
 
   protected function hotRenderPersistence(): HotRenderPersistence {
     if (empty($this->hotRenderPersistence)) {
-      $this->hotRenderPersistence = new HotRenderPersistence($this->di->dbConnection);
+      $this->hotRenderPersistence = new HotRenderPersistence($this->db);
     }
     return $this->hotRenderPersistence;
   }
