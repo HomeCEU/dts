@@ -32,7 +32,9 @@ class AddPartial {
       $res = AddPartialResponse::fromState($partial->toArray());
       $res->bodyUri = "/api/v1/partial/{$partial->id}";
 
-      return $response->withStatus(201)->withJson($res);
+      return $response->withStatus(201)
+          ->withJson($res)
+          ->withHeader("Location", $res->bodyUri);
     } catch (InvalidRequestException $e) {
       return $response->withStatus(400)->withJson(['message' => $e->getMessage()]);
     }
