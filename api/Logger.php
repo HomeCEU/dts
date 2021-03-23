@@ -6,7 +6,6 @@ namespace HomeCEU\DTS\Api;
 
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\StreamHandler;
 use Psr\Log\LoggerInterface;
 
 class Logger {
@@ -15,28 +14,29 @@ class Logger {
   public static function instance(): LoggerInterface {
     if (empty(self::$instance)) {
       $logger = new \Monolog\Logger('applog');
-      $handler = self::monologHandler();
-      $logger->pushHandler($handler);
+      $logger->pushHandler(LoggerAppHandler::create());
       self::$instance = $logger;
     }
     return self::$instance;
   }
 
-  public static function logDir() {
+  public static function testInstance(): LoggerInterface {
+    self::initialize();
+    return self::$instance->pushHandler(LoggerTestHandler::create());
+  }
+
+  public static function logDir(): string {
     $appLogDir = getenv('APP_LOG_DIR') ?: APP_ROOT.'/log';
     return substr($appLogDir, 0, 1) == '/'
         ? $appLogDir
         : APP_ROOT.'/'.$appLogDir;
   }
 
-  protected static function monologHandler() {
-    $logFile = self::logDir().'/dts.log';
-    $h = new StreamHandler($logFile, \Monolog\Logger::NOTICE);
-    $h->setFormatter(self::monologFormatter());
-    return $h;
+  protected static function initialize(): void {
+    self::instance();
   }
 
-  protected static function monologFormatter(): FormatterInterface {
+  public static function monologFormatter(): FormatterInterface {
     $formatter = new LineFormatter(
         LineFormatter::SIMPLE_FORMAT,
         LineFormatter::SIMPLE_DATE

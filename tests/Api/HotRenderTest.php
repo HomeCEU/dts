@@ -4,10 +4,9 @@
 namespace HomeCEU\Tests\Api;
 
 
-use HomeCEU\Tests\Api\TestCase;
 use PHPUnit\Framework\Assert;
 
-class HotRenderTest extends TestCase {
+class HotRenderTest extends ApiTestCase {
   const ROUTE = '/api/v1/hotrender';
 
   protected function setUp(): void {

@@ -3,10 +3,11 @@
 
 namespace HomeCEU\Tests\Api\DocData;
 
-use HomeCEU\Tests\Api\TestCase;
+use Generator;
+use HomeCEU\Tests\Api\ApiTestCase;
 use PHPUnit\Framework\Assert;
 
-class DocDataAddTest extends TestCase {
+class DocDataAddTest extends ApiTestCase {
   const EXPECTED_KEYS = ['dataId', 'docType', 'dataKey', 'createdAt'];
   const ROUTE = '/api/v1/docdata';
 
@@ -32,7 +33,7 @@ class DocDataAddTest extends TestCase {
     $this->assertStatus(400, $response);
   }
 
-  public function invalidDataProvider(): \Generator {
+  public function invalidDataProvider(): Generator {
     yield [$this->docType, null];
     yield [$this->docType, ''];
     yield [null, uniqid()];

@@ -4,6 +4,7 @@
 namespace HomeCEU\DTS\UseCase;
 
 
+use HomeCEU\DTS\Entity\Partial;
 use HomeCEU\DTS\Repository\PartialRepository;
 
 class AddPartial {
@@ -13,19 +14,14 @@ class AddPartial {
     $this->repository = $repository;
   }
 
-  /**
-   * Add a new partial to the database
-   *
-   * @param AddPartialRequest $request
-   * @return string New Partial ID
-   */
-  public function add(AddPartialRequest $request): string {
+  public function add(AddPartialRequest $request): Partial {
     $partial = $this->repository->create(
         $request->docType,
         $request->name,
         $request->author,
         $request->body
     );
-    return $this->repository->save($partial);
+    $this->repository->save($partial);
+    return $partial;
   }
 }

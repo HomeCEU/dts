@@ -4,5 +4,7 @@
 namespace HomeCEU\Tests\Api\DocData;
 
 
-class TestCase extends \HomeCEU\Tests\Api\TestCase {
+use HomeCEU\Tests\Api\ApiTestCase;
+
+class TestCase extends ApiTestCase {
 }

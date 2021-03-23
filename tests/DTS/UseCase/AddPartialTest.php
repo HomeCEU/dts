@@ -4,14 +4,14 @@
 namespace HomeCEU\Tests\DTS\UseCase;
 
 
-use HomeCEU\DTS\Persistence\InMemory;
+use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\UseCase\AddPartial;
 use HomeCEU\DTS\UseCase\AddPartialRequest;
 use HomeCEU\Tests\DTS\TestCase;
 
 class AddPartialTest extends TestCase {
-  private InMemory $persistence;
+  private Persistence $persistence;
   private AddPartial $service;
 
   protected function setUp(): void {
@@ -28,7 +28,7 @@ class AddPartialTest extends TestCase {
         'author' => 'an_author'
     ];
     $saved = $this->service->add(AddPartialRequest::fromState($state));
-    $found = $this->persistence->retrieve($saved);
-    $this->assertEquals($found['id'], $saved);
+    $found = $this->persistence->retrieve($saved->id);
+    $this->assertEquals($found, $saved->toArray());
   }
 }

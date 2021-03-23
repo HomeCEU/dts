@@ -6,7 +6,7 @@ namespace HomeCEU\Tests\Api;
 
 use PHPUnit\Framework\Assert;
 
-class AddTemplateTest extends TestCase {
+class AddTemplateTest extends ApiTestCase {
   const ROUTE = '/api/v1/template';
 
   public function testBadRequest(): void {
