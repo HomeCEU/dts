@@ -10,7 +10,7 @@ use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Repository\HotRenderRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
-use HomeCEU\DTS\UseCase\Exception\InvalidHotRenderRequestException;
+use HomeCEU\DTS\UseCase\Exception\InvalidRequestException;
 use HomeCEU\DTS\UseCase\Render\AddHotRender as AddHotRenderUseCase;
 use HomeCEU\DTS\UseCase\Render\AddHotRenderRequest;
 use Psr\Container\ContainerInterface;
@@ -21,7 +21,7 @@ class AddHotRender {
   private AddHotRenderUseCase $useCase;
 
   public function __construct(ContainerInterface $container) {
-    $conn = $container->dbConnection;
+    $conn = $container->get('dbConnection');
 
     $templateRepo = new TemplateRepository(
         new TemplatePersistence($conn),
@@ -51,7 +51,7 @@ class AddHotRender {
               'createdAt' => $renderRequest['createdAt'],
               'location' => $route
           ]);
-    } catch (InvalidHotRenderRequestException $e) {
+    } catch (InvalidRequestException $e) {
       return $response->withStatus(400)->withJson([
           'status' => 400,
           'errors' => [$e->getMessage()],
