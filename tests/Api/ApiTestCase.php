@@ -17,7 +17,6 @@ use HomeCEU\DTS\Render\TemplateCompiler;
 use HomeCEU\Tests\TestCase as HomeCEUTestCase;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
-use ReflectionClass;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 
@@ -74,7 +73,7 @@ class ApiTestCase extends HomeCEUTestCase {
     return $this->hotRenderPersistence;
   }
 
-  protected function addDocDataFixture($dataKey, $id = null) {
+  protected function addDocDataFixture($dataKey, $id = null): void {
     $this->docDataPersistence()->persist([
         'docType' => $this->docType,
         'dataKey' => $dataKey,
@@ -96,7 +95,7 @@ class ApiTestCase extends HomeCEUTestCase {
     ]);
   }
 
-  protected function addTemplateFixture($templateKey, $id = null, $body = null) {
+  protected function addTemplateFixture($templateKey, $id = null, $body = null): void {
     $id = $id ?? uniqid();
     $body = $body ?? 'Hi {{name}}';
     $this->templatePersistence()->persist([
@@ -114,7 +113,7 @@ class ApiTestCase extends HomeCEUTestCase {
     ]);
   }
 
-  protected function addHotRenderRequestFixture($requestId, $value) {
+  protected function addHotRenderRequestFixture($requestId, $value): void {
     $this->hotRenderPersistence()->persist([
         'requestId' => $requestId,
         'template' => TemplateCompiler::create()->compile('{{ value }}'),
@@ -153,7 +152,7 @@ class ApiTestCase extends HomeCEUTestCase {
     return $this->app->run(true);
   }
 
-  private function separateUriAndQuery($uri) {
+  private function separateUriAndQuery($uri): array {
     if (strstr($uri, '?')) {
       list($uri, $queryString) = explode('?', $uri);
       parse_str($queryString, $queryParams);
@@ -173,8 +172,9 @@ class ApiTestCase extends HomeCEUTestCase {
     return $this->app->run(true);
   }
 
-  protected function getResponseJsonAsObj(ResponseInterface $response): \stdClass {
-    return json_decode((string) $response->getBody());
+  protected function getResponseJsonAsObj(ResponseInterface $response): ?\stdClass {
+    $obj = json_decode((string) $response->getBody());
+    return is_array($obj) ? null : $obj;
   }
 
   protected function getResponseJsonAsArray(ResponseInterface $response): ?array {
