@@ -13,7 +13,7 @@ return [
     new Api\Route(['get'], '/template/{docType}/{templateKey}/history', Api\Template\ListVersions::class),
   # Partial
     new Api\Route(['post'], '/partial', Api\Partial\AddPartial::class),
-    new Api\Route(['get'], '/partial/{docType}', Api\Partial\ListPartials::class),
+    new Api\Route(['get'], '/partial', Api\Partial\ListPartials::class),
   # DocData
     new Api\Route(['post'], '/docdata', Api\DocData\DocDataAdd::class),
     new Api\Route(['get'], '/docdata/{docType}/{dataKey}/history', Api\DocData\ListVersions::class),
