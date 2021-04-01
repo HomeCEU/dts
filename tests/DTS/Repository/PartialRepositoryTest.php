@@ -6,6 +6,7 @@ namespace HomeCEU\Tests\DTS\Repository;
 
 use HomeCEU\DTS\Db;
 use HomeCEU\DTS\Entity\Partial;
+use HomeCEU\DTS\Entity\PartialBuilder;
 use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\Tests\DTS\TestCase;
@@ -18,13 +19,6 @@ class PartialRepositoryTest extends TestCase {
     parent::setUp();
     $this->persistence = $this->fakePersistence('partial', 'id');
     $this->repo = $repo = new PartialRepository($this->persistence);
-  }
-
-  public function testCreatePartial(): void {
-    $partial = $this->createSamplePartial();
-    $this->assertInstanceOf(Partial::class, $partial);
-    $this->assertNotEmpty($partial->id);
-    $this->assertNotEmpty($partial->createdAt);
   }
 
   public function testSavePartial(): void {
@@ -53,12 +47,13 @@ class PartialRepositoryTest extends TestCase {
   }
 
   protected function createSamplePartial(string $docType = 'doc_type'): Partial {
-    return $this->repo->create(
-        $docType,
-        'user_full_name',
-        'Test Author',
-        '{{ user.first_name }} {{ user.lastname }}'
-    );
+    return PartialBuilder::create()
+        ->withMeta(['type' => 'standard'])
+        ->withName('user_full_name')
+        ->withDocType($docType)
+        ->withAuthor('Test Author')
+        ->withBody('body')
+        ->build();
   }
 
   private function persist(Partial ...$rows): void {

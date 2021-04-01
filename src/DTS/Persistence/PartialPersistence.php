@@ -14,7 +14,9 @@ class PartialPersistence extends AbstractPersistence {
       'id' => 'partial_id',
       'docType' => 'doc_type',
       'name' => 'name',
-      'createdAt' => 'created_at'
+      'createdAt' => 'created_at',
+      'meta' => 'meta',
+      'body' => 'body'
   ];
 
   public function __construct(Connection $db) {

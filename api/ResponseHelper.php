@@ -28,6 +28,7 @@ class ResponseHelper {
         'name' => $partial->name,
         'docType' => $partial->docType,
         'author' => $partial->author,
+        'meta' => $partial->meta,
         'createdAt' => $partial->createdAt->format(\DateTime::W3C),
         'bodyUri' => self::ROUTE . "/partial/{$partial->id}",
     ];
