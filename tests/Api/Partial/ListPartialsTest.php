@@ -26,7 +26,7 @@ class ListPartialsTest extends ApiTestCase {
     $this->assertStatus(200, $response);
 
     $content = $this->getResponseJsonAsObj($response);
-    $this->assertEquals(0, (int) $content->total);
+    $this->assertEquals(0, (int)$content->total);
     $this->assertCount(0, $content->items);
   }
 
@@ -37,13 +37,14 @@ class ListPartialsTest extends ApiTestCase {
         'body' => '{{ name }}',
         'name' => 'a_partial',
         'createdAt' => new \DateTime(),
-        'author' => 'Test Author'
+        'author' => 'Test Author',
+        'meta' => []
     ]);
     $response = $this->get('/api/v1/partial?docType=DT');
     $this->assertStatus(200, $response);
 
     $content = $this->getResponseJsonAsObj($response);
-    $this->assertEquals(1, (int) $content->total);
+    $this->assertEquals(1, (int)$content->total);
     $this->assertCount(1, $content->items);
   }
 }
