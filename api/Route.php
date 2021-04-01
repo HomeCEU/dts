@@ -2,9 +2,9 @@
 namespace HomeCEU\DTS\Api;
 
 class Route {
-  public $methods;
-  public $uri;
-  public $function;
+  public array $methods;
+  public string $uri;
+  public string $function;
 
   public function __construct(array $methods, string $uri, string $function) {
     $this->methods = $methods;

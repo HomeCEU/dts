@@ -4,18 +4,19 @@
 namespace HomeCEU\Tests\DTS\UseCase;
 
 
+use HomeCEU\DTS\Persistence\InMemory;
 use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\AddTemplate;
 use HomeCEU\DTS\UseCase\AddTemplateRequest;
-use HomeCEU\DTS\UseCase\InvalidAddTemplateRequestException;
+use HomeCEU\DTS\UseCase\Exception\InvalidAddTemplateRequestException;
 use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
 
 class AddTemplateTest extends TestCase {
   const TEST_DOCTYPE = 'test_doctype';
-  private $templatePersistence;
-  private $compiledTemplatePersistence;
-  private $useCase;
+  private InMemory $templatePersistence;
+  private InMemory $compiledTemplatePersistence;
+  private AddTemplate $useCase;
 
   protected function setUp(): void {
     parent::setUp();

@@ -13,12 +13,9 @@ use HomeCEU\DTS\Render\Partial;
 use Nette\Database\ForeignKeyConstraintViolationException;
 
 class TemplateRepository {
-  /** @var Persistence\TemplatePersistence */
-  private $persistence;
-
-  /** @var RepoHelper */
-  private $repoHelper;
-  private $compiledTemplatePersistence;
+  private Persistence $persistence;
+  private Persistence $compiledTemplatePersistence;
+  private RepoHelper $repoHelper;
 
   public function __construct(
       Persistence $persistence,

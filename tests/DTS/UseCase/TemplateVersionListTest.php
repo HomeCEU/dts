@@ -14,18 +14,10 @@ use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
 
 class TemplateVersionListTest extends TestCase {
-
-  /** @var Db\Connection */
-  private $db;
-
-  /** @var TemplatePersistence */
-  private $p;
-
-  /** @var TemplateVersionList */
-  private $useCase;
-
-  /** @var string  */
-  private $docType;
+  private Db\Connection $db;
+  private TemplatePersistence $p;
+  private TemplateVersionList $useCase;
+  private string $docType;
 
   protected function setUp(): void {
     parent::setUp();
@@ -41,7 +33,7 @@ class TemplateVersionListTest extends TestCase {
     $this->db->rollBack();
   }
 
-  public function testGetVersions() {
+  public function testGetVersions(): void {
     // fixture data
     $key1 = self::faker()->colorName;
     $key2 = self::faker()->monthName;
@@ -68,7 +60,7 @@ class TemplateVersionListTest extends TestCase {
 
 
 
-  protected function newPersistedTemplateVersion($key) {
+  protected function newPersistedTemplateVersion($key): string {
     if (empty($this->docType)) {
       $this->docType = uniqid('TemplateVersionListTest-');
     }
@@ -83,7 +75,7 @@ class TemplateVersionListTest extends TestCase {
   protected function compiledTemplatePersistence(): Persistence {
     return new class extends Persistence\InMemory {
 
-      public function getTable() {
+      public function getTable(): string {
         return Persistence\CompiledTemplatePersistence::TABLE;
       }
 

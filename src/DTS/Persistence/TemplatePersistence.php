@@ -17,13 +17,13 @@ class TemplatePersistence extends AbstractPersistence implements Persistence {
       'name', 'author', 'createdAt'
   ];
 
-  private $map = [
+  private array $map = [
       'templateId' => 'template_id',
       'docType' => 'doc_type',
       'templateKey' => 'template_key',
       'createdAt' => 'created_at'
   ];
-  private $isLatestVersionSQL = "
+  private string $isLatestVersionSQL = "
       t1.template_id = (
           SELECT t2.template_id
           FROM template t2

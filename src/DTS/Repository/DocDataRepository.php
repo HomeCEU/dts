@@ -3,6 +3,7 @@
 namespace HomeCEU\DTS\Repository;
 
 use DateTime;
+use HomeCEU\DTS\AbstractEntity;
 use HomeCEU\DTS\Entity\DocData;
 use HomeCEU\DTS\Persistence;
 
@@ -63,13 +64,7 @@ class DocDataRepository {
     return $row['dataId'];
   }
 
-
-
-  /**
-   * @param array $rows
-   * @return array|DocData[]
-   */
-  private function toDocDataArray(array $rows) {
+  private function toDocDataArray(array $rows): array {
     return array_map(function ($row) {
       return DocData::fromState($row);
     }, $rows);

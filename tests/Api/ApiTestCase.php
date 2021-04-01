@@ -12,13 +12,14 @@ use HomeCEU\DTS\Persistence\DocDataPersistence;
 use HomeCEU\DTS\Persistence\HotRenderPersistence;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Render\TemplateCompiler;
+use HomeCEU\Tests\TestCase as HomeCEUTestCase;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionClass;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 
-class TestCase extends \HomeCEU\Tests\TestCase {
+class ApiTestCase extends HomeCEUTestCase {
   /** @var DiContainer */
   protected $di;
 
@@ -180,6 +181,14 @@ class TestCase extends \HomeCEU\Tests\TestCase {
     $req = Request::createFromEnvironment($env);
     $this->app->getContainer()['request'] = $req;
     return $this->app->run(true);
+  }
+
+  protected function getResponseJsonAsObj(ResponseInterface $response): \stdClass {
+    return json_decode((string) $response->getBody());
+  }
+
+  protected function getResponseJsonAsArray(ResponseInterface $response): ?array {
+    return json_decode((string) $response->getBody(), $associative = true);
   }
 
   protected function assertContentType($contentType, ResponseInterface $response): void {

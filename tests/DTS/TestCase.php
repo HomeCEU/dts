@@ -19,17 +19,17 @@ class TestCase extends \HomeCEU\Tests\TestCase {
     ];
   }
 
-  protected function fakePersistence($table, $idCol) {
+  protected function fakePersistence($table, $idCol): Persistence\InMemory {
     return new class($table, $idCol) extends Persistence\InMemory {
-      private $table;
-      private $idCol;
+      private string $table;
+      private string $idCol;
 
       public function __construct($table, $idCol) {
         $this->table = $table;
         $this->idCol = $idCol;
       }
 
-      public function getTable() {
+      public function getTable(): string {
         return $this->table;
       }
 
@@ -38,45 +38,6 @@ class TestCase extends \HomeCEU\Tests\TestCase {
       }
     };
   }
-
-
-  protected function persistenceSpy() {
-    return new class implements Persistence {
-
-      public $spiedFindFilter;
-      public $spiedFindCols;
-
-      public $spiedRetrieveId;
-      public $spiedRetrieveCols;
-
-      public $spiedPersistData;
-
-      public function generateId() {}
-
-      public function persist($data) {
-        $this->spiedPersistData = $data;
-      }
-
-      public function retrieve($id, array $cols = ['*']) {
-        $this->spiedRetrieveId = $id;
-        $this->spiedRetrieveCols = $cols;
-      }
-
-      public function find(array $filter, array $cols = ['*']) {
-        $this->spiedFindFilter = $filter;
-        $this->spiedFindCols = $cols;
-        return [];
-      }
-
-      public function search(array $searchCols, string $searchSearchString, array $cols = ['*']) {
-        return [];
-      }
-
-      public function delete($id) {}
-    };
-  }
-
-
 
   protected function uniqueName($prefix, $substring) {
     return implode('-',[$prefix, $substring, uniqid()]);

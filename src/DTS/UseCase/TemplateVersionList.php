@@ -23,6 +23,4 @@ class TemplateVersionList {
   public function getVersions(string $docType, string $key) {
     return $this->repo->getVersions($docType, $key);
   }
-
-
 }

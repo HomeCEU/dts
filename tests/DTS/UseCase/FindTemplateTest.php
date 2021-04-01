@@ -5,10 +5,11 @@ namespace HomeCEU\Tests\DTS\UseCase;
 
 
 use HomeCEU\DTS\Entity\Template;
+use HomeCEU\DTS\Persistence\InMemory;
 use HomeCEU\DTS\Repository\TemplateRepository;
+use HomeCEU\DTS\UseCase\Exception\InvalidGetTemplateRequestException;
 use HomeCEU\DTS\UseCase\GetTemplate;
 use HomeCEU\DTS\UseCase\FindTemplateRequest;
-use HomeCEU\DTS\UseCase\InvalidGetTemplateRequestException;
 use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
 
@@ -16,17 +17,16 @@ class FindTemplateTest extends TestCase {
   const DOC_TYPE_ENROLLMENT = 'enrollment';
   const DOC_TYPE_EXAMPLE = 'example';
 
-  private $useCase;
-  private $templatePersistence;
-  private $templateRepository;
+  private GetTemplate $useCase;
+  private InMemory $templatePersistence;
 
   protected function setUp(): void {
     parent::setUp();
     $this->templatePersistence = $this->fakePersistence('template', 'templateId');
     $compiledTemplatePersistence = $this->fakePersistence('compiled_template', 'templateId');
-
-    $this->templateRepository = new TemplateRepository($this->templatePersistence, $compiledTemplatePersistence);
-    $this->useCase = new GetTemplate($this->templateRepository);
+    $this->useCase = new GetTemplate(
+        new TemplateRepository($this->templatePersistence, $compiledTemplatePersistence)
+    );
   }
 
   public function testInvalidRequestThrowsException(): void {

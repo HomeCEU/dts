@@ -5,19 +5,18 @@ namespace HomeCEU\DTS\Db;
 
 
 class Config {
-
   const DEFAULT_DRIVER          = 'mysql';
   const DEFAULT_MYSQL_PORT      = 3306;
   const DEFAULT_PG_PORT         = 5432;
   const DEFAULT_SQLITE_LOCATION = ':memory:';
 
-  public $driver;
-  public $location;
-  public $host;
-  public $user;
-  public $pass;
-  public $name;
-  public $port;
+  public string $driver='';
+  public string $location = '';
+  public string $host = '';
+  public string $user = '';
+  public string $pass = '';
+  public string $name = '';
+  public string $port = '';
 
   public function __construct(array $config) {
     foreach ($config as $k=>$v)

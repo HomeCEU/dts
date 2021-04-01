@@ -5,23 +5,15 @@ namespace HomeCEU\DTS\UseCase;
 
 
 use HomeCEU\DTS\AbstractEntity;
+use HomeCEU\DTS\UseCase\Exception\InvalidAddTemplateRequestException;
 
 class AddTemplateRequest extends AbstractEntity {
-  public $docType;
-  public $templateKey;
-  public $author;
-  public $body;
+  public string $docType;
+  public string $templateKey;
+  public string $author;
+  public string $body;
 
-  protected static function keys(): array {
-    return [
-        'docType',
-        'templateKey',
-        'author',
-        'body',
-    ];
-  }
-
-  public static function fromState(array $state): AbstractEntity {
+  public static function fromState(array $state): self {
     return parent::fromState($state)->validate();
   }
 

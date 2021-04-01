@@ -8,9 +8,9 @@ use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Render\RenderFactory;
 use HomeCEU\DTS\Repository\HotRenderRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
+use HomeCEU\DTS\UseCase\Exception\InvalidHotRenderRequestException;
 use HomeCEU\DTS\UseCase\Render\AddHotRender;
 use HomeCEU\DTS\UseCase\Render\AddHotRenderRequest;
-use HomeCEU\DTS\UseCase\Render\InvalidHotRenderRequestException;
 use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
 

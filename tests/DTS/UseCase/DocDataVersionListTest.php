@@ -9,6 +9,7 @@ use HomeCEU\DTS\Repository\DocDataRepository;
 use HomeCEU\DTS\UseCase\DocDataVersionList;
 use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
+use Ramsey\Uuid\Uuid;
 
 class DocDataVersionListTest extends TestCase {
   /** @var DocDataPersistence */
@@ -29,7 +30,7 @@ class DocDataVersionListTest extends TestCase {
     $dataKey = 'A';
     for ($i=1; $i<=3; $i++) {
       $this->persistence->persist([
-          'dataId' => $i,
+          'dataId' => Uuid::uuid1()->toString(),
           'docType' => $docType,
           'dataKey' => $dataKey
       ]);

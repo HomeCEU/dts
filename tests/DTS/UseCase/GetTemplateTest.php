@@ -7,9 +7,9 @@ namespace HomeCEU\Tests\DTS\UseCase;
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Repository\RecordNotFoundException;
 use HomeCEU\DTS\Repository\TemplateRepository;
+use HomeCEU\DTS\UseCase\Exception\InvalidGetTemplateRequestException;
 use HomeCEU\DTS\UseCase\GetTemplate;
 use HomeCEU\DTS\UseCase\GetTemplateRequest;
-use HomeCEU\DTS\UseCase\InvalidGetTemplateRequestException;
 use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
 

@@ -7,15 +7,7 @@ namespace HomeCEU\DTS\Entity;
 use HomeCEU\DTS\AbstractEntity;
 
 class CompiledTemplate extends AbstractEntity {
-  public $templateId;
-  public $body;
-  public $createdAt;
-
-  protected static function keys(): array {
-    return [
-        'templateId',
-        'body',
-        'createdAt',
-    ];
-  }
+  public string $templateId;
+  public string $body;
+  public \DateTime $createdAt;
 }

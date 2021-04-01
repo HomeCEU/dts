@@ -9,21 +9,12 @@ use HomeCEU\DTS\Db;
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\Tests\DTS\TestCase;
-use PHPUnit\Framework\Assert;
 
 class TemplatePersistenceTest extends TestCase {
-
-  /** @var TemplatePersistence */
-  protected $p;
-
-  protected $docType;
-
-  protected $cleanupDocTypes = [
-
-  ];
-
-  /** @var Db\Connection */
-  protected $db;
+  protected Db\Connection $db;
+  protected TemplatePersistence $p;
+  protected string $docType;
+  protected array $cleanupDocTypes = [];
 
   protected function setUp(): void {
     parent::setUp();
@@ -96,7 +87,7 @@ class TemplatePersistenceTest extends TestCase {
         'author' => $this->uniqueName(self::faker()->name, 'fin')
     ]);
     $results = $this->p->filterBySearchString('foo bar baz fin');
-    Assert::assertCount(2, $results);
+    $this->assertCount(2, $results);
   }
 
   public function testListDocTypes() {
@@ -127,30 +118,30 @@ class TemplatePersistenceTest extends TestCase {
 
     foreach ($docTypes as $k => $docType) {
       if (isset($expectedDoctypeCounts[$docType])) {
-        Assert::assertEquals($expectedDoctypeCounts[$docType], $foundDocTypeObjs[$k]['templateCount']);
+        $this->assertEquals($expectedDoctypeCounts[$docType], $foundDocTypeObjs[$k]['templateCount']);
       }
     }
   }
 
   protected function assertSearchMatches($results, Template $t) {
-    Assert::assertCount(1, $results);
-    Assert::assertArrayHasKey('templateId', $results[0]);
-    Assert::assertEquals($t->templateId, $results[0]['templateId']);
+    $this->assertCount(1, $results);
+    $this->assertArrayHasKey('templateId', $results[0]);
+    $this->assertEquals($t->templateId, $results[0]['templateId']);
   }
 
   public function testGenerateId() {
     $id1 = $this->p->generateId();
     $id2 = $this->p->generateId();
-    Assert::assertNotEmpty($id1);
-    Assert::assertNotEmpty($id2);
-    Assert::assertNotEquals($id1, $id2);
+    $this->assertNotEmpty($id1);
+    $this->assertNotEmpty($id2);
+    $this->assertNotEquals($id1, $id2);
   }
 
   public function testCanRetrievePersistedRecord() {
     $record = $this->fakeTemplateArray($this->docType);
     $this->p->persist($record);
     $retrieved = $this->p->retrieve($record['templateId']);
-    Assert::assertEquals($record, $retrieved);
+    $this->assertEquals($record, $retrieved);
   }
 
   public function testNoDelete() {

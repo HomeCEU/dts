@@ -4,7 +4,7 @@
 namespace HomeCEU\Tests\Api;
 
 
-class GetTemplateTest extends TestCase {
+class GetTemplateTest extends ApiTestCase {
   const ROUTE = '/api/v1/template';
 
   protected function setUp(): void {

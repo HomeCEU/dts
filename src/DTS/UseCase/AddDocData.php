@@ -3,6 +3,7 @@
 namespace HomeCEU\DTS\UseCase;
 
 use HomeCEU\DTS\Repository\DocDataRepository;
+use HomeCEU\DTS\UseCase\Exception\InvalidDocDataAddRequestException;
 
 class AddDocData {
   /** @var DocDataRepository */

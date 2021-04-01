@@ -6,23 +6,24 @@ namespace HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Repository\RecordNotFoundException;
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 abstract class InMemory implements Persistence {
-  private $data = [];
+  private array $data = [];
 
-  abstract public function getTable();
+  abstract public function getTable(): string;
   abstract public function idColumns(): array;
 
-  public function generateId() {
+  public function generateId(): string {
     return $this->uuid1()->toString();
-
   }
 
-  public function persist($data) {
+  public function persist($data): string {
     $this->data[$this->getIdFromData($data)] = $data;
+    return $this->getIdFromData($data);
   }
 
-  public function retrieve($id, array $cols=['*']) {
+  public function retrieve($id, array $cols=['*']): array {
     if (!$this->has($id))
       throw new RecordNotFoundException("No record found {$id}");
     return $this->data[$id];
@@ -34,11 +35,11 @@ abstract class InMemory implements Persistence {
     unset($this->data[$id]);
   }
 
-  protected function uuid1() {
+  protected function uuid1(): UuidInterface {
     return Uuid::uuid1();
   }
 
-  private function getIdFromData($data) {
+  private function getIdFromData($data): string {
     $id = [];
     foreach($this->idColumns() as $key) {
       array_push($id, $data[$key]);
@@ -54,7 +55,7 @@ abstract class InMemory implements Persistence {
     return array_key_exists($id, $this->data);
   }
 
-  public function find(array $filter, array $cols=['*']) {
+  public function find(array $filter, array $cols=['*']): array {
     $matching = [];
     foreach ($this->data as $id=>$entity) {
       if ($this->matchesFilter($entity, $filter)) {
@@ -64,7 +65,7 @@ abstract class InMemory implements Persistence {
     return $matching;
   }
 
-  private function matchesFilter(array $entity, array $filter) {
+  private function matchesFilter(array $entity, array $filter): bool {
     foreach ($filter as $k=>$v) {
       if (empty($entity[$k]) || $entity[$k] != $v) {
         return false;

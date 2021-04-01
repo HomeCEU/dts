@@ -6,6 +6,7 @@ namespace HomeCEU\DTS\UseCase;
 
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Repository\TemplateRepository;
+use HomeCEU\DTS\UseCase\Exception\InvalidGetTemplateRequestException;
 
 class GetTemplate {
   private $repository;

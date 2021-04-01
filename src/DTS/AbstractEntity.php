@@ -5,8 +5,9 @@ namespace HomeCEU\DTS;
 
 
 abstract class AbstractEntity implements Entity {
-
-  abstract protected static function keys(): array;
+  public function get(string $property) {
+    return $this->{$property} ?? null;
+  }
 
   public function toArray(): array {
     $result = [];
@@ -16,15 +17,22 @@ abstract class AbstractEntity implements Entity {
     return $result;
   }
 
+  /**
+   * @param array $state
+   * @return static (because 'static' isn't a valid return type in PHP7.4, we need this docblock for the IDE)
+   */
   public static function fromState(array $state): self {
     $entity = new static();
-
     foreach ($entity->keys() as $k) {
       if (array_key_exists($k, $state)) {
         $entity->{$k} = static::valueFromState($state, $k);
       }
     }
     return $entity;
+  }
+
+  protected function keys(): array {
+    return array_keys(get_class_vars(static::class));
   }
 
   protected static function valueFromState(array $state, string $key) {

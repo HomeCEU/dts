@@ -16,9 +16,7 @@ use Slim\Exception\NotFoundException;
 use Slim\Http\Response;
 
 class GetDocDataByKey {
-
-  /** @var GetDocData */
-  private $useCase;
+  private GetDocData $useCase;
 
   public function __construct(DiContainer $di) {
     $db = $di->dbConnection;

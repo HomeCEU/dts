@@ -4,30 +4,24 @@
 namespace HomeCEU\DTS\UseCase\Render;
 
 
+use HomeCEU\DTS\AbstractEntity;
 use HomeCEU\DTS\Repository\DocDataRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
+use HomeCEU\DTS\UseCase\Exception\InvalidRenderRequestException;
 
 class Render {
   use RenderServiceTrait;
-
-  /** @var DocDataRepository */
-  private $docDataRepo;
-
-  /** @var TemplateRepository  */
-  private $templateRepo;
-
-  /** @var RenderRequest  */
-  public $originalRequest;
-
-  /** @var RenderRequest  */
-  public $completeRequest;
+  private DocDataRepository $docDataRepo;
+  private TemplateRepository $templateRepo;
+  public AbstractEntity $originalRequest;
+  public AbstractEntity $completeRequest;
 
   public function __construct(TemplateRepository $templateRepo, DocDataRepository $docDataRepo) {
     $this->docDataRepo = $docDataRepo;
     $this->templateRepo = $templateRepo;
   }
 
-  public function renderDoc(RenderRequest $request): RenderResponse {
+  public function renderDoc(RenderRequest $request): AbstractEntity {
     if (!$request->isValid()) {
       throw new InvalidRenderRequestException;
     }
@@ -36,29 +30,29 @@ class Render {
     return $this->renderTemplate();
   }
 
-  protected function buildRequestOfIds(RenderRequest $request): RenderRequest {
+  protected function buildRequestOfIds(RenderRequest $request): AbstractEntity {
     return RenderRequest::fromState([
         'dataId' => $this->getDataIdFromRequest($request),
         'templateId' => $this->getTemplateIdFromRequest($request),
-        'format' => $request->format,
+        'format' => $request->get('format'),
     ]);
   }
 
-  private function getDataIdFromRequest(RenderRequest $request) {
+  private function getDataIdFromRequest(RenderRequest $request): string {
     if (!empty($request->dataId)) {
       return $request->dataId;
     }
     return $this->docDataRepo->lookupId($request->docType, $request->dataKey);
   }
 
-  private function getTemplateIdFromRequest(RenderRequest $request) {
+  private function getTemplateIdFromRequest(RenderRequest $request): string {
     if (!empty($request->templateId)) {
       return $request->templateId;
     }
     return $this->templateRepo->lookupId($request->docType, $request->templateKey);
   }
 
-  private function renderTemplate(): RenderResponse {
+  private function renderTemplate(): AbstractEntity {
     $service = $this->getRenderService($this->completeRequest->format);
     $template = $this->templateRepo->getCompiledTemplateById($this->completeRequest->templateId);
     $docData = $this->docDataRepo->getByDocDataId($this->completeRequest->dataId);

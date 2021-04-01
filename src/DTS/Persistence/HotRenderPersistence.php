@@ -11,7 +11,7 @@ class HotRenderPersistence extends AbstractPersistence implements Persistence {
   const TABLE = 'hotrender_request';
   const ID_COL = 'request_id';
 
-  private $map = [
+  private array $map = [
       'requestId' => 'request_id',
       'template' => 'template',
       'data' => 'data',

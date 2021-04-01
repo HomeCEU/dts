@@ -16,7 +16,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\NotFoundException;
 
 class GetTemplate {
-  private $useCase;
+  private GetTemplateUseCase $useCase;
 
   public function __construct(ContainerInterface $container) {
     $conn = $container->dbConnection;

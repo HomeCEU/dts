@@ -6,15 +6,16 @@ namespace HomeCEU\Tests\DTS\Repository;
 
 use HomeCEU\DTS\Db;
 use HomeCEU\DTS\Entity\HotRenderRequest;
+use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Persistence\HotRenderPersistence;
 use HomeCEU\DTS\Repository\HotRenderRepository;
 use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
 
 class HotRenderRepositoryTest extends TestCase {
-  private $persistence;
-  private $repo;
-  private $db;
+  private Persistence $persistence;
+  private HotRenderRepository $repo;
+  private Db\Connection $db;
 
   protected function setUp(): void {
     parent::setUp();
@@ -48,7 +49,7 @@ class HotRenderRepositoryTest extends TestCase {
 
   protected function fakeHotRenderRequestArray(): array {
     return [
-        'requestId' => $this->persistence->generateId()->toString(),
+        'requestId' => $this->persistence->generateId(),
         'template' => '<?php /* a compiled template */ ?>',
         'data' => ['name' => 'test'],
         'createdAt' => new \DateTime('yesterday')

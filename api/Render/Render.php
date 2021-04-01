@@ -10,7 +10,7 @@ use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Repository\DocDataRepository;
 use HomeCEU\DTS\Repository\RecordNotFoundException;
 use HomeCEU\DTS\Repository\TemplateRepository;
-use HomeCEU\DTS\UseCase\Render\InvalidRenderRequestException;
+use HomeCEU\DTS\UseCase\Exception\InvalidRenderRequestException;
 use HomeCEU\DTS\UseCase\Render\Render as RenderUseCase;
 use HomeCEU\DTS\UseCase\Render\RenderRequest;
 use Negotiation\Accept;
@@ -21,18 +21,9 @@ use Slim\Exception\NotFoundException;
 use Slim\Http\Stream;
 
 class Render {
-  /**
-   * @var DocDataRepository
-   */
-  private $dataRepo;
-  /**
-   * @var RenderUseCase
-   */
-  private $useCase;
-  /**
-   * @var TemplateRepository
-   */
-  private $templateRepo;
+  private DocDataRepository $dataRepo;
+  private RenderUseCase $useCase;
+  private TemplateRepository $templateRepo;
 
   public function __construct(DiContainer $di) {
     $db = $di->dbConnection;

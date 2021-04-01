@@ -8,24 +8,17 @@ use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Persistence\DocDataPersistence;
 use HomeCEU\DTS\Repository\DocDataRepository;
 use HomeCEU\DTS\UseCase\AddDocData;
-use HomeCEU\DTS\UseCase\InvalidDocDataAddRequestException;
+use HomeCEU\DTS\UseCase\Exception\InvalidDocDataAddRequestException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response;
 
 
 class DocDataAdd {
-  /** @var  Persistence */
-  private $persistence;
-
-  /** @var  DocDataRepository */
-  private $repository;
-
-  /** @var AddDocData */
-  private $useCase;
-
-  /** @var ContainerInterface */
-  private $di;
+  private Persistence $persistence;
+  private DocDataRepository $repository;
+  private AddDocData $useCase;
+  private ContainerInterface $di;
 
   public function __construct(ContainerInterface $diContainer) {
     $this->di = $diContainer;

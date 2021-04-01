@@ -6,7 +6,7 @@ use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Persistence\InMemory\DocDataPersistence;
 use HomeCEU\DTS\Repository\DocDataRepository;
 use HomeCEU\DTS\UseCase\AddDocData;
-use HomeCEU\DTS\UseCase\InvalidDocDataAddRequestException;
+use HomeCEU\DTS\UseCase\Exception\InvalidDocDataAddRequestException;
 use HomeCEU\Tests\Faker;
 use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;

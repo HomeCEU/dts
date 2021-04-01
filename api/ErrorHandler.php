@@ -3,22 +3,13 @@
 
 namespace HomeCEU\DTS\Api;
 
+
 use Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-/**
- * Class ErrorHandler
- * @package HomeCEU\DTS\Api
- * https://www.slimframework.com/docs/v3/handlers/error.html
- *
- * This is triggered whenever an exception is thrown past the route handlers
- */
 class ErrorHandler {
-  /**
-   * @var DiContainer
-   */
-  private $di;
+  private DiContainer $di;
 
   public function __construct(DiContainer $di) {
     $this->di = $di;

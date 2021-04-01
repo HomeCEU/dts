@@ -8,6 +8,7 @@ use HomeCEU\DTS\Render\TemplateCompiler;
 use HomeCEU\DTS\Render\TemplateHelpers;
 use HomeCEU\DTS\Repository\HotRenderRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
+use HomeCEU\DTS\UseCase\Exception\InvalidHotRenderRequestException;
 
 class AddHotRender {
   private $repository;

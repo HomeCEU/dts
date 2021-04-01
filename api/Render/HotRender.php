@@ -16,7 +16,7 @@ use Slim\Exception\NotFoundException;
 use Slim\Http\Stream;
 
 class HotRender {
-  private $useCase;
+  private HotRenderUseCase $useCase;
 
   public function __construct(ContainerInterface $container) {
     $conn = $container->dbConnection;

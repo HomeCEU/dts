@@ -10,27 +10,23 @@ use HomeCEU\DTS\Repository\RecordNotFoundException;
 use Ramsey\Uuid\Uuid;
 
 abstract class AbstractPersistence implements Persistence {
-  /** @var array */
-  private $hydratedToDbMap;
-  /** @var array */
-  private $dbToHydratedMap;
-
-  /** @var Connection */
-  protected $db;
+  private array $hydratedToDbMap;
+  private array $dbToHydratedMap;
+  protected Connection $db;
 
   public function __construct(Connection $db) {
     $this->db = $db;
   }
 
-  public function generateId() {
-    return Uuid::uuid1();
+  public function generateId(): string {
+    return Uuid::uuid1()->toString();
   }
 
-  public function persist($entity) {
-    $this->db->insert(static::TABLE, $this->flatten($entity));
+  public function persist($entity): string {
+    return $this->db->insert(static::TABLE, $this->flatten($entity));
   }
 
-  public function retrieve($id, array $cols=['*']) {
+  public function retrieve($id, array $cols=['*']): array {
     $row = $this->db->selectWhere(
         static::TABLE,
         $this->selectColumns(...$cols),
@@ -41,7 +37,7 @@ abstract class AbstractPersistence implements Persistence {
     return $this->hydrate($row);
   }
 
-  public function find(array $filter, $cols=['*']) {
+  public function find(array $filter, $cols=['*']): array {
     $where = $this->flatten($filter); // changes keys to snake_case
     $rows = $this->db->selectWhere(
         static::TABLE,
@@ -123,5 +119,8 @@ abstract class AbstractPersistence implements Persistence {
       array_push($selectedCols, $this->dbKey($alias));
     }
     return implode(', ', $selectedCols);
+  }
+
+  public function delete($id) {
   }
 }
