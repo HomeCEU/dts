@@ -22,7 +22,7 @@ class AddPartialTest extends ApiTestCase {
         'body' => '{{ user.first_name }} {{ user.last_name }}',
         'name' => 'user_full_name',
         'author' => 'Test Author',
-        'meta' => ['type' => 'standard']
+        'metadata' => ['type' => 'standard']
     ];
     $response = $this->post('/api/v1/partial', $request);
     $this->assertPartialWasCreated($response);
@@ -44,6 +44,6 @@ class AddPartialTest extends ApiTestCase {
 
     $content = $this->getResponseJsonAsArray($response);
     $partialArray = $this->persistence->retrieve($content['id']);
-    $this->assertNotEmpty($partialArray['meta']);
+    $this->assertNotEmpty($partialArray['metadata']);
   }
 }

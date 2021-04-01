@@ -38,7 +38,7 @@ class ListPartialsTest extends ApiTestCase {
         'name' => 'a_partial',
         'createdAt' => new \DateTime(),
         'author' => 'Test Author',
-        'meta' => []
+        'metadata' => []
     ]);
     $response = $this->get('/api/v1/partial?docType=DT');
     $this->assertStatus(200, $response);

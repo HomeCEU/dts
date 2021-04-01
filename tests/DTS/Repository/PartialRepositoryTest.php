@@ -48,7 +48,7 @@ class PartialRepositoryTest extends TestCase {
 
   protected function createSamplePartial(string $docType = 'doc_type'): Partial {
     return PartialBuilder::create()
-        ->withMeta(['type' => 'standard'])
+        ->withMetadata(['type' => 'standard'])
         ->withName('user_full_name')
         ->withDocType($docType)
         ->withAuthor('Test Author')

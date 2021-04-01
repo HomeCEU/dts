@@ -26,7 +26,7 @@ class AddPartialTest extends TestCase {
         'name' => 'a_name',
         'body' => 'Here is a {{ body }}',
         'author' => 'an_author',
-        'meta' => [
+        'metadata' => [
           'type' => 'generic'
         ]
     ];

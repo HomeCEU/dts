@@ -21,7 +21,7 @@ class AddPartial {
         ->withBody($request->body)
         ->withDocType($request->docType)
         ->withAuthor($request->author)
-        ->withMeta($request->meta)
+        ->withMetadata($request->metadata)
         ->build();
     $this->repository->save($partial);
     return $partial;

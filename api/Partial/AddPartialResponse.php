@@ -11,7 +11,7 @@ class AddPartialResponse extends AbstractEntity {
   public string $name;
   public string $docType;
   public string $author;
-  public array $meta;
+  public array $metadata;
   public \DateTime $createdAt;
   public string $bodyUri;
 }

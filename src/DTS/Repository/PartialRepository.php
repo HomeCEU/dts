@@ -14,14 +14,14 @@ class PartialRepository {
     $this->persistence = $persistence;
   }
 
-  public function create(string $docType, string $key, string $author, string $body, array $meta = []): Partial {
+  public function create(string $docType, string $key, string $author, string $body, array $metadata = []): Partial {
     return Partial::fromState([
         'id' => $this->persistence->generateId(),
         'docType' => $docType,
         'name' => $key,
         'author' => $author,
         'body' => $body,
-        'meta' => $meta,
+        'metadata' => $metadata,
         'createdAt' => new \DateTime()
     ]);
   }

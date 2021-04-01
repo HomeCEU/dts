@@ -15,7 +15,7 @@ class PartialPersistence extends AbstractPersistence {
       'docType' => 'doc_type',
       'name' => 'name',
       'createdAt' => 'created_at',
-      'meta' => 'meta',
+      'metadata' => 'metadata',
       'body' => 'body'
   ];
 

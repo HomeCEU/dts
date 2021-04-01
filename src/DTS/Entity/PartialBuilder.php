@@ -8,7 +8,7 @@ class PartialBuilder {
   private string $docType;
   private string $body;
   private string $author = '';
-  private array $meta = [];
+  private array $metadata = [];
   private \DateTime $createdAt;
 
   public function withName(string $name): self {
@@ -31,8 +31,8 @@ class PartialBuilder {
     return $this;
   }
 
-  public function withMeta(array $meta): self {
-    $this->meta = $meta;
+  public function withMetadata(array $metadata): self {
+    $this->metadata = $metadata;
     return $this;
   }
 
@@ -50,7 +50,7 @@ class PartialBuilder {
         'name' => $this->name,
         'author' => $this->author,
         'body' => $this->body,
-        'meta' => $this->meta,
+        'metadata' => $this->metadata,
         'createdAt' => $this->createdAt
     ]);
   }
