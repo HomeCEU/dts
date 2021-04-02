@@ -38,7 +38,7 @@ class PartialBuilder {
 
   public static function create(): self {
     $p = new self();
-    $p->id = Id::create();
+    $p->id = IdGenerator::create();
     $p->createdAt = new \DateTime();
     return $p;
   }
