@@ -6,7 +6,7 @@ namespace HomeCEU\DTS\Entity;
 
 use Ramsey\Uuid\Uuid;
 
-class Id {
+class IdGenerator {
   public static function create(): string {
     return Uuid::uuid1()->toString();
   }
