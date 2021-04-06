@@ -11,6 +11,15 @@ class PartialBuilder {
   private array $metadata = [];
   private \DateTime $createdAt;
 
+  private function __construct(string $id, \DateTime $createdAt) {
+    $this->id = $id;
+    $this->createdAt = $createdAt;
+  }
+
+  public static function create(): self {
+    return new self(IdGenerator::create(), new \DateTime());
+  }
+
   public function withName(string $name): self {
     $this->name = $name;
     return $this;
@@ -34,13 +43,6 @@ class PartialBuilder {
   public function withMetadata(array $metadata): self {
     $this->metadata = $metadata;
     return $this;
-  }
-
-  public static function create(): self {
-    $p = new self();
-    $p->id = IdGenerator::create();
-    $p->createdAt = new \DateTime();
-    return $p;
   }
 
   public function build(): Partial {
