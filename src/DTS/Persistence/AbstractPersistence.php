@@ -22,8 +22,8 @@ abstract class AbstractPersistence implements Persistence {
     return Uuid::uuid1()->toString();
   }
 
-  public function persist($entity): string {
-    return $this->db->insert(static::TABLE, $this->flatten($entity));
+  public function persist($data): string {
+    return $this->db->insert(static::TABLE, $this->flatten($data));
   }
 
   public function retrieve($id, array $cols=['*']): array {
