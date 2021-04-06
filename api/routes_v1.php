@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use HomeCEU\DTS\Api;
 
@@ -14,6 +14,7 @@ return [
   # Partial
     new Api\Route(['post'], '/partial', Api\Partial\AddPartial::class),
     new Api\Route(['get'], '/partial', Api\Partial\ListPartials::class),
+    new Api\Route(['get'], '/partial/{partialId}', Api\Partial\GetPartial::class),
   # DocData
     new Api\Route(['post'], '/docdata', Api\DocData\DocDataAdd::class),
     new Api\Route(['get'], '/docdata/{docType}/{dataKey}/history', Api\DocData\ListVersions::class),
