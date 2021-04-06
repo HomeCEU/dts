@@ -40,10 +40,8 @@ class PartialRepositoryTest extends TestCase {
     $this->persist($p1, $p2);
 
     $partials = $this->repo->findByDocType('DT');
-    $this->assertCount(2, $partials);
-    foreach ($partials as $partial) {
-      $this->assertInstanceOf(Partial::class, $partial);
-    }
+    $this->assertCount(1, $partials);
+    $this->assertEquals($p2->id, $partials[0]->id);
   }
 
   protected function createSamplePartial(string $docType = 'doc_type'): Partial {
