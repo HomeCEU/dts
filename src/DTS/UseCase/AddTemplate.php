@@ -9,8 +9,8 @@ use HomeCEU\DTS\Render\TemplateCompiler;
 use HomeCEU\DTS\Repository\TemplateRepository;
 
 class AddTemplate {
-  private $repository;
-  private $compiler;
+  private TemplateRepository $repository;
+  private TemplateCompiler $compiler;
 
   public function __construct(TemplateRepository $repository) {
     $this->repository = $repository;
@@ -30,6 +30,6 @@ class AddTemplate {
     $images = $this->repository->findImagesByDocType($template->docType);
 
     $this->compiler->setPartials(array_merge($partials, $images));
-    $this->repository->addCompiled($template, $this->compiler->compile($template->body));
+    $this->repository->saveCompiled($template, $this->compiler->compile($template->body));
   }
 }

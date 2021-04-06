@@ -55,7 +55,7 @@ class TemplateRepository {
     return Template::fromState($array);
   }
 
-  public function addCompiled(Template $template, string $compiled): void {
+  public function saveCompiled(Template $template, string $compiled): void {
     try {
       $this->compiledTemplatePersistence->persist(CompiledTemplate::fromState([
           'templateId' => $template->templateId,

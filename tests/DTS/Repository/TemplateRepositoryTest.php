@@ -86,14 +86,14 @@ class TemplateRepositoryTest extends TestCase {
     $template = $this->repo->createNewTemplate('T', 'K', 'A', 'B');
     $this->repo->save($template);
 
-    $this->repo->addCompiled($template, "<?php /* compiled template */ ?>");
+    $this->repo->saveCompiled($template, "<?php /* compiled template */ ?>");
     Assert::assertEquals("<?php /* compiled template */ ?>", $this->ctp->retrieve($template->templateId)['body']);
   }
 
   public function testAddCompiledTemplateForNonExistingTemplate(): void {
     $this->expectException(RecordNotFoundException::class);
     $template = $this->repo->createNewTemplate('T', 'K', 'A', 'B');
-    $this->repo->addCompiled($template, 'body');
+    $this->repo->saveCompiled($template, 'body');
   }
 
   public function testGetNewestTemplateByKey() {
