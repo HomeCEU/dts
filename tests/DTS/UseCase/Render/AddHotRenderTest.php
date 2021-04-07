@@ -4,8 +4,6 @@
 namespace HomeCEU\Tests\DTS\UseCase\Render;
 
 
-use HomeCEU\DTS\Entity\Partial;
-use HomeCEU\DTS\Entity\PartialBuilder;
 use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Render\RenderFactory;
@@ -14,12 +12,12 @@ use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\Render\AddHotRender;
 use HomeCEU\DTS\UseCase\Render\AddHotRenderRequest;
-use HomeCEU\Tests\DTS\PartialTrait;
 use HomeCEU\Tests\DTS\TestCase;
+use HomeCEU\Tests\DTS\PartialTestTrait;
 use PHPUnit\Framework\Assert;
 
 class AddHotRenderTest extends TestCase {
-  use PartialTrait;
+  use PartialTestTrait;
 
   const EXAMPLE_DOCTYPE = 'example_doctype';
 
