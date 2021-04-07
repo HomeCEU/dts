@@ -4,7 +4,7 @@
 namespace HomeCEU\DTS\Render;
 
 
-interface PartialInterface {
-  public function get(string $parameter);
-  public function toArray(): array;
+use HomeCEU\DTS\Entity;
+
+interface PartialInterface extends Entity {
 }

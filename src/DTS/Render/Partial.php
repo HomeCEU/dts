@@ -4,11 +4,9 @@
 namespace HomeCEU\DTS\Render;
 
 
-use HomeCEU\DTS\Entity\GetPropertyTrait;
+use HomeCEU\DTS\AbstractEntity;
 
-class Partial implements PartialInterface {
-  use GetPropertyTrait;
-
+class Partial extends AbstractEntity implements PartialInterface {
   public string $name;
   public string $body;
 

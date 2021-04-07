@@ -4,10 +4,10 @@
 namespace HomeCEU\DTS;
 
 
-use HomeCEU\DTS\Entity\GetPropertyTrait;
-
 abstract class AbstractEntity implements Entity {
-  use GetPropertyTrait;
+  public function get(string $property) {
+    return $this->{$property} ?? null;
+  }
 
   public function toArray(): array {
     $result = [];
