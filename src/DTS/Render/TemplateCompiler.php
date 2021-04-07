@@ -62,7 +62,7 @@ class TemplateCompiler {
     }
   }
 
-  public function checkIsPartial($partial): void {
+  protected function checkIsPartial($partial): void {
     if (!($partial instanceof PartialInterface)) {
       throw new \TypeError('$partials must be an array of PartialInterface objects');
     }
