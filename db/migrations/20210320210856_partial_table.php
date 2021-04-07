@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use HomeCEU\DTS\Db;
 use HomeCEU\DTS\Db\Connection;
