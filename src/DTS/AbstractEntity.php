@@ -4,10 +4,10 @@
 namespace HomeCEU\DTS;
 
 
+use HomeCEU\DTS\Entity\GetPropertyTrait;
+
 abstract class AbstractEntity implements Entity {
-  public function get(string $property) {
-    return $this->{$property} ?? null;
-  }
+  use GetPropertyTrait;
 
   public function toArray(): array {
     $result = [];
@@ -35,7 +35,7 @@ abstract class AbstractEntity implements Entity {
     return array_keys(get_class_vars(static::class));
   }
 
-  protected static function valueFromState(array $state, string $key) {
+  protected static function valueFromState(array $state, string $key): \DateTime {
     if ($key == 'createdAt' && is_string($state[$key]))
       return new \DateTime($state[$key]);
     return $state[$key];
