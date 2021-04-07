@@ -16,8 +16,9 @@ use HomeCEU\DTS\UseCase\Exception\InvalidRequestException;
 use HomeCEU\DTS\UseCase\Render\AddHotRender as AddHotRenderUseCase;
 use HomeCEU\DTS\UseCase\Render\AddHotRenderRequest;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\RequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class AddHotRender {
   private AddHotRenderUseCase $useCase;
@@ -36,14 +37,14 @@ class AddHotRender {
     $this->useCase = new AddHotRenderUseCase($hotRenderRepo, $templateRepo, $partialRepo);
   }
 
-  public function __invoke(Request $request, Response $response): Response {
+  public function __invoke(Request $request, Response $response): ResponseInterface {
     try {
       $reqData = $request->getParsedBody();
       $renderRequest = $this->useCase->add(
           AddHotRenderRequest::fromState([
               'template' => !empty($reqData['template']) ? $reqData['template'] : '',
               'data' => !empty($reqData['data']) ? $reqData['data'] : [],
-              'docType' => !empty($reqData['docType']) ? $reqData['docType'] : null,
+              'docType' => !empty($reqData['docType']) ? $reqData['docType'] : '',
           ])
       );
       $route = "/api/v1/hotrender/{$renderRequest['requestId']}";
