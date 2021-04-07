@@ -19,7 +19,7 @@ class HotRender {
   private HotRenderUseCase $useCase;
 
   public function __construct(ContainerInterface $container) {
-    $conn = $container->dbConnection;
+    $conn = $container->get('dbConnection');
     $repo = new HotRenderRepository(new HotRenderPersistence($conn));
     $this->useCase = new HotRenderUseCase($repo);
   }

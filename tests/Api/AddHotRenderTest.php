@@ -37,7 +37,7 @@ class AddHotRenderTest extends ApiTestCase {
   }
 
   public function testAddHotRenderWithPartial(): void {
-    $this->addPartialFeature(__FUNCTION__, 'a_partial');
+    $this->addPartialFixture(__FUNCTION__, 'a_partial');
     $data = ['template' => '{{> a_partial }}', 'data' => [], 'docType' => __FUNCTION__];
     $response = $this->post(self::ROUTE, $data);
 

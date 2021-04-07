@@ -6,9 +6,11 @@ namespace HomeCEU\DTS\Api\Render;
 
 use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;
 use HomeCEU\DTS\Persistence\HotRenderPersistence;
+use HomeCEU\DTS\Persistence\PartialPersistence;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Repository\HotRenderRepository;
+use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\Exception\InvalidRequestException;
 use HomeCEU\DTS\UseCase\Render\AddHotRender as AddHotRenderUseCase;
@@ -23,14 +25,15 @@ class AddHotRender {
   public function __construct(ContainerInterface $container) {
     $conn = $container->get('dbConnection');
 
+    $hotRenderRepo = new HotRenderRepository(
+        new HotRenderPersistence($conn)
+    );
     $templateRepo = new TemplateRepository(
         new TemplatePersistence($conn),
         new CompiledTemplatePersistence($conn)
     );
-    $hotRenderRepo = new HotRenderRepository(
-        new HotRenderPersistence($conn)
-    );
-    $this->useCase = new AddHotRenderUseCase($hotRenderRepo, $templateRepo);
+    $partialRepo = new PartialRepository(new PartialPersistence($conn));
+    $this->useCase = new AddHotRenderUseCase($hotRenderRepo, $templateRepo, $partialRepo);
   }
 
   public function __invoke(Request $request, Response $response): Response {
