@@ -12,5 +12,6 @@ class Partial extends AbstractEntity {
   public string $docType;
   public string $body;
   public string $author;
+  public array $metadata = [];
   public \DateTime $createdAt;
 }

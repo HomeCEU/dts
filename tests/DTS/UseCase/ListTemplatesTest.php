@@ -12,14 +12,9 @@ use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
 
 class ListTemplatesTest extends TestCase {
-  /** @var Db\Connection */
-  private $db;
-
-  /** @var TemplatePersistence */
-  private $p;
-
-  /** @var ListTemplates */
-  private $useCase;
+  private Db\Connection $db;
+  private Persistence $p;
+  private ListTemplates $useCase;
 
   protected function setUp(): void {
     parent::setUp();

@@ -7,6 +7,8 @@ namespace HomeCEU\Tests\Api;
 use DateTime;
 use HomeCEU\DTS\Api\App;
 use HomeCEU\DTS\Api\DiContainer;
+use HomeCEU\DTS\Db\Connection;
+use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;
 use HomeCEU\DTS\Persistence\DocDataPersistence;
 use HomeCEU\DTS\Persistence\HotRenderPersistence;
@@ -15,76 +17,63 @@ use HomeCEU\DTS\Render\TemplateCompiler;
 use HomeCEU\Tests\TestCase as HomeCEUTestCase;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
-use ReflectionClass;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 
 class ApiTestCase extends HomeCEUTestCase {
-  /** @var DiContainer */
-  protected $di;
+  private Persistence $templatePersistence;
+  private Persistence $compiledTemplatePersistence;
 
-  /** @var App */
-  protected $app;
-
-  /** @var TemplatePersistence */
-  private $templatePersistence;
-
-  /** @var CompiledTemplatePersistence */
-  private $compiledTemplatePersistence;
-
-  /** @var DocDataPersistence */
-  protected $docDataPersistence;
-
-  /** @var string */
-  protected $docType;
-
-  /** @var HotRenderPersistence */
-  protected $hotRenderPersistence;
+  protected DiContainer $di;
+  protected Connection $db;
+  protected App $app;
+  protected DocDataPersistence $docDataPersistence;
+  protected Persistence $hotRenderPersistence;
+  protected string $docType;
 
   protected function setUp(): void {
     parent::setUp();
     $this->di = new DiContainer();
-    $this->di->dbConnection->beginTransaction();
+    $this->db = $this->di->get('dbConnection');
+    $this->db->beginTransaction();
     $this->app = new App($this->di);
-
-    $this->docType = (new ReflectionClass($this))->getShortName().'-'.time();
+    $this->docType = uniqid('type_');
   }
 
   protected function tearDown(): void {
-    $db = $this->di->dbConnection;
-    $db->rollBack();
+    $this->db->rollback();
     parent::tearDown();
   }
 
   protected function docDataPersistence(): DocDataPersistence {
     if (empty($this->docDataPersistence)) {
-      $this->docDataPersistence = new DocDataPersistence($this->di->dbConnection);
+      $this->docDataPersistence = new DocDataPersistence($this->db);
     }
     return $this->docDataPersistence;
   }
 
   protected function templatePersistence(): TemplatePersistence {
     if (empty($this->templatePersistence)) {
-      $this->templatePersistence = new TemplatePersistence($this->di->dbConnection);
+      $this->templatePersistence = new TemplatePersistence($this->db);
     }
     return $this->templatePersistence;
   }
 
   protected function compiledTemplatePersistence(): CompiledTemplatePersistence {
     if (empty($this->compiledTemplatePersistence)) {
-      $this->compiledTemplatePersistence = new CompiledTemplatePersistence($this->di->dbConnection);
+      $this->compiledTemplatePersistence = new CompiledTemplatePersistence($this->db);
     }
     return $this->compiledTemplatePersistence;
   }
 
   protected function hotRenderPersistence(): HotRenderPersistence {
     if (empty($this->hotRenderPersistence)) {
-      $this->hotRenderPersistence = new HotRenderPersistence($this->di->dbConnection);
+      $this->hotRenderPersistence = new HotRenderPersistence($this->db);
     }
     return $this->hotRenderPersistence;
   }
 
-  protected function addDocDataFixture($dataKey, $id = null) {
+  protected function addDocDataFixture($dataKey, $id = null): void {
     $this->docDataPersistence()->persist([
         'docType' => $this->docType,
         'dataKey' => $dataKey,
@@ -106,7 +95,7 @@ class ApiTestCase extends HomeCEUTestCase {
     ]);
   }
 
-  protected function addTemplateFixture($templateKey, $id = null, $body = null) {
+  protected function addTemplateFixture($templateKey, $id = null, $body = null): void {
     $id = $id ?? uniqid();
     $body = $body ?? 'Hi {{name}}';
     $this->templatePersistence()->persist([
@@ -124,7 +113,7 @@ class ApiTestCase extends HomeCEUTestCase {
     ]);
   }
 
-  protected function addHotRenderRequestFixture($requestId, $value) {
+  protected function addHotRenderRequestFixture($requestId, $value): void {
     $this->hotRenderPersistence()->persist([
         'requestId' => $requestId,
         'template' => TemplateCompiler::create()->compile('{{ value }}'),
@@ -163,7 +152,7 @@ class ApiTestCase extends HomeCEUTestCase {
     return $this->app->run(true);
   }
 
-  private function separateUriAndQuery($uri) {
+  private function separateUriAndQuery($uri): array {
     if (strstr($uri, '?')) {
       list($uri, $queryString) = explode('?', $uri);
       parse_str($queryString, $queryParams);
@@ -183,8 +172,9 @@ class ApiTestCase extends HomeCEUTestCase {
     return $this->app->run(true);
   }
 
-  protected function getResponseJsonAsObj(ResponseInterface $response): \stdClass {
-    return json_decode((string) $response->getBody());
+  protected function getResponseJsonAsObj(ResponseInterface $response): ?\stdClass {
+    $obj = json_decode((string) $response->getBody());
+    return is_array($obj) ? null : $obj;
   }
 
   protected function getResponseJsonAsArray(ResponseInterface $response): ?array {

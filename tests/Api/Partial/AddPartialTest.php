@@ -21,10 +21,10 @@ class AddPartialTest extends ApiTestCase {
         'docType' => 'DT',
         'body' => '{{ user.first_name }} {{ user.last_name }}',
         'name' => 'user_full_name',
-        'author' => 'Test Author'
+        'author' => 'Test Author',
+        'metadata' => ['type' => 'standard']
     ];
     $response = $this->post('/api/v1/partial', $request);
-    $this->assertResponseIsJson($response);
     $this->assertPartialWasCreated($response);
   }
 
@@ -40,8 +40,10 @@ class AddPartialTest extends ApiTestCase {
 
   private function assertPartialWasCreated(ResponseInterface $response): void {
     $this->assertStatus(201, $response);
+    $this->assertResponseIsJson($response);
 
     $content = $this->getResponseJsonAsArray($response);
-    $this->assertNotEmpty($this->persistence->retrieve($content['id']));
+    $partialArray = $this->persistence->retrieve($content['id']);
+    $this->assertNotEmpty($partialArray['metadata']);
   }
 }

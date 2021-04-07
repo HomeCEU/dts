@@ -9,18 +9,21 @@ use HomeCEU\DTS\Persistence;
 
 class PartialRepository {
   private Persistence $persistence;
+  private RepoHelper $repoHelper;
 
   public function __construct(Persistence $persistence) {
     $this->persistence = $persistence;
+    $this->repoHelper = new RepoHelper($persistence);
   }
 
-  public function create(string $docType, string $key, string $author, string $body): Partial {
+  public function create(string $docType, string $key, string $author, string $body, array $metadata = []): Partial {
     return Partial::fromState([
         'id' => $this->persistence->generateId(),
         'docType' => $docType,
         'name' => $key,
         'author' => $author,
         'body' => $body,
+        'metadata' => $metadata,
         'createdAt' => new \DateTime()
     ]);
   }
@@ -35,8 +38,18 @@ class PartialRepository {
   }
 
   public function findByDocType(string $docType): array {
-    return array_map(function (array $p) {
-      return Partial::fromState($p);
-    }, $this->persistence->find(['docType' => $docType]));
+    $partials = $this->persistence->find(['docType' => $docType]);
+
+    return array_map(function ($key) use ($docType) {
+      return $this->getPartialByKey($docType, $key);
+    }, $this->repoHelper->extractUniqueProperty($partials, 'name'));
+  }
+
+  protected function getPartialByKey(string $docType, string $key): Partial {
+    $row = $this->repoHelper->findNewest([
+        'docType' => $docType,
+        'name' => $key,
+    ]);
+    return Partial::fromState($row);
   }
 }

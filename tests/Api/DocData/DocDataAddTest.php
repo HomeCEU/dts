@@ -34,8 +34,8 @@ class DocDataAddTest extends ApiTestCase {
   }
 
   public function invalidDataProvider(): Generator {
-    yield [$this->docType, null];
-    yield [$this->docType, ''];
+    yield ['DT', null];
+    yield ['DT', ''];
     yield [null, uniqid()];
     yield ['', uniqid()];
   }

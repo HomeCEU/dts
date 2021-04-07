@@ -25,7 +25,10 @@ class AddPartialTest extends TestCase {
         'docType' => 'dt',
         'name' => 'a_name',
         'body' => 'Here is a {{ body }}',
-        'author' => 'an_author'
+        'author' => 'an_author',
+        'metadata' => [
+          'type' => 'generic'
+        ]
     ];
     $saved = $this->service->add(AddPartialRequest::fromState($state));
     $found = $this->persistence->retrieve($saved->id);

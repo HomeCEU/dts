@@ -5,6 +5,7 @@ namespace HomeCEU\DTS\Api;
 
 
 use HomeCEU\DTS\Entity\DocData;
+use HomeCEU\DTS\Entity\Partial;
 use HomeCEU\DTS\Entity\Template;
 
 class ResponseHelper {
@@ -17,7 +18,19 @@ class ResponseHelper {
         'templateKey' => $t->templateKey,
         'author' => $t->author,
         'createdAt' => $t->createdAt->format(\DateTime::W3C),
-        'bodyUri' => self::ROUTE."/template/{$t->templateId}"
+        'bodyUri' => self::ROUTE . "/template/{$t->templateId}"
+    ];
+  }
+
+  public static function partialDetailModel(Partial $partial): array {
+    return [
+        'id' => $partial->id,
+        'name' => $partial->name,
+        'docType' => $partial->docType,
+        'author' => $partial->author,
+        'metadata' => $partial->metadata,
+        'createdAt' => $partial->createdAt->format(\DateTime::W3C),
+        'bodyUri' => self::ROUTE . "/partial/{$partial->id}",
     ];
   }
 
@@ -27,7 +40,7 @@ class ResponseHelper {
         'docType' => $d->docType,
         'dataKey' => $d->dataKey,
         "createdAt" => $d->createdAt->format(\DateTime::W3C),
-        "link" => self::ROUTE."/docdata/{$d->dataId}"
+        "link" => self::ROUTE . "/docdata/{$d->dataId}"
     ];
   }
 
