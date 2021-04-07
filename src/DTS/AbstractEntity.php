@@ -35,7 +35,7 @@ abstract class AbstractEntity implements Entity {
     return array_keys(get_class_vars(static::class));
   }
 
-  protected static function valueFromState(array $state, string $key): \DateTime {
+  protected static function valueFromState(array $state, string $key) {
     if ($key == 'createdAt' && is_string($state[$key]))
       return new \DateTime($state[$key]);
     return $state[$key];
