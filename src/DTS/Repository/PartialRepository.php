@@ -6,6 +6,7 @@ namespace HomeCEU\DTS\Repository;
 
 use HomeCEU\DTS\Entity\Partial;
 use HomeCEU\DTS\Persistence;
+use HomeCEU\DTS\Render\PartialInterface;
 
 class PartialRepository {
   private Persistence $persistence;
@@ -16,19 +17,7 @@ class PartialRepository {
     $this->repoHelper = new RepoHelper($persistence);
   }
 
-  public function create(string $docType, string $key, string $author, string $body, array $metadata = []): Partial {
-    return Partial::fromState([
-        'id' => $this->persistence->generateId(),
-        'docType' => $docType,
-        'name' => $key,
-        'author' => $author,
-        'body' => $body,
-        'metadata' => $metadata,
-        'createdAt' => new \DateTime()
-    ]);
-  }
-
-  public function save(Partial $partial): string {
+  public function save(PartialInterface $partial): string {
     return $this->persistence->persist($partial->toArray());
   }
 
@@ -45,7 +34,7 @@ class PartialRepository {
     }, $this->repoHelper->extractUniqueProperty($partials, 'name'));
   }
 
-  protected function getPartialByKey(string $docType, string $key): Partial {
+  protected function getPartialByKey(string $docType, string $key): PartialInterface {
     $row = $this->repoHelper->findNewest([
         'docType' => $docType,
         'name' => $key,

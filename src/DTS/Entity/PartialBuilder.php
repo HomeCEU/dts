@@ -2,6 +2,9 @@
 
 namespace HomeCEU\DTS\Entity;
 
+
+use HomeCEU\DTS\Render\PartialInterface;
+
 class PartialBuilder {
   private string $id;
   private string $name;
@@ -45,7 +48,7 @@ class PartialBuilder {
     return $this;
   }
 
-  public function build(): Partial {
+  public function build(): PartialInterface {
     return Partial::fromState([
         'id' => $this->id,
         'docType' => $this->docType,

@@ -5,8 +5,9 @@ namespace HomeCEU\DTS\Entity;
 
 
 use HomeCEU\DTS\AbstractEntity;
+use HomeCEU\DTS\Render\PartialInterface;
 
-class Partial extends AbstractEntity {
+class Partial extends AbstractEntity implements PartialInterface {
   public string $id;
   public string $name;
   public string $docType;
