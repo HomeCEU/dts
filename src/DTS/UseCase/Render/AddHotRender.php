@@ -28,7 +28,7 @@ class AddHotRender {
   }
 
   public function add(AddHotRenderRequest $request): array {
-    $this->configureCompiler($request);
+    $this->loadPartials($request);
 
     $compiled = $this->compiler->compile($request->template);
     $request = $this->repository->newHotRenderRequest($compiled, $request->data);
@@ -37,11 +37,9 @@ class AddHotRender {
     return $request->toArray();
   }
 
-  private function configureCompiler(AddHotRenderRequest $request) {
-    $this->compiler->addHelper(TemplateHelpers::equal());
+  private function loadPartials(AddHotRenderRequest $request): void {
     if (empty($request->docType)) {
       $this->compiler->ignoreMissingPartials();
-      return;
     }
     $this->compiler->setPartials($this->partialRepository->findByDocType($request->docType));
   }
