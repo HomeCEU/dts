@@ -28,4 +28,3 @@ return [
   # API
     new Api\Route(['get'], '/status', Api\Status::class),
 ];
-
