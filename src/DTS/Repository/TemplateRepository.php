@@ -80,18 +80,6 @@ class TemplateRepository {
     }, $this->repoHelper->extractUniqueProperty($templates, 'templateKey'));
   }
 
-  public function findPartialsByDocType(string $docType): array {
-    return array_map(function ($partial) {
-      return new Partial($partial->templateKey, $partial->body);
-    }, $this->findByDocType($docType . '/partial'));
-  }
-
-  public function findImagesByDocType(string $docType): array {
-    return array_map(function ($partial) {
-      return new Image($partial->templateKey, $partial->body);
-    }, $this->findByDocType($docType . '/image'));
-  }
-
   public function getTemplateByKey(string $docType, string $key): Template {
     $filter = [
         'docType' => $docType,
