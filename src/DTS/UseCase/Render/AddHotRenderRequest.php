@@ -10,7 +10,7 @@ use HomeCEU\DTS\UseCase\Exception\InvalidRequestException;
 class AddHotRenderRequest extends AbstractEntity {
   public string $template;
   public array $data;
-  public ?string $docType;
+  public string $docType = '';
 
   public static function fromState(array $state): self {
     return parent::fromState($state)->validate();
