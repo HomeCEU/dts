@@ -4,6 +4,7 @@
 namespace HomeCEU\DTS\Render;
 
 
+use HomeCEU\DTS\Entity;
 use LightnCandy\Flags;
 use LightnCandy\LightnCandy;
 
@@ -34,13 +35,14 @@ class TemplateCompiler {
   public function setPartials(array $partials): self {
     $this->partials = [];
     foreach ($partials as $partial) {
+      $this->checkIsPartial($partial);
       $this->addPartial($partial);
     }
     return $this;
   }
 
-  public function addPartial(Partial $partial): void {
-    $this->partials[$partial->name] = $partial->template;
+  public function addPartial(PartialInterface $partial): void {
+    $this->partials[$partial->name] = $partial->body;
   }
 
   public function ignoreMissingPartials(): void {
@@ -57,6 +59,12 @@ class TemplateCompiler {
       return LightnCandy::compile($template, $options);
     } catch (\Exception $e) {
       throw new CompilationException("Cannot compile template: {$e->getMessage()}");
+    }
+  }
+
+  protected function checkIsPartial($partial): void {
+    if (!($partial instanceof PartialInterface)) {
+      throw new \TypeError('$partials must be an array of PartialInterface objects');
     }
   }
 }

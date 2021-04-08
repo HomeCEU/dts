@@ -12,6 +12,7 @@ use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;
 use HomeCEU\DTS\Persistence\DocDataPersistence;
 use HomeCEU\DTS\Persistence\HotRenderPersistence;
+use HomeCEU\DTS\Persistence\PartialPersistence;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Render\TemplateCompiler;
 use HomeCEU\Tests\TestCase as HomeCEUTestCase;
@@ -23,6 +24,7 @@ use Slim\Http\Request;
 class ApiTestCase extends HomeCEUTestCase {
   private Persistence $templatePersistence;
   private Persistence $compiledTemplatePersistence;
+  private Persistence $partialPersistence;
 
   protected DiContainer $di;
   protected Connection $db;
@@ -73,6 +75,13 @@ class ApiTestCase extends HomeCEUTestCase {
     return $this->hotRenderPersistence;
   }
 
+  protected function partialPersistence(): Persistence {
+    if (empty($this->partialPersistence)) {
+      $this->partialPersistence = new PartialPersistence($this->db);
+    }
+    return $this->partialPersistence;
+  }
+
   protected function addDocDataFixture($dataKey, $id = null): void {
     $this->docDataPersistence()->persist([
         'docType' => $this->docType,
@@ -83,15 +92,15 @@ class ApiTestCase extends HomeCEUTestCase {
     ]);
   }
 
-  protected function addPartialFeature(string $docType, string $templateKey): void {
-    $this->templatePersistence()->persist([
-        'docType' => $docType . '/partial',
-        'templateKey' => $templateKey,
-        'createdAt' => $this->createdAtDateTime(),
-        'templateId' => uniqid(),
-        'body'=> 'this is a partial',
+  protected function addPartialFixture(string $docType, string $key): void {
+    $this->partialPersistence()->persist([
+        'id' => uniqid(),
+        'docType' => $docType,
+        'name' => $key,
         'author'=>'author',
-        'name'=> 'A partial'
+        'body'=> 'this is a partial',
+        'metadata' => [],
+        'createdAt' => $this->createdAtDateTime(),
     ]);
   }
 

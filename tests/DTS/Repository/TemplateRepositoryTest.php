@@ -86,17 +86,17 @@ class TemplateRepositoryTest extends TestCase {
     $template = $this->repo->createNewTemplate('T', 'K', 'A', 'B');
     $this->repo->save($template);
 
-    $this->repo->addCompiled($template, "<?php /* compiled template */ ?>");
+    $this->repo->saveCompiled($template, "<?php /* compiled template */ ?>");
     Assert::assertEquals("<?php /* compiled template */ ?>", $this->ctp->retrieve($template->templateId)['body']);
   }
 
   public function testAddCompiledTemplateForNonExistingTemplate(): void {
     $this->expectException(RecordNotFoundException::class);
     $template = $this->repo->createNewTemplate('T', 'K', 'A', 'B');
-    $this->repo->addCompiled($template, 'body');
+    $this->repo->saveCompiled($template, 'body');
   }
 
-  public function testGetNewestTemplateByKey() {
+  public function testGetNewestTemplateByKey(): void {
     $key = __FUNCTION__;
     $this->p->persist($this->buildTemplate($key,'B','2000-01-02'));
     $this->p->persist($this->buildTemplate($key,'A','2000-01-01'));
@@ -106,7 +106,7 @@ class TemplateRepositoryTest extends TestCase {
     Assert::assertEquals('C', $template->name);
   }
 
-  public function testGetTemplateById() {
+  public function testGetTemplateById(): void {
     $key = __FUNCTION__;
     $t = $this->fakeTemplateArray($this->docType, $key);
     $this->p->persist($this->fakeTemplateArray($this->docType));
@@ -117,7 +117,7 @@ class TemplateRepositoryTest extends TestCase {
     Assert::assertEquals($t['templateId'], $template->templateId);
   }
 
-  public function testGetCompiledTemplateById() {
+  public function testGetCompiledTemplateById(): void {
     $t = $this->fakeTemplateArray();
     $ct = $this->fakeCompiledTemplate($t);
     $this->p->persist($t);
@@ -127,7 +127,7 @@ class TemplateRepositoryTest extends TestCase {
     Assert::assertEquals($t['templateId'], $template->templateId);
   }
 
-  public function testSave() {
+  public function testSave(): void {
     $templateArray = $this->fakeTemplateArray($this->docType, __FUNCTION__);
     $template = Template::fromState($templateArray);
     $this->repo->save($template);
@@ -135,7 +135,7 @@ class TemplateRepositoryTest extends TestCase {
     Assert::assertEquals($templateArray, $fromDb->toArray());
   }
 
-  public function testFindByDocType() {
+  public function testFindByDocType(): void {
     $t = $this->buildTemplate(__FUNCTION__, 'A', '2000-01-01');
     $t2 = $this->buildTemplate(__FUNCTION__, 'A', '1999-01-01');
     $this->p->persist($t);
@@ -146,12 +146,12 @@ class TemplateRepositoryTest extends TestCase {
     Assert::assertNotContainsEquals(Template::fromState($t2), $fromDb);
   }
 
-  public function test_LookupId_shouldThrowExceptionIfNoneFound() {
+  public function test_LookupId_shouldThrowExceptionIfNoneFound(): void {
     $this->expectException(RecordNotFoundException::class);
     $this->repo->lookupId($this->docType, __FUNCTION__);
   }
 
-  public function testLookupIdFromKey() {
+  public function testLookupIdFromKey(): void {
     $p = $this->fakePersistence('template', 'templateId');
     $ctp = $this->fakePersistence('compiled_template', 'templateId');
     $p->persist([
@@ -164,7 +164,7 @@ class TemplateRepositoryTest extends TestCase {
     Assert::assertEquals('tid', $repo->lookupId('dt', 'tk'));
   }
 
-  public function testGetNewestTemplateIdWhenLookupByKey() {
+  public function testGetNewestTemplateIdWhenLookupByKey(): void {
     $key = __FUNCTION__;
     $a = $this->buildTemplate($key, 'A', '2000-01-01');
     $b = $this->buildTemplate($key, 'B', '2000-01-02');
@@ -176,31 +176,7 @@ class TemplateRepositoryTest extends TestCase {
     Assert::assertEquals($c['templateId'], $id);
   }
 
-  public function testFindPartialsByDocType(): void {
-    $partial = $this->buildTemplate('a_partial', 'a partial', 'today');
-    $partial['docType'] = $this->docType . '/partial';
-    $this->p->persist($partial);
-
-    $partials = $this->repo->findPartialsByDocType($this->docType);
-    Assert::assertCount(1, $partials);
-    Assert::assertInstanceOf(Partial::class, $partials[0]);
-    Assert::assertEquals($partial['templateKey'], $partials[0]->name);
-    Assert::assertEquals($partial['body'], $partials[0]->template);
-  }
-
-  public function testFindImagesByDocType(): void {
-    $image = $this->buildTemplate('an_image', 'an image', 'today');
-    $image['docType'] = $this->docType . '/image';
-    $this->p->persist($image);
-
-    $images = $this->repo->findImagesByDocType($this->docType);
-    Assert::assertCount(1, $images);
-    Assert::assertInstanceOf(Image::class, $images[0]);
-    Assert::assertEquals($image['templateKey'], $images[0]->name);
-    Assert::assertEquals($image['body'], $images[0]->template);
-  }
-
-  private function buildTemplate($key, $name, $createdAt) {
+  private function buildTemplate($key, $name, $createdAt): array {
     $t = $this->fakeTemplateArray($this->docType, $key);
     $t['createdAt'] = new DateTime($createdAt);
     $t['name'] = $name;

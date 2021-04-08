@@ -4,18 +4,24 @@
 namespace HomeCEU\Tests\DTS\UseCase;
 
 
-use HomeCEU\DTS\Persistence\InMemory;
+use HomeCEU\DTS\Persistence;
+use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\AddTemplate;
 use HomeCEU\DTS\UseCase\AddTemplateRequest;
 use HomeCEU\DTS\UseCase\Exception\InvalidAddTemplateRequestException;
+use HomeCEU\Tests\DTS\PartialTestTrait;
 use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
 
 class AddTemplateTest extends TestCase {
+  use PartialTestTrait;
+
   const TEST_DOCTYPE = 'test_doctype';
-  private InMemory $templatePersistence;
-  private InMemory $compiledTemplatePersistence;
+
+  private Persistence $templatePersistence;
+  private Persistence $compiledTemplatePersistence;
+  private Persistence $partialPersistence;
   private AddTemplate $useCase;
 
   protected function setUp(): void {
@@ -23,10 +29,14 @@ class AddTemplateTest extends TestCase {
 
     $this->templatePersistence = $this->fakePersistence('template', 'templateId');
     $this->compiledTemplatePersistence = $this->fakePersistence('compiled_template', 'templateId');
-    $this->useCase = new AddTemplate(new TemplateRepository(
+    $this->partialPersistence = $this->fakePersistence('partial', 'id');
+
+    $templateRepository = new TemplateRepository(
         $this->templatePersistence,
         $this->compiledTemplatePersistence
-    ));
+    );
+    $partialRepository = new PartialRepository($this->partialPersistence);
+    $this->useCase = new AddTemplate($templateRepository, $partialRepository);
   }
 
   public function testAddTemplateInvalidRequest(): void {
@@ -43,19 +53,10 @@ class AddTemplateTest extends TestCase {
   }
 
   public function testAddTemplateWithPartials(): void {
-    $this->templatePersistence->persist($this->fakeTemplate(self::TEST_DOCTYPE . '/partial', 'a_partial')->toArray());
+    $this->partialPersistence->persist($this->createSamplePartial(self::TEST_DOCTYPE, 'a_partial')->toArray());
+    $this->partialPersistence->persist($this->createSamplePartial(self::TEST_DOCTYPE, 'another_partial')->toArray());
 
-    $request = $this->createAddRequestWithBody('{{> a_partial }}');
-    $template = $this->useCase->addTemplate($request);
-
-    Assert::assertEquals($template->toArray(), $this->templatePersistence->retrieve($template->templateId));
-    Assert::assertNotEmpty($this->compiledTemplatePersistence->retrieve($template->templateId));
-  }
-
-  public function testAddTemplateWithImages(): void {
-    $this->templatePersistence->persist($this->fakeTemplate(self::TEST_DOCTYPE . '/image', 'image.png')->toArray());
-
-    $request = $this->createAddRequestWithBody('{{> image.png }}');
+    $request = $this->createAddRequestWithBody('{{> a_partial }} {{> another_partial }}');
     $template = $this->useCase->addTemplate($request);
 
     Assert::assertEquals($template->toArray(), $this->templatePersistence->retrieve($template->templateId));

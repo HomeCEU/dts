@@ -5,7 +5,9 @@ namespace HomeCEU\DTS\Api\Template;
 
 
 use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;
+use HomeCEU\DTS\Persistence\PartialPersistence;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
+use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\AddTemplate as AddTemplateUseCase;
 use HomeCEU\DTS\UseCase\AddTemplateRequest;
@@ -20,11 +22,12 @@ class AddTemplate {
   public function __construct(ContainerInterface $container) {
     $conn = $container->get('dbConnection');
 
-    $repo = new TemplateRepository(
+    $templateRepository = new TemplateRepository(
         new TemplatePersistence($conn),
         new CompiledTemplatePersistence($conn)
     );
-    $this->useCase = new AddTemplateUseCase($repo);
+    $partialRepository = new PartialRepository(new PartialPersistence($conn));
+    $this->useCase = new AddTemplateUseCase($templateRepository, $partialRepository);
   }
 
   public function __invoke(Request $request, Response $response) {

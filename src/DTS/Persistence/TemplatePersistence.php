@@ -37,11 +37,7 @@ class TemplatePersistence extends AbstractPersistence implements Persistence {
   }
 
   public function delete($id) {
-    $error = sprintf(
-        "%s not implemented",
-        __METHOD__
-    );
-    throw new Exception($error);
+    $this->db->deleteWhere(self::TABLE, ['template_id' => $id]);
   }
 
   public function filterByDoctype(string $type, $cols=self::HEAD_COLS) {

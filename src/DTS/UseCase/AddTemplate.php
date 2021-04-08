@@ -4,17 +4,22 @@
 namespace HomeCEU\DTS\UseCase;
 
 
+use HomeCEU\DTS\Entity\Partial;
 use HomeCEU\DTS\Entity\Template;
+use HomeCEU\DTS\Render\Partial as RenderPartial;
 use HomeCEU\DTS\Render\TemplateCompiler;
+use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
 
 class AddTemplate {
-  private $repository;
-  private $compiler;
+  private TemplateCompiler $compiler;
+  private TemplateRepository $repository;
+  private PartialRepository $partialRepository;
 
-  public function __construct(TemplateRepository $repository) {
-    $this->repository = $repository;
+  public function __construct(TemplateRepository $repository, PartialRepository $partialRepository) {
     $this->compiler = TemplateCompiler::create();
+    $this->repository = $repository;
+    $this->partialRepository = $partialRepository;
   }
 
   public function addTemplate(AddTemplateRequest $request): Template {
@@ -26,10 +31,11 @@ class AddTemplate {
   }
 
   private function addCompiled(Template $template): void {
-    $partials = $this->repository->findPartialsByDocType($template->docType);
-    $images = $this->repository->findImagesByDocType($template->docType);
+    $renderPartials = array_map(function (Partial $partial) {
+      return new RenderPartial($partial->name, $partial->body);
+    }, $this->partialRepository->findByDocType($template->docType));
 
-    $this->compiler->setPartials(array_merge($partials, $images));
-    $this->repository->addCompiled($template, $this->compiler->compile($template->body));
+    $this->compiler->setPartials($renderPartials);
+    $this->repository->saveCompiled($template, $this->compiler->compile($template->body));
   }
 }

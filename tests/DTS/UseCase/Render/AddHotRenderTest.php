@@ -8,27 +8,34 @@ use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Render\RenderFactory;
 use HomeCEU\DTS\Repository\HotRenderRepository;
+use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\Render\AddHotRender;
 use HomeCEU\DTS\UseCase\Render\AddHotRenderRequest;
 use HomeCEU\Tests\DTS\TestCase;
+use HomeCEU\Tests\DTS\PartialTestTrait;
 use PHPUnit\Framework\Assert;
 
 class AddHotRenderTest extends TestCase {
+  use PartialTestTrait;
+
   const EXAMPLE_DOCTYPE = 'example_doctype';
 
   private AddHotRender $useCase;
   private Persistence $hotRenderRequestPersistence;
   private Persistence $templatePersistence;
+  private Persistence $partialPersistence;
 
   protected function setUp(): void {
     parent::setUp();
     $this->hotRenderRequestPersistence = $this->fakePersistence('hotrender_request', 'requestId');
     $this->templatePersistence = $this->fakePersistence('template', 'templateId');
+    $this->partialPersistence = $this->fakePersistence('partial', 'id');
 
     $this->useCase = new AddHotRender(
         new HotRenderRepository($this->hotRenderRequestPersistence),
-        new TemplateRepository($this->templatePersistence, $this->fakePersistence('compiled_template', 'templateId'))
+        new TemplateRepository($this->templatePersistence, $this->fakePersistence('compiled_template', 'templateId')),
+        new PartialRepository($this->partialPersistence)
     );
   }
 
@@ -49,9 +56,9 @@ class AddHotRenderTest extends TestCase {
   }
 
   public function testAddTemplateWithPartials(): void {
-    $partial = $this->fakeTemplate(self::EXAMPLE_DOCTYPE . '/partial', 'a_partial');
+    $partial = $this->createSamplePartial(self::EXAMPLE_DOCTYPE, 'a_partial');
     $partial->body = 'world';
-    $this->templatePersistence->persist($partial->toArray());
+    $this->partialPersistence->persist($partial->toArray());
     $addRequest = $this->fakeAddRequest('Hello, {{> a_partial }}!', [], self::EXAMPLE_DOCTYPE);
     $renderRequest = $this->useCase->add($addRequest);
 

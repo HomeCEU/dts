@@ -7,7 +7,6 @@ namespace HomeCEU\Tests\DTS\Render;
 use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Render\Helper;
 use HomeCEU\DTS\Render\Partial;
-use HomeCEU\DTS\Render\TemplateCompiler;
 use PHPUnit\Framework\Assert;
 
 class TemplateCompilerTest extends TestCase {
@@ -19,12 +18,12 @@ class TemplateCompilerTest extends TestCase {
 
   public function testExpectedPartialNotProvided(): void {
     $this->expectException(CompilationException::class);
-    $this->compiler->compile('{{> expected_partial }}');
+    $this->compile('{{> expected_partial }}');
   }
 
   public function testDisablePartialNotProvidedException(): void {
     $this->compiler->ignoreMissingPartials();
-    $template = $this->compiler->compile('This, {{>expected_partial}}is a test');
+    $template = $this->compile('This, {{>expected_partial}}is a test');
     Assert::assertEquals('This, is a test', $this->renderHTML($template));
   }
 
@@ -36,6 +35,14 @@ class TemplateCompilerTest extends TestCase {
   public function testCompileWithPartial(): void {
     $this->compiler->setPartials([new Partial('expected_partial', 'text')]);
     $this->assertEquals('text', $this->renderHTML($this->compile('{{> expected_partial }}')));
+  }
+
+  public function testCompileWithMultiplePartials(): void {
+    $this->compiler->setPartials([
+        new Partial('p1', 'Hello'),
+        new Partial('p2', 'World')
+    ]);
+    $this->assertEquals('Hello, World!', $this->renderHTML($this->compile('{{> p1 }}, {{> p2 }}!')));
   }
 
   public function testCompileWithHelper(): void {

@@ -19,7 +19,7 @@ class TestCase extends \HomeCEU\Tests\TestCase {
     ];
   }
 
-  protected function fakePersistence($table, $idCol): Persistence\InMemory {
+  protected function fakePersistence($table, $idCol): Persistence {
     return new class($table, $idCol) extends Persistence\InMemory {
       private string $table;
       private string $idCol;

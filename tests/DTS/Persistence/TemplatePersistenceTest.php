@@ -8,6 +8,7 @@ use Exception;
 use HomeCEU\DTS\Db;
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
+use HomeCEU\DTS\Repository\RecordNotFoundException;
 use HomeCEU\Tests\DTS\TestCase;
 
 class TemplatePersistenceTest extends TestCase {
@@ -144,11 +145,12 @@ class TemplatePersistenceTest extends TestCase {
     $this->assertEquals($record, $retrieved);
   }
 
-  public function testNoDelete() {
+  public function testDelete() {
+    $this->expectException(RecordNotFoundException::class);
     $record = $this->fakeTemplateArray($this->docType);
     $this->p->persist($record);
-    $this->expectException(Exception::class);
     $this->p->delete($record['templateId']);
+    $this->p->retrieve($record['templateId']);
   }
 
   /**
