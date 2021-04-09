@@ -6,29 +6,19 @@ use DateTime;
 use HomeCEU\DTS\Db;
 use HomeCEU\DTS\Entity\CompiledTemplate;
 use HomeCEU\DTS\Entity\Template;
+use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
-use HomeCEU\DTS\Render\Image;
-use HomeCEU\DTS\Render\Partial;
 use HomeCEU\DTS\Repository\RecordNotFoundException;
 use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\Tests\DTS\TestCase;
-use PHPUnit\Framework\Assert;
 
 class TemplateRepositoryTest extends TestCase {
-  /** @var Db\Connection */
-  private $db;
-
-  /** @var TemplatePersistence */
-  private $p;
-
-  /** @var CompiledTemplatePersistence */
-  private $ctp;
-
-  /** @var TemplateRepository */
-  private $repo;
-
-  private $docType;
+  private Db\Connection $db;
+  private Persistence $p;
+  private Persistence $ctp;
+  private TemplateRepository $repo;
+  private string $docType;
 
   protected function setUp(): void {
     parent::setUp();
@@ -63,12 +53,8 @@ class TemplateRepositoryTest extends TestCase {
     $body = 'body';
 
     $template = $this->repo->createNewTemplate($type, $key, $author, $body);
-    Assert::assertSame($type, $template->docType);
-    Assert::assertSame($key, $template->templateKey);
-    Assert::assertSame($author, $template->author);
-    Assert::assertSame($body, $template->body);
-    Assert::assertNotEmpty($template->templateId);
-    Assert::assertNotEmpty($template->createdAt);
+    $this->assertNotEmpty($template->templateId);
+    $this->assertNotEmpty($template->createdAt);
   }
 
   public function testNewCompiledTemplate(): void {
@@ -77,20 +63,27 @@ class TemplateRepositoryTest extends TestCase {
 
     $compiled = $this->repo->createNewCompiledTemplate($template, $body);
 
-    Assert::assertSame($template->templateId, $compiled->templateId);
-    Assert::assertSame($body, $compiled->body);
-    Assert::assertNotEmpty($compiled->createdAt);
+    $this->assertSame($template->templateId, $compiled->templateId);
+    $this->assertNotEmpty($compiled->createdAt);
   }
 
-  public function testAddCompiledTemplate(): void {
+  public function testSaveCompiledTemplate(): void {
     $template = $this->repo->createNewTemplate('T', 'K', 'A', 'B');
     $this->repo->save($template);
 
     $this->repo->saveCompiled($template, "<?php /* compiled template */ ?>");
-    Assert::assertEquals("<?php /* compiled template */ ?>", $this->ctp->retrieve($template->templateId)['body']);
+    $this->assertEquals("<?php /* compiled template */ ?>", $this->ctp->retrieve($template->templateId)['body']);
   }
 
-  public function testAddCompiledTemplateForNonExistingTemplate(): void {
+  public function testUpdateCompiledTemplate(): void {
+    $template = $this->repo->createNewTemplate('T', 'K', 'A', 'B');
+    $this->repo->save($template);
+    $this->repo->saveCompiled($template, "<?php /* compiled template */ ?>");
+    $this->repo->saveCompiled($template, "<?php /* compiled template updated */ ?>");
+    $this->assertEquals("<?php /* compiled template updated */ ?>", $this->ctp->retrieve($template->templateId)['body']);
+  }
+
+  public function testSaveCompiledTemplateForNonExistingTemplate(): void {
     $this->expectException(RecordNotFoundException::class);
     $template = $this->repo->createNewTemplate('T', 'K', 'A', 'B');
     $this->repo->saveCompiled($template, 'body');
@@ -102,8 +95,8 @@ class TemplateRepositoryTest extends TestCase {
     $this->p->persist($this->buildTemplate($key,'A','2000-01-01'));
     $this->p->persist($this->buildTemplate($key,'C','2000-01-03'));
     $template = $this->repo->getTemplateByKey($this->docType, $key);
-    Assert::assertInstanceOf(Template::class, $template);
-    Assert::assertEquals('C', $template->name);
+    $this->assertInstanceOf(Template::class, $template);
+    $this->assertEquals('C', $template->name);
   }
 
   public function testGetTemplateById(): void {
@@ -113,8 +106,8 @@ class TemplateRepositoryTest extends TestCase {
     $this->p->persist($t);
     $this->p->persist($this->fakeTemplateArray($this->docType));
     $template = $this->repo->getTemplateById($t['templateId']);
-    Assert::assertInstanceOf(Template::class, $template);
-    Assert::assertEquals($t['templateId'], $template->templateId);
+    $this->assertInstanceOf(Template::class, $template);
+    $this->assertEquals($t['templateId'], $template->templateId);
   }
 
   public function testGetCompiledTemplateById(): void {
@@ -123,8 +116,8 @@ class TemplateRepositoryTest extends TestCase {
     $this->p->persist($t);
     $this->ctp->persist($ct);
     $template = $this->repo->getCompiledTemplateById($t['templateId']);
-    Assert::assertInstanceOf(CompiledTemplate::class, $template);
-    Assert::assertEquals($t['templateId'], $template->templateId);
+    $this->assertInstanceOf(CompiledTemplate::class, $template);
+    $this->assertEquals($t['templateId'], $template->templateId);
   }
 
   public function testSave(): void {
@@ -132,7 +125,7 @@ class TemplateRepositoryTest extends TestCase {
     $template = Template::fromState($templateArray);
     $this->repo->save($template);
     $fromDb = $this->repo->getTemplateById($template->templateId);
-    Assert::assertEquals($templateArray, $fromDb->toArray());
+    $this->assertEquals($templateArray, $fromDb->toArray());
   }
 
   public function testFindByDocType(): void {
@@ -141,9 +134,9 @@ class TemplateRepositoryTest extends TestCase {
     $this->p->persist($t);
     $this->p->persist($t2);
     $fromDb = $this->repo->findByDocType($this->docType);
-    Assert::assertCount(1, $fromDb);
-    Assert::assertContainsEquals(Template::fromState($t), $fromDb);
-    Assert::assertNotContainsEquals(Template::fromState($t2), $fromDb);
+    $this->assertCount(1, $fromDb);
+    $this->assertContainsEquals(Template::fromState($t), $fromDb);
+    $this->assertNotContainsEquals(Template::fromState($t2), $fromDb);
   }
 
   public function test_LookupId_shouldThrowExceptionIfNoneFound(): void {
@@ -161,7 +154,7 @@ class TemplateRepositoryTest extends TestCase {
         'body' => 'Hi {{name}}'
     ]);
     $repo = new TemplateRepository($p, $ctp);
-    Assert::assertEquals('tid', $repo->lookupId('dt', 'tk'));
+    $this->assertEquals('tid', $repo->lookupId('dt', 'tk'));
   }
 
   public function testGetNewestTemplateIdWhenLookupByKey(): void {
@@ -173,7 +166,7 @@ class TemplateRepositoryTest extends TestCase {
     $this->p->persist($a);
     $this->p->persist($c);
     $id = $this->repo->lookupId($this->docType, $key);
-    Assert::assertEquals($c['templateId'], $id);
+    $this->assertEquals($c['templateId'], $id);
   }
 
   private function buildTemplate($key, $name, $createdAt): array {

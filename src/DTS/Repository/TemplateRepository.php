@@ -8,8 +8,6 @@ use DateTime;
 use HomeCEU\DTS\Entity\CompiledTemplate;
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Persistence;
-use HomeCEU\DTS\Render\Image;
-use HomeCEU\DTS\Render\Partial;
 use Nette\Database\ForeignKeyConstraintViolationException;
 
 class TemplateRepository {
@@ -57,11 +55,12 @@ class TemplateRepository {
 
   public function saveCompiled(Template $template, string $compiled): void {
     try {
-      $this->compiledTemplatePersistence->persist(CompiledTemplate::fromState([
-          'templateId' => $template->templateId,
-          'body' => $compiled,
-          'createdAt' => (new DateTime())->format(DateTime::ISO8601),
-      ])->toArray());
+      $ct = $this->buildCompiledTemplate($template, $compiled);
+      if (!$this->hasCompiledTemplateForTemplate($template)) {
+        $this->compiledTemplatePersistence->persist($ct);
+        return;
+      }
+      $this->compiledTemplatePersistence->update($ct);
     } catch (ForeignKeyConstraintViolationException $e) {
       throw new RecordNotFoundException("Cannot add compiled template, template not found {$template->templateId}");
     }
@@ -72,6 +71,7 @@ class TemplateRepository {
     return CompiledTemplate::fromState($arr);
   }
 
+  /** @return Template[] */
   public function findByDocType(string $docType): array {
     $templates = $this->persistence->find(['docType' => $docType]);
 
@@ -156,5 +156,22 @@ class TemplateRepository {
     return array_map(function ($row) {
       return Template::fromState($row);
     }, $rows);
+  }
+
+  private function hasCompiledTemplateForTemplate(Template $template): bool {
+    return !empty($this->compiledTemplatePersistence->find(['templateId' => $template->templateId]));
+  }
+
+  /**
+   * @param Template $template
+   * @param string $compiled
+   * @return array
+   */
+  private function buildCompiledTemplate(Template $template, string $compiled): array {
+    return CompiledTemplate::fromState([
+        'templateId' => $template->templateId,
+        'body' => $compiled,
+        'createdAt' => (new DateTime())->format(DateTime::ISO8601),
+    ])->toArray();
   }
 }
