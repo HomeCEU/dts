@@ -4,13 +4,7 @@
 namespace HomeCEU\DTS\UseCase\Exception;
 
 
-class InvalidRequestException extends \Exception {
-  public function __construct($message = "", array $keys = [], $code = 0) {
-    parent::__construct($message, $code);
+use HomeCEU\DTS\Entity\IncompleteEntityException;
 
-    if (!empty($keys)) {
-      $keyStr = "Required Keys: " . implode(', ', $keys);
-      $this->message = empty($message) ? $keyStr : "{$message} | {$keyStr}";
-    }
-  }
+class InvalidRequestException extends IncompleteEntityException {
 }
