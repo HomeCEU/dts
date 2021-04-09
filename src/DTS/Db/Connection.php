@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace HomeCEU\DTS\Db;
@@ -87,6 +87,10 @@ class Connection  extends \Nette\Database\Connection {
   public function insert($table, array ...$rows): string {
     $this->query("INSERT INTO {$table}", $rows);
     return $this->getInsertId();
+  }
+
+  public function update($table, array $setValues, array $where): void {
+    $this->query("UPDATE {$table} SET", $setValues, " WHERE", $where);
   }
 
   public function deleteWhere($table, array $where): ResultSet {

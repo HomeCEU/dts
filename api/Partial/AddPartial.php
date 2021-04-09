@@ -4,8 +4,11 @@
 namespace HomeCEU\DTS\Api\Partial;
 
 
+use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;
 use HomeCEU\DTS\Persistence\PartialPersistence;
+use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Repository\PartialRepository;
+use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\AddPartial as AddPartialService;
 use HomeCEU\DTS\UseCase\AddPartialRequest;
 use HomeCEU\DTS\UseCase\Exception\InvalidRequestException;
@@ -18,10 +21,15 @@ class AddPartial {
   private AddPartialService $service;
 
   public function __construct(ContainerInterface $container) {
-    $db = $container->get('dbConnection');
+    $conn = $container->get('dbConnection');
 
-    $repo = new PartialRepository(new PartialPersistence($db));
-    $this->service = new AddPartialService($repo);
+    $this->service = new AddPartialService(
+        new PartialRepository(new PartialPersistence($conn)),
+        new TemplateRepository(
+            new TemplatePersistence($conn),
+            new CompiledTemplatePersistence($conn)
+        )
+    );
   }
 
   public function __invoke(Request $request, Response $response): ResponseInterface {

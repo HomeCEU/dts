@@ -5,7 +5,6 @@ namespace HomeCEU\DTS\UseCase\Render;
 
 
 use HomeCEU\DTS\Render\TemplateCompiler;
-use HomeCEU\DTS\Render\TemplateHelpers;
 use HomeCEU\DTS\Repository\HotRenderRepository;
 use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;

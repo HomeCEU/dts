@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace HomeCEU\DTS\Repository;
@@ -8,8 +8,6 @@ use DateTime;
 use HomeCEU\DTS\Entity\CompiledTemplate;
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Persistence;
-use HomeCEU\DTS\Render\Image;
-use HomeCEU\DTS\Render\Partial;
 use Nette\Database\ForeignKeyConstraintViolationException;
 
 class TemplateRepository {
@@ -57,11 +55,12 @@ class TemplateRepository {
 
   public function saveCompiled(Template $template, string $compiled): void {
     try {
-      $this->compiledTemplatePersistence->persist(CompiledTemplate::fromState([
-          'templateId' => $template->templateId,
-          'body' => $compiled,
-          'createdAt' => (new DateTime())->format(DateTime::ISO8601),
-      ])->toArray());
+      $ct = $this->buildCompiledTemplate($template, $compiled);
+      if (!$this->hasCompiledTemplateForTemplate($template)) {
+        $this->compiledTemplatePersistence->persist($ct);
+        return;
+      }
+      $this->compiledTemplatePersistence->update($ct);
     } catch (ForeignKeyConstraintViolationException $e) {
       throw new RecordNotFoundException("Cannot add compiled template, template not found {$template->templateId}");
     }
@@ -72,6 +71,7 @@ class TemplateRepository {
     return CompiledTemplate::fromState($arr);
   }
 
+  /** @return Template[] */
   public function findByDocType(string $docType): array {
     $templates = $this->persistence->find(['docType' => $docType]);
 
@@ -103,43 +103,33 @@ class TemplateRepository {
   }
 
   /** @return Template[] */
-  public function latestVersions() {
-    $cols = ['templateId','docType','templateKey','name','author','createdAt'];
+  public function latestVersions(): array {
+    $cols = ['templateId', 'docType', 'templateKey', 'name', 'author', 'createdAt'];
     $rows = $this->persistence->latestVersions($cols);
     return $this->toTemplateArray($rows);
   }
 
-  /**
-   * @param $type
-   * @return Template[]
-   */
-  public function filterByType($type) {
-    $cols = ['templateId','docType','templateKey','name','author','createdAt'];
+  /** @return Template[] */
+  public function filterByType($type): array {
+    $cols = ['templateId', 'docType', 'templateKey', 'name', 'author', 'createdAt'];
     $rows = $this->persistence->filterByDoctype($type, $cols);
     return $this->toTemplateArray($rows);
   }
 
-  /**
-   * @param $searchString
-   * @return Template[]
-   */
-  public function filterBySearchString($searchString) {
-    $cols = ['templateId','docType','templateKey','name','author','createdAt'];
+  /** @return Template[] */
+  public function filterBySearchString($searchString): array {
+    $cols = ['templateId', 'docType', 'templateKey', 'name', 'author', 'createdAt'];
     $rows = $this->persistence->filterBySearchString($searchString, $cols);
     return $this->toTemplateArray($rows);
   }
 
-  /**
-   * @param string $type
-   * @param string $key
-   * @return Template[]
-   */
-  public function getVersions(string $type, string $key) {
+  /** @return Template[] */
+  public function getVersions(string $type, string $key): array {
     $filter = [
         'docType' => $type,
         'templateKey' => $key
     ];
-    $cols = ['templateId','docType','templateKey','name','author','createdAt'];
+    $cols = ['templateId', 'docType', 'templateKey', 'name', 'author', 'createdAt'];
     $rows = $this->persistence->find($filter, $cols);
     return $this->toTemplateArray($rows);
   }
@@ -148,13 +138,22 @@ class TemplateRepository {
     return $this->persistence->listDocTypes();
   }
 
-  /**
-   * @param array $rows
-   * @return array|Template[]
-   */
-  private function toTemplateArray(array $rows) {
+  /** @return Template[] */
+  private function toTemplateArray(array $rows): array {
     return array_map(function ($row) {
       return Template::fromState($row);
     }, $rows);
+  }
+
+  private function hasCompiledTemplateForTemplate(Template $template): bool {
+    return !empty($this->compiledTemplatePersistence->find(['templateId' => $template->templateId]));
+  }
+
+  private function buildCompiledTemplate(Template $template, string $compiled): array {
+    return CompiledTemplate::fromState([
+        'templateId' => $template->templateId,
+        'body' => $compiled,
+        'createdAt' => (new DateTime())->format(DateTime::ISO8601),
+    ])->toArray();
   }
 }

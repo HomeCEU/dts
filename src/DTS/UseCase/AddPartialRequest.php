@@ -20,9 +20,9 @@ class AddPartialRequest extends AbstractEntity {
 
   protected function validate(): self {
     if (empty($this->docType)
-        || empty($this->body)
         || empty($this->name)
-        || empty($this->author)) {
+        || empty($this->author)
+        || !isset($this->body)) {
       throw new InvalidAddPartialRequestException('Cannot Create Partial', self::keys());
     }
     return $this;

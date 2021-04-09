@@ -4,7 +4,6 @@
 namespace HomeCEU\DTS\Render;
 
 
-use HomeCEU\DTS\Entity;
 use LightnCandy\Flags;
 use LightnCandy\LightnCandy;
 
