@@ -22,11 +22,19 @@ abstract class AbstractPersistence implements Persistence {
     return Uuid::uuid1()->toString();
   }
 
-  public function persist($data): string {
+  public function persist(array $data): string {
     return $this->db->insert(static::TABLE, $this->flatten($data));
   }
 
-  public function retrieve($id, array $cols=['*']): array {
+  public function update(array $data): void {
+    $data = $this->flatten($data);
+    $id = $data[static::ID_COL];
+    unset($data[static::ID_COL]);
+
+    $this->db->update(static::TABLE, $this->flatten($data), [static::ID_COL => $id]);
+  }
+
+  public function retrieve(string $id, array $cols=['*']): array {
     $row = $this->db->selectWhere(
         static::TABLE,
         $this->selectColumns(...$cols),

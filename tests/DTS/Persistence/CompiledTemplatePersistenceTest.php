@@ -54,7 +54,7 @@ class CompiledTemplatePersistenceTest extends TestCase {
   public function testRecordNotFound(): void {
     $this->expectException(RecordNotFoundException::class);
     $this->expectExceptionMessage('compiled template');
-    $this->persistence->retrieve(Uuid::uuid4());
+    $this->persistence->retrieve(Uuid::uuid4()->toString());
   }
 
   public function testFindByTemplateDocTypeAndKeyRecordNotFound(): void

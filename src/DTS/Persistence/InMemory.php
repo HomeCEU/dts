@@ -18,18 +18,22 @@ abstract class InMemory implements Persistence {
     return $this->uuid1()->toString();
   }
 
-  public function persist($data): string {
+  public function persist(array $data): string {
     $this->data[$this->getIdFromData($data)] = $data;
     return $this->getIdFromData($data);
   }
 
-  public function retrieve($id, array $cols=['*']): array {
+  public function update(array $data): void {
+    $this->data[$this->getIdFromData($data)] = $data;
+  }
+
+  public function retrieve(string $id, array $cols=['*']): array {
     if (!$this->has($id))
       throw new RecordNotFoundException("No record found {$id}");
     return $this->data[$id];
   }
 
-  public function delete($id) {
+  public function delete(string $id) {
     if (!$this->has($id))
       throw new RecordNotFoundException("No record found {$id}");
     unset($this->data[$id]);
@@ -39,7 +43,7 @@ abstract class InMemory implements Persistence {
     return Uuid::uuid1();
   }
 
-  private function getIdFromData($data): string {
+  private function getIdFromData(array $data): string {
     $id = [];
     foreach($this->idColumns() as $key) {
       array_push($id, $data[$key]);
@@ -51,7 +55,7 @@ abstract class InMemory implements Persistence {
    * @param $id
    * @return bool
    */
-  protected function has($id): bool {
+  protected function has(string $id): bool {
     return array_key_exists($id, $this->data);
   }
 

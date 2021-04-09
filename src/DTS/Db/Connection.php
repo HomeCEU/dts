@@ -89,6 +89,10 @@ class Connection  extends \Nette\Database\Connection {
     return $this->getInsertId();
   }
 
+  public function update($table, array $setValues, array $where): void {
+    $this->query("UPDATE {$table} SET", $setValues, " WHERE", $where);
+  }
+
   public function deleteWhere($table, array $where): ResultSet {
     return $this->query("DELETE FROM {$table} WHERE ?", $where);
   }
