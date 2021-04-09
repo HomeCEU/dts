@@ -87,7 +87,8 @@ class RenderTest extends TestCase {
   protected function persistCompiledTemplate(string $templateId, string $body): void {
     $this->compiledTemplatePersistence->persist([
         'templateId' => $templateId,
-        'body' => TemplateCompiler::create()->compile($body)
+        'body' => TemplateCompiler::create()->compile($body),
+        'createdAt' => new \DateTime(),
     ]);
   }
 
