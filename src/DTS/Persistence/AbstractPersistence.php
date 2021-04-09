@@ -28,10 +28,7 @@ abstract class AbstractPersistence implements Persistence {
 
   public function update(array $data): void {
     $data = $this->flatten($data);
-    $id = $data[static::ID_COL];
-    unset($data[static::ID_COL]);
-
-    $this->db->update(static::TABLE, $this->flatten($data), [static::ID_COL => $id]);
+    $this->db->update(static::TABLE, $data, [static::ID_COL => $data[static::ID_COL]]);
   }
 
   public function retrieve(string $id, array $cols=['*']): array {
