@@ -5,33 +5,65 @@ namespace HomeCEU\Tests\DTS\UseCase;
 
 
 use HomeCEU\DTS\Persistence;
+use HomeCEU\DTS\Render\RenderFactory;
 use HomeCEU\DTS\Repository\PartialRepository;
+use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\AddPartial;
 use HomeCEU\DTS\UseCase\AddPartialRequest;
+use HomeCEU\Tests\DTS\PartialTestTrait;
+use HomeCEU\Tests\DTS\TemplateTestTrait;
 use HomeCEU\Tests\DTS\TestCase;
 
 class AddPartialTest extends TestCase {
-  private Persistence $persistence;
+  use PartialTestTrait;
+  use TemplateTestTrait;
+
   private AddPartial $service;
+  private PartialRepository $partialRepository;
+  private TemplateRepository $templateRepository;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->persistence = $this->fakePersistence('partial', 'id');
-    $this->service = new AddPartial(new PartialRepository($this->persistence));
+    $this->partialRepository = new PartialRepository($this->fakePersistence('partial', 'id'));
+    $this->templateRepository = new TemplateRepository(
+        $this->fakePersistence('template', 'templateId'),
+        $this->fakePersistence('compiled_template', 'templateId')
+    );
+    $this->service = new AddPartial($this->partialRepository, $this->templateRepository);
   }
 
   public function testAddPartialFromRequest(): void {
+    $request = $this->createAddPartialRequest('DT', 'a_partial', 'body');
+    $saved = $this->service->add($request);
+    $found = $this->partialRepository->getById($saved->id);
+
+    $this->assertEquals($found, $saved);
+  }
+
+  public function testAddingPartialCompilesTemplatesWithSameDocType(): void {
+    $docType = 'DT';
+    $request = $this->createAddPartialRequest($docType, 'a_partial', 'partial body');
+    $template = $this->createSampleTemplate($docType, 'key', '{{> a_partial }}');
+    $this->templateRepository->save($template);
+    $this->templateRepository->saveCompiled($template, 'compiled_version');
+
+    $this->service->add($request);
+    $ct = $this->templateRepository->getCompiledTemplateById($template->templateId);
+
+    $r = RenderFactory::createHTML();
+    $this->assertEquals('partial body', file_get_contents($r->render($ct->body, [])));
+  }
+
+  protected function createAddPartialRequest(string $docType, string $key, string $body): AddPartialRequest {
     $state = [
-        'docType' => 'dt',
-        'name' => 'a_name',
-        'body' => 'Here is a {{ body }}',
+        'docType' => $docType,
+        'name' => $key,
+        'body' => $body,
         'author' => 'an_author',
         'metadata' => [
-          'type' => 'generic'
+            'type' => 'generic'
         ]
     ];
-    $saved = $this->service->add(AddPartialRequest::fromState($state));
-    $found = $this->persistence->retrieve($saved->id);
-    $this->assertEquals($found, $saved->toArray());
+    return AddPartialRequest::fromState($state);
   }
 }
