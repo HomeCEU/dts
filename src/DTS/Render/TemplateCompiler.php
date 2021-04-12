@@ -12,11 +12,12 @@ class TemplateCompiler {
   private array $helpers = [];
   private array $partials = [];
 
-  public static function create(): self {
-    $tc = new self();
-    $tc->addHelper(TemplateHelpers::equal());
+  private function __construct() {
+    $this->addHelper(TemplateHelpers::equal());
+  }
 
-    return $tc;
+  public static function create(): self {
+    return new self();
   }
 
   public function setHelpers(array $helpers): self {

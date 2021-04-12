@@ -16,7 +16,7 @@ class AddPartial {
   private TemplateRepository $templateRepository;
 
   public function __construct(PartialRepository $partialRepository, TemplateRepository $templateRepository) {
-    $this->compiler = new TemplateCompiler();
+    $this->compiler = TemplateCompiler::create();
     $this->partialRepository = $partialRepository;
     $this->templateRepository = $templateRepository;
   }

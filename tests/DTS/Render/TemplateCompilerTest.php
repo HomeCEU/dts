@@ -45,6 +45,16 @@ class TemplateCompilerTest extends TestCase {
     $this->assertEquals('Hello, World!', $this->renderHTML($this->compile('{{> p1 }}, {{> p2 }}!')));
   }
 
+  public function testHasDefaultEqHelper(): void {
+    $cTemplate = $this->compile("{{#if (eq value_1 value_2)}}matches{{else}}doesn't match{{/if}}");
+
+    $text = $this->renderHTML($cTemplate, ['value_1' => 'live', 'value_2' => 'text']);
+    $this->assertEquals("doesn't match", $text);
+
+    $text = $this->renderHTML($cTemplate, ['value_1' => 'live', 'value_2' => 'live']);
+    $this->assertEquals('matches', $text);
+  }
+
   public function testCompileWithHelper(): void {
     $this->compiler->setHelpers([
         new Helper('upper', function ($val) {
