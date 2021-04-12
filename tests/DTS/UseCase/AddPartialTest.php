@@ -4,7 +4,7 @@
 namespace HomeCEU\Tests\DTS\UseCase;
 
 
-use HomeCEU\DTS\Persistence;
+use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Render\RenderFactory;
 use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
@@ -52,6 +52,21 @@ class AddPartialTest extends TestCase {
 
     $r = RenderFactory::createHTML();
     $this->assertEquals('partial body', file_get_contents($r->render($ct->body, [])));
+  }
+
+  public function testCompilationErrorProvidesTemplateData(): void {
+    $request = $this->createAddPartialRequest('DT', 'a_partial', '{{#if name }}');
+    $template = $this->createSampleTemplate('DT', 'key', '{{> a_partial }}');
+    $this->templateRepository->save($template);
+    $this->templateRepository->saveCompiled($template, 'compiled_version');
+
+    try {
+      $this->service->add($request);
+    } catch (CompilationException $e) {
+      $meta = $e->templateMetadata;
+      $this->assertEquals($template->templateId, $meta[0]['template']['id']);
+      $this->assertEquals($template->templateKey, $meta[0]['template']['key']);
+    }
   }
 
   protected function createAddPartialRequest(string $docType, string $key, string $body): AddPartialRequest {

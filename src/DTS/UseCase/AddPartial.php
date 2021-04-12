@@ -5,10 +5,13 @@ namespace HomeCEU\DTS\UseCase;
 
 
 use HomeCEU\DTS\Entity\PartialBuilder;
+use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Render\PartialInterface;
 use HomeCEU\DTS\Render\TemplateCompiler;
 use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class AddPartial {
   private TemplateCompiler $compiler;
@@ -33,12 +36,31 @@ class AddPartial {
     $this->partialRepository->save($partial);
   }
 
-  private function compileTemplatesForDocType(string $docType) {
-    $this->compiler->setPartials($this->partialRepository->findByDocType($docType));
+  private function compileTemplatesForDocType(string $docType): void {
+    $partials = $this->partialRepository->findByDocType($docType);
+    $this->compiler->setPartials($partials);
 
+    $partials = array_map(function (PartialInterface $partial) {
+      return ['id' => $partial->get('id'), 'key' => $partial->get('name')];
+    }, $partials);
+
+    $errors = [];
     foreach ($this->templateRepository->findByDocType($docType) as $template) {
-      $ct = $this->compiler->compile($template->body);
-      $this->templateRepository->saveCompiled($template, $ct);
+      try {
+        $ct = $this->compiler->compile($template->body);
+        $this->templateRepository->saveCompiled($template, $ct);
+      } catch (CompilationException $e) {
+        $errors[] = [
+            'template' => [
+                'id' => $template->templateId,
+                'key' => $template->templateKey,
+            ],
+            'partials' => $partials
+        ];
+      }
+    }
+    if (!empty($errors)) {
+      throw new CompilationException($e->getMessage(), $errors);
     }
   }
 
