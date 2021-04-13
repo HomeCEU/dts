@@ -7,22 +7,15 @@ namespace HomeCEU\DTS\UseCase\Render;
 use HomeCEU\DTS\Render\TemplateCompiler;
 use HomeCEU\DTS\Repository\HotRenderRepository;
 use HomeCEU\DTS\Repository\PartialRepository;
-use HomeCEU\DTS\Repository\TemplateRepository;
 
 class AddHotRender {
   private TemplateCompiler $compiler;
   private HotRenderRepository $repository;
-  private TemplateRepository $templateRepository;
   private PartialRepository $partialRepository;
 
-  public function __construct(
-      HotRenderRepository $repository,
-      TemplateRepository $templateRepository,
-      PartialRepository $partialRepository
-  ) {
+  public function __construct(HotRenderRepository $repository, PartialRepository $partialRepository) {
     $this->compiler = TemplateCompiler::create();
     $this->repository = $repository;
-    $this->templateRepository = $templateRepository;
     $this->partialRepository = $partialRepository;
   }
 

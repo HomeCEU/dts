@@ -9,11 +9,10 @@ use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Render\RenderFactory;
 use HomeCEU\DTS\Repository\HotRenderRepository;
 use HomeCEU\DTS\Repository\PartialRepository;
-use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\Render\AddHotRender;
 use HomeCEU\DTS\UseCase\Render\AddHotRenderRequest;
-use HomeCEU\Tests\DTS\TestCase;
 use HomeCEU\Tests\DTS\PartialTestTrait;
+use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
 
 class AddHotRenderTest extends TestCase {
@@ -23,18 +22,15 @@ class AddHotRenderTest extends TestCase {
 
   private AddHotRender $useCase;
   private Persistence $hotRenderRequestPersistence;
-  private Persistence $templatePersistence;
   private Persistence $partialPersistence;
 
   protected function setUp(): void {
     parent::setUp();
     $this->hotRenderRequestPersistence = $this->fakePersistence('hotrender_request', 'requestId');
-    $this->templatePersistence = $this->fakePersistence('template', 'templateId');
     $this->partialPersistence = $this->fakePersistence('partial', 'id');
 
     $this->useCase = new AddHotRender(
         new HotRenderRepository($this->hotRenderRequestPersistence),
-        new TemplateRepository($this->templatePersistence, $this->fakePersistence('compiled_template', 'templateId')),
         new PartialRepository($this->partialPersistence)
     );
   }
