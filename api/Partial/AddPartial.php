@@ -7,6 +7,7 @@ namespace HomeCEU\DTS\Api\Partial;
 use HomeCEU\DTS\Persistence\CompiledTemplatePersistence;
 use HomeCEU\DTS\Persistence\PartialPersistence;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
+use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\AddPartial as AddPartialService;
@@ -45,6 +46,11 @@ class AddPartial {
           ->withHeader("Location", $res->bodyUri);
     } catch (InvalidRequestException $e) {
       return $response->withStatus(400)->withJson(['message' => $e->getMessage()]);
+    } catch (CompilationException $e) {
+      return $response->withStatus(409)->withJson([
+          'message' => $e->getMessage(),
+          'errors' => $e->templateMetadata
+      ]);
     }
   }
 }
