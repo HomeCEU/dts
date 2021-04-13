@@ -10,58 +10,27 @@ use HomeCEU\DTS\Render\PartialInterface;
 use HomeCEU\DTS\Render\TemplateCompiler;
 use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 
 class AddPartial {
-  private TemplateCompiler $compiler;
+  private TransactionalCompiler $compiler;
   private PartialRepository $partialRepository;
-  private TemplateRepository $templateRepository;
 
   public function __construct(PartialRepository $partialRepository, TemplateRepository $templateRepository) {
-    $this->compiler = TemplateCompiler::create();
+    $this->compiler = new TransactionalCompiler($templateRepository, $partialRepository);
     $this->partialRepository = $partialRepository;
-    $this->templateRepository = $templateRepository;
   }
 
   public function add(AddPartialRequest $request): PartialInterface {
     $partial = $this->createPartialFromRequest($request);
+    $this->assertCanCompile($partial);
     $this->savePartial($partial);
-    $this->compileTemplatesForDocType($request->docType);
+    $this->compiler->compileAllTemplatesForDocType($request->docType);
 
     return $partial;
   }
 
   private function savePartial(PartialInterface $partial): void {
     $this->partialRepository->save($partial);
-  }
-
-  private function compileTemplatesForDocType(string $docType): void {
-    $partials = $this->partialRepository->findByDocType($docType);
-    $this->compiler->setPartials($partials);
-
-    $partials = array_map(function (PartialInterface $partial) {
-      return ['id' => $partial->get('id'), 'key' => $partial->get('name')];
-    }, $partials);
-
-    $errors = [];
-    foreach ($this->templateRepository->findByDocType($docType) as $template) {
-      try {
-        $ct = $this->compiler->compile($template->body);
-        $this->templateRepository->saveCompiled($template, $ct);
-      } catch (CompilationException $e) {
-        $errors[] = [
-            'template' => [
-                'id' => $template->templateId,
-                'key' => $template->templateKey,
-            ],
-            'partials' => $partials
-        ];
-      }
-    }
-    if (!empty($errors)) {
-      throw new CompilationException($e->getMessage(), $errors);
-    }
   }
 
   private function createPartialFromRequest(AddPartialRequest $request): PartialInterface {
@@ -72,5 +41,23 @@ class AddPartial {
         ->withAuthor($request->author)
         ->withMetadata($request->metadata)
         ->build();
+  }
+
+  /**
+   * Creates a template that requires the partial,
+   * if it fails to compile, don't save it.
+   *
+   * @param PartialInterface $partial
+   * @throws CompilationException
+   */
+  private function assertCanCompile(PartialInterface $partial) {
+    try {
+      TemplateCompiler::create()
+          ->ignoreMissingPartials()
+          ->addPartial($partial)
+          ->compile("{{> {$partial->getName()} }}");
+    } catch (CompilationException $e) {
+      throw new CompilationException('Cannot compile partial', [$e->getMessage()]);
+    }
   }
 }
