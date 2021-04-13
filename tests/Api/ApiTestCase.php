@@ -43,7 +43,9 @@ class ApiTestCase extends HomeCEUTestCase {
   }
 
   protected function tearDown(): void {
-    $this->db->rollback();
+    if ($this->db->inTransaction) {
+      $this->db->rollback();
+    }
     parent::tearDown();
   }
 
@@ -130,8 +132,6 @@ class ApiTestCase extends HomeCEUTestCase {
         'createdAt' => new DateTime()
     ]);
   }
-
-
 
   protected function post($uri, array $data): ResponseInterface {
     $method = 'POST';
