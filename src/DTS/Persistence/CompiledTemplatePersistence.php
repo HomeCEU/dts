@@ -35,7 +35,7 @@ class CompiledTemplatePersistence extends AbstractPersistence {
     $this->notImplemented(__METHOD__);
   }
 
-  public function delete($id): void {
+  public function delete(string $id): void {
     $this->notImplemented(__METHOD__);
   }
 

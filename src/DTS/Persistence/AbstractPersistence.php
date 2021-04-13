@@ -110,7 +110,7 @@ abstract class AbstractPersistence implements Persistence {
     return $result;
   }
 
-  private function isJson($v) {
+  private function isJson($v): bool {
     return is_array(json_decode($v, true));
   }
 
@@ -118,7 +118,7 @@ abstract class AbstractPersistence implements Persistence {
     return json_decode($json, true);
   }
 
-  protected function selectColumns(...$cols) {
+  protected function selectColumns(...$cols): string {
     $selectedCols = [];
     foreach ($cols as $alias) {
       array_push($selectedCols, $this->dbKey($alias));
@@ -126,6 +126,7 @@ abstract class AbstractPersistence implements Persistence {
     return implode(', ', $selectedCols);
   }
 
-  public function delete($id) {
+  public function delete(string $id): void {
+    $this->db->deleteWhere(static::TABLE, [static::ID_COL => $id]);
   }
 }
