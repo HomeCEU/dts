@@ -14,7 +14,8 @@ class Db {
   }
 
   public static function newConnection(array $options = null):  Connection {
-    return Connection::buildFromConfig(static::dbConfig(), $options);
+    self::$connection = Connection::buildFromConfig(static::dbConfig(), $options);
+    return self::$connection;
   }
 
   public static function dbConfig(): DbConfig {
