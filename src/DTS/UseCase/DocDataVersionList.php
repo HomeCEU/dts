@@ -15,7 +15,7 @@ class DocDataVersionList {
     $this->repo = $repo;
   }
 
-  public function versions(string $docType, string $dataKey) {
-    return $this->repo->allVersions($docType, $dataKey);
+  public function versions(string $docType, string $key) {
+    return $this->repo->allVersions($docType, $key);
   }
 }

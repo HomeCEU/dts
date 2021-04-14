@@ -14,17 +14,17 @@ class RenderTest extends ApiTestCase {
 
   public function testTemplateNotFound(): void {
     $templateKey = __FUNCTION__;
-    $dataKey = __FUNCTION__;
+    $key = __FUNCTION__;
 
-    $this->assertStatus(404, $this->get(self::ROUTE."/{$this->docType}/{$templateKey}/{$dataKey}"));
+    $this->assertStatus(404, $this->get(self::ROUTE."/{$this->docType}/{$templateKey}/{$key}"));
   }
 
   public function testRenderFromKeys(): void {
     $templateKey = __FUNCTION__;
-    $dataKey = __FUNCTION__;
-    $this->addDocDataFixture($dataKey);
+    $key = __FUNCTION__;
+    $this->addDocDataFixture($key);
     $this->addTemplateFixture($templateKey);
-    $response = $this->get(self::ROUTE."/{$this->docType}/{$templateKey}/{$dataKey}");
+    $response = $this->get(self::ROUTE."/{$this->docType}/{$templateKey}/{$key}");
 
     $this->assertStatus(200, $response);
     $this->assertContentType('text/html', $response);
@@ -33,10 +33,10 @@ class RenderTest extends ApiTestCase {
 
   public function testRenderPDFFromKeys(): void {
     $templateKey = __FUNCTION__;
-    $dataKey = __FUNCTION__;
-    $this->addDocDataFixture($dataKey);
+    $key = __FUNCTION__;
+    $this->addDocDataFixture($key);
     $this->addTemplateFixture($templateKey);
-    $response = $this->get(self::ROUTE."/{$this->docType}/{$templateKey}/{$dataKey}?format=pdf");
+    $response = $this->get(self::ROUTE."/{$this->docType}/{$templateKey}/{$key}?format=pdf");
 
     $this->assertStatus(200, $response);
     $this->assertContentType('application/pdf', $response);
@@ -44,12 +44,12 @@ class RenderTest extends ApiTestCase {
 
   public function testAcceptHeader_pdf() {
     $templateKey = __FUNCTION__;
-    $dataKey = __FUNCTION__;
-    $this->addDocDataFixture($dataKey);
+    $key = __FUNCTION__;
+    $this->addDocDataFixture($key);
     $this->addTemplateFixture($templateKey);
 
     $response = $this->get(
-        self::ROUTE."/{$this->docType}/{$templateKey}/{$dataKey}",
+        self::ROUTE."/{$this->docType}/{$templateKey}/{$key}",
         ['Accept' => 'application/pdf,text/html;q=0.9,*/*;q=0.8']
     );
 
@@ -60,8 +60,8 @@ class RenderTest extends ApiTestCase {
   public function testRenderFromQuery_TemplateKey_DataKey() {
     $this->loadFixtures();
     $templateKey = 'T';
-    $dataKey = 'D';
-    $uri = self::ROUTE."?docType={$this->docType}&templateKey={$templateKey}&dataKey={$dataKey}";
+    $key = 'D';
+    $uri = self::ROUTE."?docType={$this->docType}&templateKey={$templateKey}&key={$key}";
     $responseBody = $this->httpGetRender($uri);
     Assert::assertEquals("Hi Smith, Jane", $responseBody);
   }
@@ -69,17 +69,17 @@ class RenderTest extends ApiTestCase {
   public function testRenderFromQuery_TemplateKey_DataId() {
     $fixtures = $this->loadFixtures();
     $templateKey = 'T';
-    $dataId = $fixtures['docData'][0]['dataId'];
-    $uri = self::ROUTE."?docType={$this->docType}&templateKey={$templateKey}&dataId={$dataId}";
+    $id = $fixtures['docData'][0]['id'];
+    $uri = self::ROUTE."?docType={$this->docType}&templateKey={$templateKey}&id={$id}";
     $responseBody = $this->httpGetRender($uri);
     Assert::assertEquals("Hi Doe, Jane", $responseBody);
   }
 
   public function testRenderFromQuery_TemplateId_DataKey() {
     $fixtures = $this->loadFixtures();
-    $dataKey = 'D';
+    $key = 'D';
     $templateId = $fixtures['template'][0]['id'];
-    $uri = self::ROUTE."?docType={$this->docType}&templateId={$templateId}&dataKey={$dataKey}";
+    $uri = self::ROUTE."?docType={$this->docType}&templateId={$templateId}&key={$key}";
     $responseBody = $this->httpGetRender($uri);
     Assert::assertEquals("Hi Jane Smith", $responseBody);
   }
@@ -87,8 +87,8 @@ class RenderTest extends ApiTestCase {
   public function testRenderFromQuery_TemplateId_DataId() {
     $fixtures = $this->loadFixtures();
     $templateId = $fixtures['template'][0]['id'];
-    $dataId = $fixtures['docData'][0]['dataId'];
-    $uri = self::ROUTE."?docType={$this->docType}&templateId={$templateId}&dataId={$dataId}";
+    $id = $fixtures['docData'][0]['id'];
+    $uri = self::ROUTE."?docType={$this->docType}&templateId={$templateId}&id={$id}";
     $responseBody = $this->httpGetRender($uri);
     Assert::assertEquals("Hi Jane Doe", $responseBody);
   }
@@ -96,8 +96,8 @@ class RenderTest extends ApiTestCase {
   public function testRenderFromQuery_Pdf() {
     $this->loadFixtures();
     $templateKey = 'T';
-    $dataKey = 'D';
-    $uri = self::ROUTE."?docType={$this->docType}&templateKey={$templateKey}&dataKey={$dataKey}";
+    $key = 'D';
+    $uri = self::ROUTE."?docType={$this->docType}&templateKey={$templateKey}&key={$key}";
     $response = $this->get($uri."&format=pdf");
     $this->assertStatus(200, $response);
     $this->assertContentType('application/pdf', $response);
@@ -108,15 +108,15 @@ class RenderTest extends ApiTestCase {
   public function testRenderFromQuery_404() {
     $fixtures = $this->loadFixtures();
     $templateId = $fixtures['template'][0]['id'];
-    $dataId = $fixtures['docData'][0]['dataId'];
+    $id = $fixtures['docData'][0]['id'];
     $templateKey = 'T';
-    $dataKey = 'D';
+    $key = 'D';
     $fake = 'i-dont-exist';
     $uris = [
-        "/render?docType={$this->docType}&templateKey={$templateKey}&dataKey={$fake}",
-        "/render?docType={$this->docType}&templateKey={$fake}&dataKey={$dataKey}",
-        "/render?docType={$this->docType}&templateId={$templateId}&dataId={$fake}",
-        "/render?docType={$this->docType}&templateId={$fake}&dataId={$dataId}"
+        "/render?docType={$this->docType}&templateKey={$templateKey}&key={$fake}",
+        "/render?docType={$this->docType}&templateKey={$fake}&key={$key}",
+        "/render?docType={$this->docType}&templateId={$templateId}&id={$fake}",
+        "/render?docType={$this->docType}&templateId={$fake}&id={$id}"
     ];
     foreach ($uris as $uri) {
       $response = $this->get($uri);
@@ -127,15 +127,15 @@ class RenderTest extends ApiTestCase {
   public function testRenderFromQuery_InvalidRequest() {
     $fixtures = $this->loadFixtures();
     $templateId = $fixtures['template'][0]['id'];
-    $dataId = $fixtures['docData'][0]['dataId'];
+    $id = $fixtures['docData'][0]['id'];
     $templateKey = 'T';
-    $dataKey = 'D';
+    $key = 'D';
     $uris = [
         self::ROUTE."?docType={$this->docType}&templateKey={$templateKey}", // data Key or Id required
-        self::ROUTE."?docType={$this->docType}&dataKey={$dataKey}",         // template Key or Id required
+        self::ROUTE."?docType={$this->docType}&key={$key}",         // template Key or Id required
         self::ROUTE."?docType={$this->docType}&templateId={$templateId}",   // data Key or Id required
-        self::ROUTE."?docType={$this->docType}&dataId={$dataId}",           // template Key or Id required
-        self::ROUTE."?templateKey={$templateKey}&dataKey={$dataKey}",       // docType required
+        self::ROUTE."?docType={$this->docType}&id={$id}",           // template Key or Id required
+        self::ROUTE."?templateKey={$templateKey}&key={$key}",       // docType required
     ];
     foreach ($uris as $uri) {
       $response = $this->get($uri);
@@ -162,8 +162,8 @@ class RenderTest extends ApiTestCase {
 
     $data = [
         // 2 data with same key to ensure we get the newest one...
-        ['dataId' => self::faker()->uuid, 'dataKey'=>'D', 'data' => ['fname'=>'Jane', 'lname'=>'Doe']],
-        ['dataId' => self::faker()->uuid, 'dataKey'=>'D', 'data' => ['fname'=>'Jane', 'lname'=>'Smith']],
+        ['id' => self::faker()->uuid, 'key'=>'D', 'data' => ['fname'=>'Jane', 'lname'=>'Doe']],
+        ['id' => self::faker()->uuid, 'key'=>'D', 'data' => ['fname'=>'Jane', 'lname'=>'Smith']],
     ];
     foreach ($data as $r) {
       $r['docType'] = $this->docType;

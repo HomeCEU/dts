@@ -7,9 +7,9 @@ namespace HomeCEU\DTS\Entity;
 use HomeCEU\DTS\AbstractEntity;
 
 class DocData extends AbstractEntity {
-  public string $dataId;
+  public string $id;
+  public string $key;
   public string $docType;
-  public string $dataKey;
   public \DateTime $createdAt;
   public array $data;
 }

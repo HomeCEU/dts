@@ -26,8 +26,8 @@ class GetDocDataById {
 
   public function __invoke(Request $request, Response $response, $args) {
     try {
-      $dataId = $args['dataId'];
-      $entity = $this->useCase->getById($dataId);
+      $id = $args['id'];
+      $entity = $this->useCase->getById($id);
       $responseData = ResponseHelper::docDataModel($entity);
       return $response
           ->withStatus(200)

@@ -28,7 +28,7 @@ class ListVersions {
   }
 
   public function __invoke(Request $request, Response $response, $args) {
-      $versions = $this->useCase->versions($args['docType'], $args['dataKey']);
+      $versions = $this->useCase->versions($args['docType'], $args['key']);
       $responseData = [
           'total' => count($versions),
           'items' => array_map(function (DocData $d) {

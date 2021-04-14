@@ -12,9 +12,9 @@ class DocDataPersistence extends AbstractPersistence implements Persistence {
   const ID_COL = 'data_id';
 
   private array $map = [
-      'dataId' => 'data_id',
+      'id' => 'data_id',
       'docType' => 'doc_type',
-      'dataKey' => 'data_key',
+      'key' => 'data_key',
       'createdAt' => 'created_at'
   ];
 

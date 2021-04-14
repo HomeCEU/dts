@@ -46,15 +46,15 @@ class GetDocDataTest extends TestCase {
 
   public function testGetByTypeAndKey() {
     // should return only the most recent version
-    $expectedId = $this->fixtureData['A2']['dataId'];
+    $expectedId = $this->fixtureData['A2']['id'];
     $docData = $this->useCase->getLatestVersion($this->docType, 'A');
-    Assert::assertEquals($expectedId, $docData->dataId);
+    Assert::assertEquals($expectedId, $docData->id);
   }
 
   public function testGetById() {
-    $dataId = $this->fixtureData['find']['dataId'];
-    $docData = $this->useCase->getById($dataId);
-    Assert::assertEquals($dataId, $docData->dataId);
+    $id = $this->fixtureData['find']['id'];
+    $docData = $this->useCase->getById($id);
+    Assert::assertEquals($id, $docData->id);
     Assert::assertEquals($this->fixtureData['find'], $docData->toArray());
   }
 
@@ -62,31 +62,31 @@ class GetDocDataTest extends TestCase {
     $day = 0;
     $this->fixtureData = [
         'A1' => [
-            'dataId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => $this->docType,
-            'dataKey' => 'A',
+            'key' => 'A',
             'createdAt' => new DateTime('2020-01-0'.++$day)
         ],
         'A2' => [
-            'dataId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => $this->docType,
-            'dataKey' => 'A',
+            'key' => 'A',
             'createdAt' => new DateTime('2020-01-0'.++$day)
         ],
         'B1' => [
-            'dataId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => $this->docType,
-            'dataKey' => 'B',
+            'key' => 'B',
             'createdAt' => new DateTime('2020-01-0'.++$day)
         ],
         'B2' => [
-            'dataId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => $this->docType,
-            'dataKey' => 'B',
+            'key' => 'B',
             'createdAt' => new DateTime('2020-01-0'.++$day)
         ],
         'find' => $this->docDataArray([
-            'dataId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => $this->docType
         ])
     ];

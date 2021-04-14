@@ -49,7 +49,7 @@ class DocDataPersistenceTest extends TestCase {
         $this->db->count(
             DocDataPersistence::TABLE,
             'data_id=:data_id',
-            [':data_id'=>$data->dataId]
+            [':data_id'=>$data->id]
         )
     );
   }
@@ -57,18 +57,18 @@ class DocDataPersistenceTest extends TestCase {
   public function testCanRetrieveSavedRecord() {
     $data = $this->docData();
     $this->persist($data);
-    $retrieved = $this->p->retrieve($data->dataId);
+    $retrieved = $this->p->retrieve($data->id);
     Assert::assertEquals($data->toArray(), $retrieved);
   }
 
   public function testCanSpecifyWhichColsToRetrieve() {
     $data = $this->docData();
     $this->persist($data);
-    $cols = ['dataId','dataKey'];
-    $retrieved = $this->p->retrieve($data->dataId, $cols);
+    $cols = ['id','key'];
+    $retrieved = $this->p->retrieve($data->id, $cols);
     $expected = [
-        'dataId' => $data->dataId,
-        'dataKey' => $data->dataKey
+        'id' => $data->id,
+        'key' => $data->key
     ];
     Assert::assertEquals($expected, $retrieved);
   }
@@ -80,31 +80,31 @@ class DocDataPersistenceTest extends TestCase {
     $this->persist($a1);
     $this->persist($b1);
     $this->persist($a2);
-    $expectedIds = [$a1->dataId, $a2->dataId];
-    $results = $this->p->find(['dataKey'=>'a']);
+    $expectedIds = [$a1->id, $a2->id];
+    $results = $this->p->find(['key'=>'a']);
     Assert::assertCount(2, $results);
     Assert::assertNotEquals($results[0], $results[1]);
     foreach ($results as $row) {
-      Assert::assertContains($row['dataId'], $expectedIds);
+      Assert::assertContains($row['id'], $expectedIds);
     }
   }
 
   public function testFindWithSpecificCols() {
-    $cols = ['docType', 'dataKey'];
+    $cols = ['docType', 'key'];
     $this->persist($this->docData('a'));
     $this->persist($this->docData('b'));
-    $results = $this->p->find(['dataKey'=>'a'], $cols);
+    $results = $this->p->find(['key'=>'a'], $cols);
     $row = $results[0];
     Assert::assertCount(2, $row);
     Assert::assertContains('docType', array_keys($row));
-    Assert::assertContains('dataKey', array_keys($row));
+    Assert::assertContains('key', array_keys($row));
   }
 
   public function testNoDelete() {
     $data = $this->docData();
     $this->persist($data);
     $this->expectException(\Exception::class);
-    $this->p->delete($data->dataId);
+    $this->p->delete($data->id);
   }
 
   protected function persist(DocData $data) {
@@ -112,7 +112,7 @@ class DocDataPersistenceTest extends TestCase {
     $this->p->persist($array);
     $this->addCleanup(function() use($data){
       $table = DocDataPersistence::TABLE;
-      $this->db->query("DELETE FROM {$table} WHERE data_id=?", $data->dataId);
+      $this->db->query("DELETE FROM {$table} WHERE data_id=?", $data->id);
     });
   }
 
@@ -120,18 +120,18 @@ class DocDataPersistenceTest extends TestCase {
     array_push($this->cleanupCalls, $func);
   }
 
-  protected function docData($dataKey=null) {
-    $entityState = $this->fakeEntity($dataKey);
+  protected function docData($key=null) {
+    $entityState = $this->fakeEntity($key);
     return DocData::fromState($entityState);
   }
 
-  protected function fakeEntity($dataKey=null) {
+  protected function fakeEntity($key=null) {
     $fake = Faker::generator();
-    $key = $dataKey?:$fake->md5;
+    $key = $key?:$fake->md5;
     return [
-        'dataId'   => $fake->uuid,
+        'id'   => $fake->uuid,
         'docType' => 'courseCompletionCertificate',
-        'dataKey'  => $key,
+        'key'  => $key,
         'createdAt'  => $fake->iso8601,
         'data'       => [
             "firstName" => $fake->firstName,

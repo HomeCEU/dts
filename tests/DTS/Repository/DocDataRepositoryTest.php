@@ -30,9 +30,9 @@ class DocDataRepositoryTest extends TestCase {
     $data = $this->profileData();
     $e = $this->repo->newDocData($type, $key, $data);
     $this->assertSame($type, $e->docType);
-    $this->assertSame($key, $e->dataKey);
+    $this->assertSame($key, $e->key);
     $this->assertSame($data, $e->data);
-    $this->assertNotEmpty($e->dataId);;
+    $this->assertNotEmpty($e->id);;
     $this->assertNotEmpty($e->createdAt);
   }
 
@@ -44,7 +44,7 @@ class DocDataRepositoryTest extends TestCase {
     $data = $this->profileData();
     $entity = $this->repo->newDocData($type, $key, $data);
     $this->repo->save($entity);
-    $savedEntity = $this->persistence->retrieve($entity->dataId);
+    $savedEntity = $this->persistence->retrieve($entity->id);
     $this->assertEquals($entity->toArray(), $savedEntity);
   }
 
@@ -54,9 +54,9 @@ class DocDataRepositoryTest extends TestCase {
     $this->persistence->persist($d);
     $this->persistence->persist($this->fakeDocDataArray());
 
-    $docData = $this->repo->getByDocDataId($d['dataId']);
+    $docData = $this->repo->getByDocDataId($d['id']);
     Assert::assertInstanceOf(DocData::class, $docData);
-    Assert::assertEquals($d['dataId'], $docData->dataId);
+    Assert::assertEquals($d['id'], $docData->id);
   }
 
   public function testDocDataHistory() {
@@ -66,20 +66,20 @@ class DocDataRepositoryTest extends TestCase {
     $d = $this->fakeDocDataArray();
     $d2 = $this->fakeDocDataArray();
     $d['docType'] = $type;
-    $d['dataKey'] = $key;
+    $d['key'] = $key;
     $d2['docType'] = $type;
-    $d2['dataKey'] = $key;
+    $d2['key'] = $key;
     $this->persistence->persist($d);
     $this->persistence->persist($d2);
     $this->assertAllVersions($type, $key);
   }
 
   public function testLookupIdFromKey() {
-    $p = $this->fakePersistence('docdata', 'dataId');
+    $p = $this->fakePersistence('docdata', 'id');
     $p->persist([
         'docType' => 'dt',
-        'dataId' => 'did',
-        'dataKey' => 'dk',
+        'id' => 'did',
+        'key' => 'dk',
         'data'=>['name'=>'Fred']
     ]);
     $repo = new DocDataRepository($p);
@@ -111,7 +111,7 @@ class DocDataRepositoryTest extends TestCase {
     ];
   }
 
-  private function assertAllVersions(string $docType, string $dataKey): void {
-    $this->assertCount(2, $this->repo->allVersions($docType, $dataKey));
+  private function assertAllVersions(string $docType, string $key): void {
+    $this->assertCount(2, $this->repo->allVersions($docType, $key));
   }
 }

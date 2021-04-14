@@ -10,8 +10,8 @@ class RenderRequest extends AbstractEntity {
   public string $docType;
   public string $templateId;
   public string $templateKey;
-  public string $dataId;
-  public string $dataKey;
+  public string $id;
+  public string $key;
   public string $format;
 
   public function isValid(): bool {
@@ -25,8 +25,8 @@ class RenderRequest extends AbstractEntity {
   }
 
   private function isValidDocData(): bool {
-    if (!empty($this->dataId)) return true;
-    if ((!empty($this->docType) && !empty($this->dataKey))) return true;
+    if (!empty($this->id)) return true;
+    if ((!empty($this->docType) && !empty($this->key))) return true;
     return false;
   }
 }
