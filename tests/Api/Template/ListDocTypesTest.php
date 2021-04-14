@@ -11,20 +11,18 @@ class ListDocTypesTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    // parent is handling db transaction...
   }
 
   protected function tearDown(): void {
     parent::tearDown();
-    // parent is handling db transaction rollback...
   }
 
   public function testInvoke() {
     // Load Fixture Data
     $fixtureData = [
-        [ 'docType' => 'A', 'templateKey' => 'k1' ], // 3 versions of k1
-        [ 'docType' => 'A', 'templateKey' => 'k1' ],
-        [ 'docType' => 'A', 'templateKey' => 'k1' ],
+        [ 'docType' => 'A', 'key' => 'k1' ], // 3 versions of k1
+        [ 'docType' => 'A', 'key' => 'k1' ],
+        [ 'docType' => 'A', 'key' => 'k1' ],
         [ 'docType' => 'A' ], // will be unique key
         [ 'docType' => 'A' ], // so should be 3 A's
         [ 'docType' => 'B' ],

@@ -46,7 +46,7 @@ class CompiledTemplatePersistenceTest extends TestCase {
 
     $retrieved = $this->persistence->findBy(
         $this->template['docType'],
-        $this->template['templateKey']
+        $this->template['key']
     );
     Assert::assertEquals($cTemplate, $retrieved);
   }

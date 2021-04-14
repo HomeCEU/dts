@@ -48,13 +48,13 @@ class TemplateVersionsTest extends TestCase {
   protected function assertExpectedResults($data, $key) {
     $expectedIds = [];
     foreach ($this->expectedResults[$key] as $k) {
-      array_push($expectedIds, $this->data[$k]['templateId']);
+      array_push($expectedIds, $this->data[$k]['id']);
     }
 
     Assert::assertSameSize($expectedIds, $data['items']);
 
     foreach ($data['items'] as $row) {
-      Assert::assertContains($row['templateId'], $expectedIds);
+      Assert::assertContains($row['id'], $expectedIds);
       Assert::assertArrayNotHasKey('body', $row);
     }
   }
@@ -65,45 +65,45 @@ class TemplateVersionsTest extends TestCase {
     $this->exampleKey = "example-".uniqid();
     $this->data = [
         'v1' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => $this->type,
-            'templateKey' => $this->key,
+            'key' => $this->key,
             'name' => self::faker()->sentence,
             'author' => self::faker()->name,
             'createdAt' => new DateTime('2020-01-01'),
             'body' => 'hi {{name}}'
         ],
         'v2' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => $this->type,
-            'templateKey' => $this->key,
+            'key' => $this->key,
             'name' => self::faker()->sentence,
             'author' => self::faker()->name,
             'createdAt' => new DateTime('2020-01-02'),
             'body' => 'hi {{name}}'
         ],
         'v3' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => $this->type,
-            'templateKey' => $this->key,
+            'key' => $this->key,
             'name' => self::faker()->sentence,
             'author' => self::faker()->name,
             'createdAt' => new DateTime('2020-01-03'),
             'body' => 'hi {{name}}'
         ],
         'other' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => $this->type,
-            'templateKey' => self::faker()->lastName,
+            'key' => self::faker()->lastName,
             'name' => self::faker()->sentence,
             'author' => self::faker()->name,
             'createdAt' => new DateTime('2020-01-04'),
             'body' => 'hi {{name}}'
         ],
         'example' => [
-            "templateId" => $exampleId,
+            "id" => $exampleId,
             "docType" => $this->type,
-            "templateKey" => $this->exampleKey,
+            "key" => $this->exampleKey,
             "name" => "is this field even used?",
             "author" => "Robert Martin",
             "createdAt" => new DateTime("2020-10-13 23:47:07"),
@@ -112,9 +112,9 @@ class TemplateVersionsTest extends TestCase {
     ];
 
     $this->expectedExampleResponse = [
-        "templateId" => $exampleId,
+        "id" => $exampleId,
         "docType" => $this->type,
-        "templateKey" => $this->exampleKey,
+        "key" => $this->exampleKey,
         "author" => "Robert Martin",
         "createdAt" => "2020-10-13T23:47:07+00:00",
         "bodyUri" => self::ROUTE."/{$exampleId}"

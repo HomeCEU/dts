@@ -10,9 +10,9 @@ use HomeCEU\DTS\Entity\Template;
 trait TemplateTestTrait {
   protected function createSampleTemplate(string $docType, string $key, string $body = ''): Template {
     return Template::fromState([
-        'templateId' => IdGenerator::create(),
+        'id' => IdGenerator::create(),
+        'key' => $key,
         'docType' => $docType,
-        'templateKey' => $key,
         'author' => 'Test Author',
         'body' => $body,
         'createdAt' => new \DateTime(),

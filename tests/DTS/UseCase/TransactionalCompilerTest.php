@@ -27,7 +27,7 @@ class TransactionalCompilerTest extends TestCase {
     parent::setUp();
 
     $this->templateRepository = new TemplateRepository(
-        $this->fakePersistence('template', 'templateId'),
+        $this->fakePersistence('template', 'id'),
         $this->fakePersistence('compiled_template', 'templateId')
     );
     $this->partialRepository = new PartialRepository($this->fakePersistence('partial', 'id'));
@@ -68,8 +68,8 @@ class TransactionalCompilerTest extends TestCase {
     try {
       $this->compiler->compileAllTemplatesForDocType($docType);
     } catch (CompilationException $e) {
-      $this->assertEquals($template->templateId, $e->errors[0]['template']['id']);
-      $this->assertEquals($template->templateKey, $e->errors[0]['template']['key']);
+      $this->assertEquals($template->id, $e->errors[0]['template']['id']);
+      $this->assertEquals($template->key, $e->errors[0]['template']['key']);
       $this->assertTrue(in_array('a_partial', $e->errors[0]['template']['partials']));
     }
   }
@@ -82,12 +82,12 @@ class TransactionalCompilerTest extends TestCase {
     try {
       $this->compiler->compileAllTemplatesForDocType($docType);
     } catch (CompilationException $e) {
-      $this->assertEquals($template->templateId, $e->errors[0]['template']['id']);
-      $this->assertEquals($template->templateKey, $e->errors[0]['template']['key']);
+      $this->assertEquals($template->id, $e->errors[0]['template']['id']);
+      $this->assertEquals($template->key, $e->errors[0]['template']['key']);
     }
   }
 
   private function findCompiled(Template $template): CompiledTemplate {
-    return $this->templateRepository->getCompiledTemplateById($template->templateId);
+    return $this->templateRepository->getCompiledTemplateById($template->id);
   }
 }

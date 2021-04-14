@@ -13,12 +13,12 @@ class ResponseHelper {
 
   public static function templateDetailModel(Template $t): array {
     return [
-        'templateId' => $t->templateId,
+        'id' => $t->id,
+        'key' => $t->key,
         'docType' => $t->docType,
-        'templateKey' => $t->templateKey,
         'author' => $t->author,
         'createdAt' => $t->createdAt->format(\DateTime::W3C),
-        'bodyUri' => self::ROUTE . "/template/{$t->templateId}"
+        'bodyUri' => self::ROUTE . "/template/{$t->id}"
     ];
   }
 

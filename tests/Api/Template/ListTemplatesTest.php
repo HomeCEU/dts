@@ -19,9 +19,9 @@ use PHPUnit\Framework\Assert;
  *   "total": 1,
  *   "items": [
  *     {
- *       "templateId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+ *       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
  *       "docType": "courseCompletionCertificate",
- *       "templateKey": "default-ce",
+ *       "key": "default-ce",
  *       "author": "Robert Martin",
  *       "createdAt": "2020-10-13T11:47:07.259Z",
  *       "bodyUri": "/template/3fa85f64-5717-4562-b3fc-2c963f66afa6"
@@ -76,12 +76,12 @@ class ListTemplatesTest extends TestCase {
   protected function assertExpectedResults($data, $key) {
     $expectedIds = [];
     foreach ($this->expectedResults[$key] as $k) {
-      array_push($expectedIds, $this->data[$k]['templateId']);
+      array_push($expectedIds, $this->data[$k]['id']);
     }
 
     Assert::assertGreaterThan(count($expectedIds) - 1, $data['items']);
     
-    $foundIds = array_column($data['items'], 'templateId');
+    $foundIds = array_column($data['items'], 'id');
     foreach ($expectedIds as $id) {
       Assert::assertContains($id, $foundIds);
     }
@@ -91,99 +91,99 @@ class ListTemplatesTest extends TestCase {
     $exampleId = self::faker()->uuid;
     $this->data = [
         '1:A1' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => 'type 1',
-            'templateKey' => 'key A',
+            'key' => 'key A',
             'name' => self::faker()->sentence,
             'author' => self::faker()->name,
             'createdAt' => new DateTime('2020-01-01'),
             'body' => 'hi {{name}}'
         ],
         '1:A2' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => 'type 1',
-            'templateKey' => 'key A',
+            'key' => 'key A',
             'name' => self::faker()->sentence,
             'author' => self::faker()->name,
             'createdAt' => new DateTime('2020-01-02'),
             'body' => 'hi {{name}}'
         ],
         '1:B1' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => 'type 1',
-            'templateKey' => 'key B',
+            'key' => 'key B',
             'name' => self::faker()->sentence,
             'author' => self::faker()->name,
             'createdAt' => new DateTime('2020-01-03'),
             'body' => 'hi {{name}}'
         ],
         '1:B2' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => 'type 1',
-            'templateKey' => 'key B',
+            'key' => 'key B',
             'name' => self::faker()->sentence,
             'author' => self::faker()->name,
             'createdAt' => new DateTime('2020-01-04'),
             'body' => 'hi {{name}}'
         ],
         '2:C1' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => 'type 2',
-            'templateKey' => 'key C',
+            'key' => 'key C',
             'name' => self::faker()->sentence,
             'author' => self::faker()->name,
             'createdAt' => new DateTime('2020-01-05'),
             'body' => 'hi {{name}}'
         ],
         '2:C2' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => 'type 2',
-            'templateKey' => 'key C',
+            'key' => 'key C',
             'name' => self::faker()->sentence,
             'author' => self::faker()->name,
             'createdAt' => new DateTime('2020-01-06'),
             'body' => 'hi {{name}}'
         ],
         '2:D1' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => 'type 2',
-            'templateKey' => 'key D',
+            'key' => 'key D',
             'name' => self::faker()->sentence,
             'author' => self::faker()->name,
             'createdAt' => new DateTime('2020-01-07'),
             'body' => 'hi {{name}}'
         ],
         '2:D2' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => 'type 2',
-            'templateKey' => 'key D',
+            'key' => 'key D',
             'name' => self::faker()->sentence,
             'author' => self::faker()->name,
             'createdAt' => new DateTime('2020-01-08'),
             'body' => 'hi {{name}}'
         ],
         'find1' => [ // certificate to name bob
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => 'courseCompletionCertificate',
-            'templateKey' => 'how to code',
+            'key' => 'how to code',
             'name' => 'what is in a name',
             'author' => 'uncle bob',
             'createdAt' => new DateTime('2020-01-09'),
             'body' => 'hi {{name}}'
         ],
         'find2' => [
-            'templateId' => self::faker()->uuid,
+            'id' => self::faker()->uuid,
             'docType' => 'courseCompletionCertificate',
-            'templateKey' => 'how to code',
+            'key' => 'how to code',
             'name' => 'what is in a name',
             'author' => 'uncle bob',
             'createdAt' => new DateTime('2020-01-10'),
             'body' => 'hi {{name}}!'
         ],
         'example' => [
-            "templateId" => $exampleId,
+            "id" => $exampleId,
             "docType" => "example",
-            "templateKey" => "default-ce",
+            "key" => "default-ce",
             "name" => "is this field even used?",
             "author" => "Robert Martin",
             "createdAt" => new DateTime("2020-10-13 23:47:07"),
@@ -192,9 +192,9 @@ class ListTemplatesTest extends TestCase {
     ];
 
     $this->expectedExampleResponse = [
-        "templateId" => $exampleId,
+        "id" => $exampleId,
         "docType" => "example",
-        "templateKey" => "default-ce",
+        "key" => "default-ce",
         "author" => "Robert Martin",
         "createdAt" => "2020-10-13T23:47:07+00:00",
         "bodyUri" => self::ROUTE."/{$exampleId}"

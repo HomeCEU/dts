@@ -18,7 +18,7 @@ class AddTemplateTest extends ApiTestCase {
   public function testAddTemplate(): void {
     $request = [
         'docType' => 'DT',
-        'templateKey' => 'TK',
+        'key' => 'TK',
         'author' => 'Test Author',
         'body' => 'Hello, {{ name }}!'
     ];
@@ -27,9 +27,9 @@ class AddTemplateTest extends ApiTestCase {
 
     $responseData = json_decode((string) $response->getBody(), true);
     Assert::assertEquals($request['docType'], $responseData['docType']);
-    Assert::assertEquals($request['templateKey'], $responseData['templateKey']);
+    Assert::assertEquals($request['key'], $responseData['key']);
     Assert::assertEquals($request['author'], $responseData['author']);
-    Assert::assertNotEmpty($responseData['templateId']);
+    Assert::assertNotEmpty($responseData['id']);
     Assert::assertNotEmpty($responseData['createdAt']);
     Assert::assertNotEmpty($responseData['bodyUri']);
     Assert::assertArrayNotHasKey('body', $responseData);

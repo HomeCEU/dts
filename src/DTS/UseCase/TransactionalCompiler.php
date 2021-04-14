@@ -54,9 +54,9 @@ class TransactionalCompiler {
           'code' => $e->getCode(),
           'message' => $e->getMessage(),
           'template' => [
-              'id' => $template->templateId,
+              'id' => $template->id,
               'docType' => $template->docType,
-              'key' => $template->templateKey,
+              'key' => $template->key,
               'partials' => RenderHelper::extractPartials($template->body),
           ]
       ];

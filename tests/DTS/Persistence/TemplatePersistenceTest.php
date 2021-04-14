@@ -52,13 +52,13 @@ class TemplatePersistenceTest extends TestCase {
   public function testFilterBySearchString() {
     $this->newPersistedTemplate([
         'docType' => $this->uniqueName($this->docType, 'nil'),
-        'templateKey' => $this->uniqueName(__FUNCTION__, 'nil'),
+        'key' => $this->uniqueName(__FUNCTION__, 'nil'),
         'name' => $this->uniqueName(self::faker()->name, 'nil'),
         'author' => $this->uniqueName(self::faker()->name, 'nil')
     ]);
     $t = $this->newPersistedTemplate([
         'docType' => $this->uniqueName($this->docType, 'foo'),
-        'templateKey' => $this->uniqueName(__FUNCTION__, 'bar'),
+        'key' => $this->uniqueName(__FUNCTION__, 'bar'),
         'name' => $this->uniqueName(self::faker()->name, 'baz'),
         'author' => $this->uniqueName(self::faker()->name, 'fin')
     ]);
@@ -71,19 +71,19 @@ class TemplatePersistenceTest extends TestCase {
   public function testFilterBySearchStringWithMultipleResults() {
     $this->newPersistedTemplate([
         'docType' => $this->uniqueName($this->docType, 'nil'),
-        'templateKey' => $this->uniqueName(__FUNCTION__, 'nil'),
+        'key' => $this->uniqueName(__FUNCTION__, 'nil'),
         'name' => $this->uniqueName(self::faker()->name, 'nil'),
         'author' => $this->uniqueName(self::faker()->name, 'nil')
     ]);
     $this->newPersistedTemplate([
         'docType' => $this->uniqueName($this->docType, 'foo'),
-        'templateKey' => $this->uniqueName(__FUNCTION__, 'bar'),
+        'key' => $this->uniqueName(__FUNCTION__, 'bar'),
         'name' => $this->uniqueName(self::faker()->name, 'baz'),
         'author' => $this->uniqueName(self::faker()->name, 'fin')
     ]);
     $this->newPersistedTemplate([
         'docType' => $this->uniqueName($this->docType, 'foo'),
-        'templateKey' => $this->uniqueName(__FUNCTION__, 'bar'),
+        'key' => $this->uniqueName(__FUNCTION__, 'bar'),
         'name' => $this->uniqueName(self::faker()->name, 'baz'),
         'author' => $this->uniqueName(self::faker()->name, 'fin')
     ]);
@@ -98,9 +98,9 @@ class TemplatePersistenceTest extends TestCase {
 
     // Load Fixture Data
     $fixtureData = [
-        [ 'docType' => $dtA, 'templateKey' => 'k1' ], // 3 versions of k1
-        [ 'docType' => $dtA, 'templateKey' => 'k1' ],
-        [ 'docType' => $dtA, 'templateKey' => 'k1' ],
+        [ 'docType' => $dtA, 'key' => 'k1' ], // 3 versions of k1
+        [ 'docType' => $dtA, 'key' => 'k1' ],
+        [ 'docType' => $dtA, 'key' => 'k1' ],
         [ 'docType' => $dtA ], // will be unique key
         [ 'docType' => $dtA ], // so should be 3 A's
         [ 'docType' => $dtB],
@@ -126,8 +126,8 @@ class TemplatePersistenceTest extends TestCase {
 
   protected function assertSearchMatches($results, Template $t) {
     $this->assertCount(1, $results);
-    $this->assertArrayHasKey('templateId', $results[0]);
-    $this->assertEquals($t->templateId, $results[0]['templateId']);
+    $this->assertArrayHasKey('id', $results[0]);
+    $this->assertEquals($t->id, $results[0]['id']);
   }
 
   public function testGenerateId() {
@@ -141,7 +141,7 @@ class TemplatePersistenceTest extends TestCase {
   public function testCanRetrievePersistedRecord() {
     $record = $this->fakeTemplateArray($this->docType);
     $this->p->persist($record);
-    $retrieved = $this->p->retrieve($record['templateId']);
+    $retrieved = $this->p->retrieve($record['id']);
     $this->assertEquals($record, $retrieved);
   }
 
@@ -149,8 +149,8 @@ class TemplatePersistenceTest extends TestCase {
     $this->expectException(RecordNotFoundException::class);
     $record = $this->fakeTemplateArray($this->docType);
     $this->p->persist($record);
-    $this->p->delete($record['templateId']);
-    $this->p->retrieve($record['templateId']);
+    $this->p->delete($record['id']);
+    $this->p->retrieve($record['id']);
   }
 
   /**

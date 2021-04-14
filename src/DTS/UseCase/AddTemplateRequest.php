@@ -9,7 +9,7 @@ use HomeCEU\DTS\UseCase\Exception\InvalidAddTemplateRequestException;
 
 class AddTemplateRequest extends AbstractEntity {
   public string $docType;
-  public string $templateKey;
+  public string $key;
   public string $author;
   public string $body;
 
@@ -19,7 +19,7 @@ class AddTemplateRequest extends AbstractEntity {
 
   protected function validate(): self {
     if (empty($this->docType)
-        || empty($this->templateKey)
+        || empty($this->key)
         || empty($this->author)
         || empty($this->body)) {
       throw new InvalidAddTemplateRequestException("Required values: " . implode(', ', self::keys()));

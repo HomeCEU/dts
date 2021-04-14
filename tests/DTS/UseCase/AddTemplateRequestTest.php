@@ -10,19 +10,19 @@ use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
 
 class AddTemplateRequestTest extends TestCase {
-  protected $req = ['docType', 'templateKey', 'author', 'body'];
+  protected $req = ['docType', 'key', 'author', 'body'];
 
   public function testBuildFromArray(): void {
     $state = [
         'docType' => 'enrollment',
-        'templateKey' => __FUNCTION__,
+        'key' => __FUNCTION__,
         'author' => 'test',
         'body' => '1234'
     ];
     $obj = AddTemplateRequest::fromState($state);
 
     Assert::assertEquals($state['docType'], $obj->docType);
-    Assert::assertEquals($state['templateKey'], $obj->templateKey);
+    Assert::assertEquals($state['key'], $obj->key);
     Assert::assertEquals($state['author'], $obj->author);
     Assert::assertEquals($state['body'], $obj->body);
   }

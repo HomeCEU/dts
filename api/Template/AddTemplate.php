@@ -38,13 +38,13 @@ class AddTemplate {
       /** @var AddTemplateRequest $addRequest */
       $addRequest = AddTemplateRequest::fromState($request->getParsedBody());
       $template = $this->useCase->addTemplate($addRequest);
-      $route = "/api/v1/template/{$template->templateId}";
+      $route = "/api/v1/template/{$template->id}";
 
       return $response->withStatus(201)
           ->withHeader('Location', $route)
           ->withJson([
-              'templateId' => $template->templateId,
-              'templateKey' => $template->templateKey,
+              'id' => $template->id,
+              'key' => $template->key,
               'docType' => $template->docType,
               'author' => $template->author,
               'createdAt' => $template->createdAt,

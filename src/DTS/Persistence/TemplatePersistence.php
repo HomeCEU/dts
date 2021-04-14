@@ -13,14 +13,14 @@ class TemplatePersistence extends AbstractPersistence implements Persistence {
   const TABLE = 'template';
   const ID_COL = 'template_id';
   const HEAD_COLS = [
-      'templateId', 'docType', 'templateKey',
+      'id', 'key', 'docType',
       'name', 'author', 'createdAt'
   ];
 
   private array $map = [
-      'templateId' => 'template_id',
+      'id' => 'template_id',
       'docType' => 'doc_type',
-      'templateKey' => 'template_key',
+      'key' => 'template_key',
       'createdAt' => 'created_at'
   ];
   private string $isLatestVersionSQL = "

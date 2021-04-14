@@ -25,7 +25,7 @@ class AddTemplate {
   public function addTemplate(AddTemplateRequest $request): Template {
     $template = $this->repository->createNewTemplate(
         $request->docType,
-        $request->templateKey,
+        $request->key,
         $request->author,
         $request->body
     );

@@ -7,11 +7,11 @@ namespace HomeCEU\DTS\UseCase;
 use HomeCEU\DTS\AbstractEntity;
 
 class GetTemplateRequest extends AbstractEntity {
-  public string $templateId;
+  public string $id;
   public string $docType;
-  public string $templateKey;
+  public string $key;
 
   public function isValid(): bool {
-    return !empty($this->templateId) || (!empty($this->docType) && !empty($this->templateKey));
+    return !empty($this->id) || (!empty($this->docType) && !empty($this->key));
   }
 }

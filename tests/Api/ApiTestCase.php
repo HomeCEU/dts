@@ -106,14 +106,14 @@ class ApiTestCase extends HomeCEUTestCase {
     ]);
   }
 
-  protected function addTemplateFixture($templateKey, $id = null, $body = null): void {
+  protected function addTemplateFixture($key, $id = null, $body = null): void {
     $id = $id ?? uniqid();
     $body = $body ?? 'Hi {{name}}';
     $this->templatePersistence()->persist([
         'docType' => $this->docType,
-        'templateKey' => $templateKey,
+        'key' => $key,
         'createdAt' => $this->createdAtDateTime(),
-        'templateId' => $id,
+        'id' => $id,
         'body'=> $body,
         'author'=>'author',
         'name'=>'name'

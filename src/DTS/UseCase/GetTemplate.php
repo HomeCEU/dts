@@ -29,9 +29,9 @@ class GetTemplate {
     if (!$request->isValid()) {
       throw new InvalidGetTemplateRequestException();
     }
-    if (!empty($request->templateId)) {
-      return $this->repository->getTemplateById($request->templateId);
+    if (!empty($request->id)) {
+      return $this->repository->getTemplateById($request->id);
     }
-    return $this->repository->getTemplateByKey($request->docType, $request->templateKey);
+    return $this->repository->getTemplateByKey($request->docType, $request->key);
   }
 }
