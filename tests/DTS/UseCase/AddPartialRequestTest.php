@@ -17,8 +17,8 @@ class AddPartialRequestTest extends TestCase {
   }
 
   public function validStates(): Generator {
-    yield [['docType' => 'dt', 'body' => '', 'name' => 'a_name', 'author' => 'an_author']];
-    yield [['docType' => 'dt', 'body' => 'a body', 'name' => 'a_name', 'author' => 'an_author']];
+    yield [['docType' => 'dt', 'body' => '', 'key' => 'a_name', 'author' => 'an_author']];
+    yield [['docType' => 'dt', 'body' => 'a body', 'key' => 'a_name', 'author' => 'an_author']];
   }
 
   /** @dataProvider invalidStates() */
@@ -29,18 +29,18 @@ class AddPartialRequestTest extends TestCase {
 
   public function invalidStates(): Generator {
     // missing docType
-    yield [['name' => 'a_name', 'body' => 'a_body', 'author' => 'an_author']];
+    yield [['key' => 'a_name', 'body' => 'a_body', 'author' => 'an_author']];
     // empty doctype
-    yield [['docType' => '', 'name' => 'a_name', 'body' => 'a_body', 'author' => 'an_author']];
+    yield [['docType' => '', 'key' => 'a_name', 'body' => 'a_body', 'author' => 'an_author']];
     // missing body
-    yield [['docType' => 'dt', 'name' => 'a_name', 'author' => 'an_author']];
+    yield [['docType' => 'dt', 'key' => 'a_name', 'author' => 'an_author']];
     // missing name
     yield [['docType' => 'dt', 'body' => 'a_body', 'author' => 'an_author']];
     // empty name
-    yield [['docType' => 'dt', 'name' => '', 'body' => 'a_body', 'author' => 'an_author']];
+    yield [['docType' => 'dt', 'key' => '', 'body' => 'a_body', 'author' => 'an_author']];
     // missing author
-    yield [['docType' => 'dt', 'name' => 'a_name', 'body' => 'a_body']];
+    yield [['docType' => 'dt', 'key' => 'a_name', 'body' => 'a_body']];
     // empty author
-    yield [['docType' => 'dt', 'name' => 'a_name', 'body' => 'a_body', 'author' => '']];
+    yield [['docType' => 'dt', 'key' => 'a_name', 'body' => 'a_body', 'author' => '']];
   }
 }

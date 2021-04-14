@@ -87,7 +87,7 @@ class AddPartialTest extends TestCase {
   protected function createAddPartialRequest(string $docType, string $key, string $body): AddPartialRequest {
     $state = [
         'docType' => $docType,
-        'name' => $key,
+        'key' => $key,
         'body' => $body,
         'author' => 'an_author',
         'metadata' => [

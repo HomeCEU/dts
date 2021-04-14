@@ -35,7 +35,7 @@ class AddPartial {
 
   private function createPartialFromRequest(AddPartialRequest $request): PartialInterface {
     return PartialBuilder::create()
-        ->withKey($request->name)
+        ->withKey($request->key)
         ->withBody($request->body)
         ->withDocType($request->docType)
         ->withAuthor($request->author)
