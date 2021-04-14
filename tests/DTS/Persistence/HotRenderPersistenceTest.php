@@ -28,19 +28,19 @@ class HotRenderPersistenceTest extends TestCase {
   public function testRetrievePersistedRecord(): void {
     $record = $this->fakeHotRenderRequestArray();
     $this->persistence->persist($record);
-    Assert::assertEquals($record, $this->persistence->retrieve($record['requestId']));
+    Assert::assertEquals($record, $this->persistence->retrieve($record['id']));
   }
 
   public function testNoDelete() {
     $record = $this->fakeHotRenderRequestArray();
     $this->persistence->persist($record);
     $this->expectException(\Exception::class);
-    $this->persistence->delete($record['requestId']);
+    $this->persistence->delete($record['id']);
   }
 
   protected function fakeHotRenderRequestArray(): array {
     return [
-        'requestId' => $this->persistence->generateId(),
+        'id' => $this->persistence->generateId(),
         'template' => '<?php /* a compiled template */ ?>',
         'data' => ['name' => 'test'],
         'createdAt' => new \DateTime('yesterday')

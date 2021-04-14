@@ -26,7 +26,7 @@ class AddHotRenderTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->hotRenderRequestPersistence = $this->fakePersistence('hotrender_request', 'requestId');
+    $this->hotRenderRequestPersistence = $this->fakePersistence('hotrender_request', 'id');
     $this->partialPersistence = $this->fakePersistence('partial', 'id');
 
     $this->useCase = new AddHotRender(
@@ -81,6 +81,6 @@ class AddHotRenderTest extends TestCase {
   }
 
   private function assertRequestPersisted(array $renderRequest) {
-    Assert::assertEquals($renderRequest, $this->hotRenderRequestPersistence->retrieve($renderRequest['requestId']));
+    Assert::assertEquals($renderRequest, $this->hotRenderRequestPersistence->retrieve($renderRequest['id']));
   }
 }

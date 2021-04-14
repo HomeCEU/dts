@@ -36,7 +36,7 @@ class HotRenderRepositoryTest extends TestCase {
     $this->persistence->persist($request);
 
     $entity = HotRenderRequest::fromState($request);
-    $hotRender = $this->repo->getById($request['requestId']);
+    $hotRender = $this->repo->getById($request['id']);
     Assert::assertEquals($entity, $hotRender);
   }
 
@@ -44,12 +44,12 @@ class HotRenderRepositoryTest extends TestCase {
     $hotRender = HotRenderRequest::fromState($this->fakeHotRenderRequestArray());
     $this->repo->save($hotRender);
 
-    Assert::assertEquals($hotRender->toArray(), $this->persistence->retrieve($hotRender->requestId));
+    Assert::assertEquals($hotRender->toArray(), $this->persistence->retrieve($hotRender->id));
   }
 
   protected function fakeHotRenderRequestArray(): array {
     return [
-        'requestId' => $this->persistence->generateId(),
+        'id' => $this->persistence->generateId(),
         'template' => '<?php /* a compiled template */ ?>',
         'data' => ['name' => 'test'],
         'createdAt' => new \DateTime('yesterday')

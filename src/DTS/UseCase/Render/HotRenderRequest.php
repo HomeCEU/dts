@@ -7,6 +7,6 @@ namespace HomeCEU\DTS\UseCase\Render;
 use HomeCEU\DTS\AbstractEntity;
 
 class HotRenderRequest extends AbstractEntity {
-  public string $requestId;
+  public string $id;
   public string $format;
 }

@@ -17,7 +17,7 @@ class HotRenderRepository {
 
   public function newHotRenderRequest(string $template, array $data): HotRenderRequest {
     return HotRenderRequest::fromState([
-      'requestId' => $this->persistence->generateId(),
+      'id' => $this->persistence->generateId(),
       'template' => $template,
       'data' => $data,
       'createdAt' => new \DateTime()

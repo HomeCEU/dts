@@ -38,11 +38,11 @@ class AddHotRender {
               'docType' => !empty($reqData['docType']) ? $reqData['docType'] : '',
           ])
       );
-      $route = "/api/v1/hotrender/{$renderRequest['requestId']}";
+      $route = "/api/v1/hotrender/{$renderRequest['id']}";
       return $response->withStatus(201)
           ->withHeader('Location', $route)
           ->withJson([
-              'requestId' => $renderRequest['requestId'],
+              'id' => $renderRequest['id'],
               'createdAt' => $renderRequest['createdAt'],
               'location' => $route
           ]);

@@ -11,13 +11,13 @@ use PHPUnit\Framework\Assert;
 class HotRenderRequestTest extends TestCase {
   public function testBuildFromState(): void {
     $state = [
-        'requestId' => 'RID',
+        'id' => 'RID',
         'template' => 'Hi {{ name }}',
         'data' => ['name' => 'test'],
         'createdAt' => new \DateTime('yesterday')
     ];
     $r = HotRenderRequest::fromState($state);
-    Assert::assertEquals($state['requestId'], $r->requestId);
+    Assert::assertEquals($state['id'], $r->id);
     Assert::assertEquals($state['template'], $r->template);
     Assert::assertEquals($state['data'], $r->data);
     Assert::assertEquals($state['createdAt'], $r->createdAt);

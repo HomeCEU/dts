@@ -25,7 +25,7 @@ class AddHotRenderTest extends ApiTestCase {
     $this->assertStatus(201, $response);
     Assert::assertEquals(
         $headers['Location'][0],
-        self::ROUTE . "/{$body->requestId}"
+        self::ROUTE . "/{$body->id}"
     );
   }
 

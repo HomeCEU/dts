@@ -124,9 +124,9 @@ class ApiTestCase extends HomeCEUTestCase {
     ]);
   }
 
-  protected function addHotRenderRequestFixture($requestId, $value): void {
+  protected function addHotRenderRequestFixture($id, $value): void {
     $this->hotRenderPersistence()->persist([
-        'requestId' => $requestId,
+        'id' => $id,
         'template' => TemplateCompiler::create()->compile('{{ value }}'),
         'data' => ['value' => $value],
         'createdAt' => new DateTime()
