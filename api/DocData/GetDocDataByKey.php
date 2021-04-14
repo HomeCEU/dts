@@ -26,7 +26,7 @@ class GetDocDataByKey {
 
   public function __invoke(Request $request, Response $response, $args) {
     try {
-      $entity = $this->useCase->getLatestVersion($args['docType'], $args['key']);
+      $entity = $this->useCase->getLatestVersion($args['docType'], $args['dataKey']);
       $responseData = ResponseHelper::docDataModel($entity);
       return $response
           ->withStatus(200)

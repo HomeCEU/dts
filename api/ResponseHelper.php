@@ -14,10 +14,10 @@ class ResponseHelper {
   public static function templateDetailModel(Template $t): array {
     return [
         'templateId' => $t->templateId,
-        'templateKey' => $t->templateKey,
         'docType' => $t->docType,
+        'templateKey' => $t->templateKey,
         'author' => $t->author,
-        "createdAt" => $t->createdAt,
+        'createdAt' => $t->createdAt->format(\DateTime::W3C),
         'bodyUri' => self::ROUTE . "/template/{$t->templateId}"
     ];
   }
@@ -29,27 +29,27 @@ class ResponseHelper {
         'docType' => $partial->docType,
         'author' => $partial->author,
         'metadata' => $partial->metadata,
-        "createdAt" => $partial->createdAt,
+        'createdAt' => $partial->createdAt->format(\DateTime::W3C),
         'bodyUri' => self::ROUTE . "/partial/{$partial->id}",
     ];
   }
 
   public static function docDataDetailModel(DocData $d): array {
     return [
-        'id' => $d->id,
-        'key' => $d->key,
+        'dataId' => $d->dataId,
         'docType' => $d->docType,
-        "createdAt" => $d->createdAt,
-        "link" => self::ROUTE . "/docdata/{$d->id}"
+        'dataKey' => $d->dataKey,
+        "createdAt" => $d->createdAt->format(\DateTime::W3C),
+        "link" => self::ROUTE . "/docdata/{$d->dataId}"
     ];
   }
 
   public static function docDataModel(DocData $d) {
     return [
-        'id' => $d->id,
-        'key' => $d->key,
+        'dataId' => $d->dataId,
         'docType' => $d->docType,
-        "createdAt" => $d->createdAt,
+        'dataKey' => $d->dataKey,
+        "createdAt" => $d->createdAt->format(\DateTime::W3C),
         "data" => $d->data
     ];
   }

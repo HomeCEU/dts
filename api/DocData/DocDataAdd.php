@@ -18,9 +18,11 @@ class DocDataAdd {
   private Persistence $persistence;
   private DocDataRepository $repository;
   private AddDocData $useCase;
+  private ContainerInterface $di;
 
-  public function __construct(ContainerInterface $container) {
-    $this->persistence = new DocDataPersistence($container->get('dbConnection'));
+  public function __construct(ContainerInterface $diContainer) {
+    $this->di = $diContainer;
+    $this->persistence = new DocDataPersistence($this->di->dbConnection);
     $this->repository = new DocDataRepository($this->persistence);
     $this->useCase = new AddDocData($this->repository);
   }
@@ -30,19 +32,19 @@ class DocDataAdd {
       $reqData = $request->getParsedBody();
       $docData = $this->useCase->add(
           $reqData['docType'],
-          $reqData['key'],
+          $reqData['dataKey'],
           $reqData['data']
       );
       $savedDocData = $this->persistence->retrieve(
-          $docData['id'],
+          $docData['dataId'],
           [
-              'id',
-              'key',
+              'dataId',
               'docType',
+              'dataKey',
               'createdAt'
           ]
       );
-      $savedDocData['bodyUri'] = '/api/v1/docdata/' . $docData['id'];
+      $savedDocData['bodyUri'] = '/api/v1/docdata/' . $docData['dataId'];
       return $response->withStatus(201)->withJson($savedDocData);
     } catch (InvalidDocDataAddRequestException $e) {
       return $response->withStatus(400)->withJson(

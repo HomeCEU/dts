@@ -32,17 +32,17 @@ class Render {
 
   protected function buildRequestOfIds(RenderRequest $request): AbstractEntity {
     return RenderRequest::fromState([
-        'id' => $this->getDataIdFromRequest($request),
+        'dataId' => $this->getDataIdFromRequest($request),
         'templateId' => $this->getTemplateIdFromRequest($request),
         'format' => $request->get('format'),
     ]);
   }
 
   private function getDataIdFromRequest(RenderRequest $request): string {
-    if (!empty($request->id)) {
-      return $request->id;
+    if (!empty($request->dataId)) {
+      return $request->dataId;
     }
-    return $this->docDataRepo->lookupId($request->docType, $request->key);
+    return $this->docDataRepo->lookupId($request->docType, $request->dataKey);
   }
 
   private function getTemplateIdFromRequest(RenderRequest $request): string {
@@ -55,7 +55,7 @@ class Render {
   private function renderTemplate(): AbstractEntity {
     $service = $this->getRenderService($this->completeRequest->format);
     $template = $this->templateRepo->getCompiledTemplateById($this->completeRequest->templateId);
-    $docData = $this->docDataRepo->getByDocDataId($this->completeRequest->id);
+    $docData = $this->docDataRepo->getByDocDataId($this->completeRequest->dataId);
 
     return RenderResponse::fromState([
         'path' => $service->render($template->body, $docData->data),

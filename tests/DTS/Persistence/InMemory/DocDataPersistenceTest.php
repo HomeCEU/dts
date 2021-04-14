@@ -13,7 +13,7 @@ class DocDataPersistenceTest extends TestCase {
   /** @var  DocDataPersistence */
   private $sut;
   
-  private $idCol = 'id';
+  private $idCol = 'dataId';
 
   public function testGetTable() {
     $this->assertSame(
@@ -76,13 +76,13 @@ class DocDataPersistenceTest extends TestCase {
 
   public function testFind() {
     $p = $this->persistence();
-    $p->persist(['id'=>'a','lname'=>'smith']);
-    $p->persist(['id'=>'b','lname'=>'doe']);
-    $p->persist(['id'=>'c','lname'=>'smith']);
+    $p->persist(['dataId'=>'a','lname'=>'smith']);
+    $p->persist(['dataId'=>'b','lname'=>'doe']);
+    $p->persist(['dataId'=>'c','lname'=>'smith']);
     $results = $p->find(['lname'=>'smith']);
     $expected = [
-        ['id'=>'a','lname'=>'smith'],
-        ['id'=>'c','lname'=>'smith']
+        ['dataId'=>'a','lname'=>'smith'],
+        ['dataId'=>'c','lname'=>'smith']
     ];
     Assert::assertEquals($expected, $results);
   }

@@ -11,10 +11,10 @@ class ListVersionsTest extends ApiTestCase {
   const ROUTE = "/api/v1/docdata";
 
   public function testListVersions() {
-    $key = __FUNCTION__; // just in case it doesnt cleanup, you will know where it came from.
-    $this->addFixtureData($key);
+    $dataKey = __FUNCTION__; // just in case it doesnt cleanup, you will know where it came from.
+    $this->addFixtureData($dataKey);
 
-    $uri = self::ROUTE."/{$this->docType}/{$key}/history";
+    $uri = self::ROUTE."/{$this->docType}/{$dataKey}/history";
     $response = $this->get($uri);
     $responseData = json_decode($response->getBody(), true);
 
@@ -23,7 +23,7 @@ class ListVersionsTest extends ApiTestCase {
     $this->assertTotalItems($responseData, 2);
     $this->AssertExpectedVersionItemKeys(
         $responseData,
-        ['id', 'docType', 'key', 'createdAt']
+        ['dataId', 'docType', 'dataKey', 'createdAt']
     );
   }
 
@@ -33,9 +33,9 @@ class ListVersionsTest extends ApiTestCase {
     $id = self::faker()->uuid;
 
     $this->docDataPersistence()->persist([
-        'id' => $id,
+        'dataId' => $id,
         'docType' => $this->docType,
-        'key' => $key,
+        'dataKey' => $key,
         "createdAt" => new DateTime("2020-10-13 23:47:07"),
         'data' => ['name'=>'Fred']
     ]);
@@ -43,9 +43,9 @@ class ListVersionsTest extends ApiTestCase {
         'total' => 1,
         'items' => [
             [
-                'id' => $id,
+                'dataId' => $id,
                 'docType' => $this->docType,
-                'key' => $key,
+                'dataKey' => $key,
                 "createdAt" => "2020-10-13T23:47:07+00:00",
                 "link" => self::ROUTE."/{$id}"
             ]
@@ -59,12 +59,12 @@ class ListVersionsTest extends ApiTestCase {
   }
 
   /**
-   * @param string $key
+   * @param string $dataKey
    */
-  private function addFixtureData(string $key): void {
-    $this->addDocDataFixture($key);
+  private function addFixtureData(string $dataKey): void {
+    $this->addDocDataFixture($dataKey);
     $this->addDocDataFixture(uniqid());
-    $this->addDocDataFixture($key);
+    $this->addDocDataFixture($dataKey);
   }
 
   /**

@@ -51,9 +51,9 @@ class TestCase extends \PHPUnit\Framework\TestCase {
 
   protected function docDataArray(array $overwrite=[]) {
     $base = [
-        'id'     => self::faker()->uuid,
+        'dataId'     => self::faker()->uuid,
         'docType'    => uniqid(__FUNCTION__),
-        'key'    => self::faker()->colorName,
+        'dataKey'    => self::faker()->colorName,
         'createdAt'  => $this->createdAtDateTime(),
         'data'       => [
             "firstName" => self::faker()->firstName,

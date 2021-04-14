@@ -23,45 +23,45 @@ class DocDataRepository {
     $this->persistence->persist($docData->toArray());
   }
 
-  public function getByDocDataId($id): DocData {
-    return DocData::fromState($this->persistence->retrieve($id));
+  public function getByDocDataId($dataId): DocData {
+    return DocData::fromState($this->persistence->retrieve($dataId));
   }
 
   public function newDocData(string $type, string $key, $data): DocData {
     return DocData::fromState(
         [
-            'id' => $this->persistence->generateId(),
+            'dataId' => $this->persistence->generateId(),
             'docType' => $type,
-            'key' => $key,
+            'dataKey' => $key,
             'data' => $data,
             'createdAt' => new \DateTime()
         ]
     );
   }
 
-  public function allVersions(string $docType, string $key): ?array {
+  public function allVersions(string $docType, string $dataKey): ?array {
     $filter = [
         'docType' => $docType,
-        'key' => $key
+        'dataKey' => $dataKey
     ];
     $cols = [
-        'id', 'docType', 'key', 'createdAt'
+        'dataId', 'docType', 'dataKey', 'createdAt'
     ];
     $rows = $this->persistence->find($filter, $cols);
     return $this->toDocDataArray($rows);
   }
 
-  public function lookupId(string $docType, string $key): string {
+  public function lookupId(string $docType, string $dataKey): string {
     $filter = [
         'docType' => $docType,
-        'key' => $key
+        'dataKey' => $dataKey
     ];
     $cols = [
-        'id',
+        'dataId',
         'createdAt'
     ];
     $row = $this->repoHelper->findNewest($filter, $cols);
-    return $row['id'];
+    return $row['dataId'];
   }
 
   private function toDocDataArray(array $rows): array {

@@ -84,12 +84,12 @@ class ApiTestCase extends HomeCEUTestCase {
     return $this->partialPersistence;
   }
 
-  protected function addDocDataFixture($key, $id = null): void {
+  protected function addDocDataFixture($dataKey, $id = null): void {
     $this->docDataPersistence()->persist([
         'docType' => $this->docType,
-        'key' => $key,
+        'dataKey' => $dataKey,
         'createdAt' => $this->createdAtDateTime(),
-        'id' => $id ?? uniqid(),
+        'dataId' => $id ?? uniqid(),
         'data' => ['name'=>'Fred']
     ]);
   }

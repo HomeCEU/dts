@@ -30,8 +30,8 @@ class GetDocDataTest extends TestCase {
   }
 
   public function testGetById() {
-    $id = $this->fixtureData['example']['id'];
-    $responseData = $this->httpGet(self::ROUTE."/{$id}");
+    $dataId = $this->fixtureData['example']['dataId'];
+    $responseData = $this->httpGet(self::ROUTE."/{$dataId}");
     Assert::assertEquals($this->expectedExampleResponse, $responseData);
   }
 
@@ -43,9 +43,9 @@ class GetDocDataTest extends TestCase {
 
   public function testGetByKey() {
     $responseData = $this->httpGet(self::ROUTE."/{$this->docType}/A");
-    // expect the most recent id from key A
-    $expectedId = $this->fixtureData['A2']['id'];
-    Assert::assertEquals($expectedId, $responseData['id']);
+    // expect the most recent id from dataKey A
+    $expectedId = $this->fixtureData['A2']['dataId'];
+    Assert::assertEquals($expectedId, $responseData['dataId']);
   }
 
   public function testGetByKey_Expect404() {
@@ -56,7 +56,7 @@ class GetDocDataTest extends TestCase {
 
   public function testGetByKey_responseFormat() {
     $example = $this->fixtureData['example'];
-    $responseData = $this->httpGet(self::ROUTE."/{$example["docType"]}/{$example['key']}");
+    $responseData = $this->httpGet(self::ROUTE."/{$example["docType"]}/{$example['dataKey']}");
     Assert::assertEquals($this->expectedExampleResponse, $responseData);
   }
 
@@ -73,36 +73,36 @@ class GetDocDataTest extends TestCase {
     $exampleId = self::faker()->uuid;
     $this->fixtureData = [
         'A1' => [
-            'id' => self::faker()->uuid,
+            'dataId' => self::faker()->uuid,
             'docType' => $this->docType,
-            'key' => 'A',
+            'dataKey' => 'A',
             'createdAt' => new DateTime('2020-01-0'.++$day),
             'data' => ['name'=>self::faker()->name]
         ],
         'A2' => [
-            'id' => self::faker()->uuid,
+            'dataId' => self::faker()->uuid,
             'docType' => $this->docType,
-            'key' => 'A',
+            'dataKey' => 'A',
             'createdAt' => new DateTime('2020-01-0'.++$day),
             'data' => ['name'=>self::faker()->name]
         ],
         'find' => $this->docDataArray([
-            'id' => self::faker()->uuid,
+            'dataId' => self::faker()->uuid,
             'docType' => $this->docType
         ]),
         'example' => [
-            'id' => $exampleId,
+            'dataId' => $exampleId,
             'docType' => $this->docType,
-            'key' => 'example',
+            'dataKey' => 'example',
             "createdAt" => new DateTime("2020-10-13 23:47:07"),
             'data' => ['name'=>'joe']
         ]
     ];
 
     $this->expectedExampleResponse = [
-        'id' => $exampleId,
+        'dataId' => $exampleId,
         'docType' => $this->docType,
-        'key' => 'example',
+        'dataKey' => 'example',
         "createdAt" => "2020-10-13T23:47:07+00:00",
         'data' => ['name'=>'joe']
     ];

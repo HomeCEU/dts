@@ -17,12 +17,12 @@ return [
     new Api\Route(['get'], '/partial/{partialId}', Api\Partial\GetPartial::class),
   # DocData
     new Api\Route(['post'], '/docdata', Api\DocData\DocDataAdd::class),
-    new Api\Route(['get'], '/docdata/{docType}/{key}/history', Api\DocData\ListVersions::class),
-    new Api\Route(['get'], '/docdata/{id}', Api\DocData\GetDocDataById::class),
-    new Api\Route(['get'], '/docdata/{docType}/{key}', API\DocData\GetDocDataByKey::class),
+    new Api\Route(['get'], '/docdata/{docType}/{dataKey}/history', Api\DocData\ListVersions::class),
+    new Api\Route(['get'], '/docdata/{dataId}', Api\DocData\GetDocDataById::class),
+    new Api\Route(['get'], '/docdata/{docType}/{dataKey}', API\DocData\GetDocDataByKey::class),
   # Render
     new Api\Route(['get'], '/render', Api\Render\Render::class),
-    new Api\Route(['get'], '/render/{docType}/{templateKey}/{key}', Api\Render\Render::class),
+    new Api\Route(['get'], '/render/{docType}/{templateKey}/{dataKey}', Api\Render\Render::class),
     new Api\Route(['post'], '/hotrender', Api\Render\AddHotRender::class),
     new Api\Route(['get'], '/hotrender/{requestId}', Api\Render\HotRender::class),
   # API

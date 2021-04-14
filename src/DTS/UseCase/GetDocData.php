@@ -20,7 +20,7 @@ class GetDocData {
     return $this->repo->getByDocDataId($id);
   }
 
-  public function getById($id): DocData {
-    return $this->repo->getByDocDataId($id);
+  public function getById($dataId): DocData {
+    return $this->repo->getByDocDataId($dataId);
   }
 }

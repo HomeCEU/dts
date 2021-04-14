@@ -8,7 +8,7 @@ use HomeCEU\Tests\Api\ApiTestCase;
 use PHPUnit\Framework\Assert;
 
 class DocDataAddTest extends ApiTestCase {
-  const EXPECTED_KEYS = ['id', 'docType', 'key', 'createdAt'];
+  const EXPECTED_KEYS = ['dataId', 'docType', 'dataKey', 'createdAt'];
   const ROUTE = '/api/v1/docdata';
 
   public function testPostNewDocData(): void {
@@ -43,7 +43,7 @@ class DocDataAddTest extends ApiTestCase {
   protected function makeRequestArray($type, $key, $data): array {
     return [
         'docType' => $type,
-        'key' => $key,
+        'dataKey' => $key,
         'data' => $data
     ];
   }

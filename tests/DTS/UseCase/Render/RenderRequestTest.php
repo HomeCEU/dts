@@ -11,11 +11,11 @@ use PHPUnit\Framework\Assert;
 class RenderRequestTest extends TestCase {
 
   public function testBuildFromArray() {
-    $state = ['templateId'=>'T', 'id'=>'D', 'key'=>'DK', 'docType'=>'DT', 'format' => 'PDF'];
+    $state = ['templateId'=>'T', 'dataId'=>'D', 'dataKey'=>'DK', 'docType'=>'DT', 'format' => 'PDF'];
     $object = RenderRequest::fromState($state);
     Assert::assertEquals($state['templateId'], $object->templateId);
-    Assert::assertEquals($state['id'], $object->id);
-    Assert::assertEquals($state['key'], $object->key);
+    Assert::assertEquals($state['dataId'], $object->dataId);
+    Assert::assertEquals($state['dataKey'], $object->dataKey);
     Assert::assertEquals($state['docType'], $object->docType);
     Assert::assertEquals($state['format'], $object->format);
   }
@@ -40,21 +40,21 @@ class RenderRequestTest extends TestCase {
     return [
         [
             'templateId' => 'T',
-            'id' => 'D'
+            'dataId' => 'D'
         ],
         [
             'templateId' => 'T',
-            'key' => 'DK',
+            'dataKey' => 'DK',
             'docType' => 'DT'
         ],
         [
-            'id' => 'D',
+            'dataId' => 'D',
             'templateKey' => 'TK',
             'docType' => 'DT'
         ],
         [
             'templateKey' => 'TK',
-            'key' => 'DK',
+            'dataKey' => 'DK',
             'docType' => 'DT'
         ]
     ];
@@ -67,19 +67,19 @@ class RenderRequestTest extends TestCase {
             'docType' => 'D'
         ],
         [
-            'key' => 'DK',
+            'dataKey' => 'DK',
             'docType' => 'DT'
         ],
         [
             'templateKey' => 'TK',
-            'id' => 'D'
+            'dataId' => 'D'
         ],
         [
-            'key' => 'DK',
+            'dataKey' => 'DK',
             'templateId' => 'T'
         ],
         [
-            'id' => 'D',
+            'dataId' => 'D',
             'docType' => 'DT'
         ]
     ];
