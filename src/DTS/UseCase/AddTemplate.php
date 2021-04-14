@@ -36,7 +36,7 @@ class AddTemplate {
 
   private function compileTemplate(Template $template): string {
     $renderPartials = array_map(function (Partial $partial) {
-      return new RenderPartial($partial->name, $partial->body);
+      return new RenderPartial($partial->key, $partial->body);
     }, $this->partialRepository->findByDocType($template->docType));
 
     $this->compiler->setPartials($renderPartials);

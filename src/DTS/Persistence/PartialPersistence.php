@@ -13,7 +13,7 @@ class PartialPersistence extends AbstractPersistence {
   private array $map = [
       'id' => 'partial_id',
       'docType' => 'doc_type',
-      'name' => 'name',
+      'key' => 'name',
       'createdAt' => 'created_at',
       'metadata' => 'metadata',
       'body' => 'body'

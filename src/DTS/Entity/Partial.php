@@ -9,15 +9,15 @@ use HomeCEU\DTS\Render\PartialInterface;
 
 class Partial extends AbstractEntity implements PartialInterface {
   public string $id;
-  public string $name;
+  public string $key;
   public string $docType;
   public string $body;
   public string $author;
   public array $metadata = [];
   public \DateTime $createdAt;
 
-  public function getName(): string {
-    return $this->name;
+  public function getKey(): string {
+    return $this->key;
   }
 
   public function getBody(): string {

@@ -39,7 +39,7 @@ class AddPartial {
       $partial = $this->service->add($req);
 
       $res = AddPartialResponse::fromState($partial->toArray());
-      $res->bodyUri = "/api/v1/partial/{$partial->id}";
+      $res->bodyUri = "/api/v1/partial/{$partial->get('id')}";
 
       return $response->withStatus(201)
           ->withJson($res)

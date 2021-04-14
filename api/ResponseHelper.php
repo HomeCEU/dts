@@ -25,11 +25,11 @@ class ResponseHelper {
   public static function partialDetailModel(Partial $partial): array {
     return [
         'id' => $partial->id,
-        'name' => $partial->name,
+        'key' => $partial->key,
         'docType' => $partial->docType,
         'author' => $partial->author,
         'metadata' => $partial->metadata,
-        'createdAt' => $partial->createdAt->format(\DateTime::W3C),
+        'createdAt' => $partial->createdAt,
         'bodyUri' => self::ROUTE . "/partial/{$partial->id}",
     ];
   }

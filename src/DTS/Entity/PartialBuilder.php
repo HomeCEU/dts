@@ -7,7 +7,7 @@ use HomeCEU\DTS\Render\PartialInterface;
 
 class PartialBuilder {
   private string $id;
-  private string $name;
+  private string $key;
   private string $docType;
   private string $body;
   private string $author = '';
@@ -23,8 +23,8 @@ class PartialBuilder {
     return new self(IdGenerator::create(), new \DateTime());
   }
 
-  public function withName(string $name): self {
-    $this->name = $name;
+  public function withKey(string $key): self {
+    $this->key = $key;
     return $this;
   }
 
@@ -51,8 +51,8 @@ class PartialBuilder {
   public function build(): PartialInterface {
     return Partial::fromState([
         'id' => $this->id,
+        'key' => $this->key,
         'docType' => $this->docType,
-        'name' => $this->name,
         'author' => $this->author,
         'body' => $this->body,
         'metadata' => $this->metadata,

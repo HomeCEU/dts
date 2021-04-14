@@ -8,7 +8,7 @@ use HomeCEU\DTS\AbstractEntity;
 
 class AddPartialResponse extends AbstractEntity {
   public string $id;
-  public string $name;
+  public string $key;
   public string $docType;
   public string $author;
   public array $metadata;
