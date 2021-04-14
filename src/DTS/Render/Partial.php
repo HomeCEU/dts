@@ -18,4 +18,12 @@ class Partial extends AbstractEntity implements PartialInterface {
   public function toArray(): array {
     return ['name' => $this->name, 'body' => $this->body];
   }
+
+  public function getName(): string {
+    return $this->name;
+  }
+
+  public function getBody(): string {
+    return $this->body;
+  }
 }

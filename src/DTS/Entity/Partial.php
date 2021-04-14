@@ -15,4 +15,12 @@ class Partial extends AbstractEntity implements PartialInterface {
   public string $author;
   public array $metadata = [];
   public \DateTime $createdAt;
+
+  public function getName(): string {
+    return $this->name;
+  }
+
+  public function getBody(): string {
+    return $this->body;
+  }
 }

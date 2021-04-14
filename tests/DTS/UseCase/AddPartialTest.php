@@ -4,7 +4,7 @@
 namespace HomeCEU\Tests\DTS\UseCase;
 
 
-use HomeCEU\DTS\Persistence;
+use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Render\RenderFactory;
 use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
@@ -32,12 +32,26 @@ class AddPartialTest extends TestCase {
     $this->service = new AddPartial($this->partialRepository, $this->templateRepository);
   }
 
-  public function testAddPartialFromRequest(): void {
-    $request = $this->createAddPartialRequest('DT', 'a_partial', 'body');
+  public function testCreatePartialFromRequest(): void {
+    $request = $this->createAddPartialRequest('DT', 'full_name', '{{ user.firstName }} {{ user.lastName }}');
     $saved = $this->service->add($request);
-    $found = $this->partialRepository->getById($saved->id);
+    $found = $this->partialRepository->getById($saved->get('id'));
 
     $this->assertEquals($found, $saved);
+  }
+
+  public function testCreatePartialDoesNotVerifyPartialsInPartial(): void {
+    $request = $this->createAddPartialRequest('DT', 'a_partial', '{{> missing_partial }}');
+    $saved = $this->service->add($request);
+    $found = $this->partialRepository->getById($saved->get('id'));
+
+    $this->assertEquals($found, $saved);
+  }
+
+  public function testCreateUnCompilablePartial(): void {
+    $this->expectException(CompilationException::class);
+    $request = $this->createAddPartialRequest('DT', 'a_partial', '{{#if name }}');
+    $this->service->add($request);
   }
 
   public function testAddingPartialCompilesTemplatesWithSameDocType(): void {
@@ -52,6 +66,22 @@ class AddPartialTest extends TestCase {
 
     $r = RenderFactory::createHTML();
     $this->assertEquals('partial body', file_get_contents($r->render($ct->body, [])));
+  }
+
+  public function testCompilationErrorProvidesTemplateData(): void {
+    $request = $this->createAddPartialRequest('DT', 'a_partial', 'test partial');
+    $template = $this->createSampleTemplate('DT', 'key', '{{> a_partial }} {{#if name }}');
+    $this->templateRepository->save($template);
+    $this->templateRepository->saveCompiled($template, 'compiled_version');
+
+    try {
+      $this->service->add($request);
+      $this->fail(CompilationException::class . ' not thrown');
+    } catch (CompilationException $e) {
+      $meta = $e->errors;
+      $this->assertEquals($template->templateId, $meta[0]['template']['id']);
+      $this->assertEquals($template->templateKey, $meta[0]['template']['key']);
+    }
   }
 
   protected function createAddPartialRequest(string $docType, string $key, string $body): AddPartialRequest {

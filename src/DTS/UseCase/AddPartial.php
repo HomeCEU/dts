@@ -5,41 +5,32 @@ namespace HomeCEU\DTS\UseCase;
 
 
 use HomeCEU\DTS\Entity\PartialBuilder;
+use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Render\PartialInterface;
 use HomeCEU\DTS\Render\TemplateCompiler;
 use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
 
 class AddPartial {
-  private TemplateCompiler $compiler;
+  private TransactionalCompiler $compiler;
   private PartialRepository $partialRepository;
-  private TemplateRepository $templateRepository;
 
   public function __construct(PartialRepository $partialRepository, TemplateRepository $templateRepository) {
-    $this->compiler = new TemplateCompiler();
+    $this->compiler = new TransactionalCompiler($templateRepository, $partialRepository);
     $this->partialRepository = $partialRepository;
-    $this->templateRepository = $templateRepository;
   }
 
   public function add(AddPartialRequest $request): PartialInterface {
     $partial = $this->createPartialFromRequest($request);
+    $this->assertCanCompile($partial);
     $this->savePartial($partial);
-    $this->compileTemplatesForDocType($request->docType);
+    $this->compiler->compileAllTemplatesForDocType($request->docType);
 
     return $partial;
   }
 
   private function savePartial(PartialInterface $partial): void {
     $this->partialRepository->save($partial);
-  }
-
-  private function compileTemplatesForDocType(string $docType) {
-    $this->compiler->setPartials($this->partialRepository->findByDocType($docType));
-
-    foreach ($this->templateRepository->findByDocType($docType) as $template) {
-      $ct = $this->compiler->compile($template->body);
-      $this->templateRepository->saveCompiled($template, $ct);
-    }
   }
 
   private function createPartialFromRequest(AddPartialRequest $request): PartialInterface {
@@ -50,5 +41,18 @@ class AddPartial {
         ->withAuthor($request->author)
         ->withMetadata($request->metadata)
         ->build();
+  }
+
+  /**
+   * Creates a template that requires the partial, will throw an exception on failure.
+   *
+   * @param PartialInterface $partial
+   * @throws CompilationException
+   */
+  private function assertCanCompile(PartialInterface $partial) {
+    TemplateCompiler::create()
+        ->ignoreMissingPartials()
+        ->addPartial($partial)
+        ->compile("{{> {$partial->getName()} }}");
   }
 }

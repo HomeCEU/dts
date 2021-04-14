@@ -36,7 +36,7 @@ class TemplatePersistence extends AbstractPersistence implements Persistence {
     $this->useKeyMap($this->map);
   }
 
-  public function delete($id) {
+  public function delete(string $id): void {
     $this->db->deleteWhere(self::TABLE, ['template_id' => $id]);
   }
 

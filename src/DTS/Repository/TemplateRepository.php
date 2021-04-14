@@ -4,7 +4,6 @@
 namespace HomeCEU\DTS\Repository;
 
 
-use DateTime;
 use HomeCEU\DTS\Entity\CompiledTemplate;
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Persistence;
@@ -32,7 +31,7 @@ class TemplateRepository {
         'templateKey' => $key,
         'author' => $author,
         'body' => $body,
-        'createdAt' => (new DateTime())->format(DateTime::ISO8601),
+        'createdAt' => new \DateTime(),
     ]);
   }
 
@@ -40,7 +39,7 @@ class TemplateRepository {
     return CompiledTemplate::fromState([
         'templateId' => $template->templateId,
         'body' => $compiled,
-        'createdAt' => (new DateTime())->format(DateTime::ISO8601),
+        'createdAt' => new \DateTime(),
     ]);
   }
 
@@ -153,7 +152,7 @@ class TemplateRepository {
     return CompiledTemplate::fromState([
         'templateId' => $template->templateId,
         'body' => $compiled,
-        'createdAt' => (new DateTime())->format(DateTime::ISO8601),
+        'createdAt' => new \DateTime(),
     ])->toArray();
   }
 }

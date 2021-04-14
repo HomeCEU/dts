@@ -10,6 +10,8 @@ use Nette\Database\Row;
 use PDOStatement;
 
 class Connection  extends \Nette\Database\Connection {
+  public bool $inTransaction = false;
+
   public static function buildFromConfig(DbConfig $config, array $options = null): Connection {
     return new static(
         $config->dsn(),
@@ -17,6 +19,23 @@ class Connection  extends \Nette\Database\Connection {
         $config->pass,
         $options
     );
+  }
+
+  public function beginTransaction(): void {
+    if (!$this->inTransaction) {
+      parent::beginTransaction();
+      $this->inTransaction = true;
+    }
+  }
+
+  public function rollBack(): void {
+    parent::rollBack();
+    $this->inTransaction = false;
+  }
+
+  public function commit(): void {
+    parent::commit();
+    $this->inTransaction = false;
   }
 
   public function pdoQuery(string $sql, array $binds=[]): PDOStatement {

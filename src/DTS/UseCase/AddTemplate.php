@@ -23,19 +23,28 @@ class AddTemplate {
   }
 
   public function addTemplate(AddTemplateRequest $request): Template {
-    $template = $this->repository->createNewTemplate($request->docType, $request->templateKey, $request->author, $request->body);
-    $this->repository->save($template);
-    $this->addCompiled($template);
-
+    $template = $this->repository->createNewTemplate(
+        $request->docType,
+        $request->templateKey,
+        $request->author,
+        $request->body
+    );
+    $compiled = $this->compileTemplate($template);
+    $this->save($template, $compiled);
     return $template;
   }
 
-  private function addCompiled(Template $template): void {
+  private function compileTemplate(Template $template): string {
     $renderPartials = array_map(function (Partial $partial) {
       return new RenderPartial($partial->name, $partial->body);
     }, $this->partialRepository->findByDocType($template->docType));
 
     $this->compiler->setPartials($renderPartials);
-    $this->repository->saveCompiled($template, $this->compiler->compile($template->body));
+    return $this->compiler->compile($template->body);
+  }
+
+  private function save(Template $template, string $compiled) {
+    $this->repository->save($template);
+    $this->repository->saveCompiled($template, $compiled);
   }
 }

@@ -26,6 +26,7 @@ class AddPartialTest extends ApiTestCase {
     ];
     $response = $this->post('/api/v1/partial', $request);
     $this->assertPartialWasCreated($response);
+    $this->deletePartial($response);
   }
 
   public function testInvalidRequests(): void {
@@ -45,5 +46,10 @@ class AddPartialTest extends ApiTestCase {
     $content = $this->getResponseJsonAsArray($response);
     $partialArray = $this->persistence->retrieve($content['id']);
     $this->assertNotEmpty($partialArray['metadata']);
+  }
+
+  private function deletePartial(ResponseInterface $response) {
+    $content = $this->getResponseJsonAsArray($response);
+    $this->persistence->delete($content['id']);
   }
 }

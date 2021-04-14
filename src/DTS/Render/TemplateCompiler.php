@@ -12,11 +12,12 @@ class TemplateCompiler {
   private array $helpers = [];
   private array $partials = [];
 
-  public static function create(): self {
-    $tc = new self();
-    $tc->addHelper(TemplateHelpers::equal());
+  private function __construct() {
+    $this->addHelper(TemplateHelpers::equal());
+  }
 
-    return $tc;
+  public static function create(): self {
+    return new self();
   }
 
   public function setHelpers(array $helpers): self {
@@ -27,8 +28,9 @@ class TemplateCompiler {
     return $this;
   }
 
-  public function addHelper(Helper $helper): void {
+  public function addHelper(Helper $helper): self {
     $this->helpers[$helper->name] = $helper->func;
+    return $this;
   }
 
   public function setPartials(array $partials): self {
@@ -40,12 +42,14 @@ class TemplateCompiler {
     return $this;
   }
 
-  public function addPartial(PartialInterface $partial): void {
+  public function addPartial(PartialInterface $partial): self {
     $this->partials[$partial->name] = $partial->body;
+    return $this;
   }
 
-  public function ignoreMissingPartials(): void {
+  public function ignoreMissingPartials(): self {
     $this->flags |= Flags::FLAG_ERROR_SKIPPARTIAL;
+    return $this;
   }
 
   public function compile(string $template): string {
@@ -57,7 +61,7 @@ class TemplateCompiler {
       ];
       return LightnCandy::compile($template, $options);
     } catch (\Exception $e) {
-      throw new CompilationException("Cannot compile template: {$e->getMessage()}");
+      throw CompilationException::fromException($e);
     }
   }
 

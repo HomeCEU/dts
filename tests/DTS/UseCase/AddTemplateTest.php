@@ -5,6 +5,7 @@ namespace HomeCEU\Tests\DTS\UseCase;
 
 
 use HomeCEU\DTS\Persistence;
+use HomeCEU\DTS\Render\CompilationException;
 use HomeCEU\DTS\Repository\PartialRepository;
 use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\AddTemplate;
@@ -12,7 +13,6 @@ use HomeCEU\DTS\UseCase\AddTemplateRequest;
 use HomeCEU\DTS\UseCase\Exception\InvalidAddTemplateRequestException;
 use HomeCEU\Tests\DTS\PartialTestTrait;
 use HomeCEU\Tests\DTS\TestCase;
-use PHPUnit\Framework\Assert;
 
 class AddTemplateTest extends TestCase {
   use PartialTestTrait;
@@ -48,8 +48,20 @@ class AddTemplateTest extends TestCase {
     $request = $this->createAddRequestWithBody('Hi, {{ name }}!');
     $template = $this->useCase->addTemplate($request);
 
-    Assert::assertEquals($template->toArray(), $this->templatePersistence->retrieve($template->templateId));
-    Assert::assertNotEmpty($this->compiledTemplatePersistence->retrieve($template->templateId));
+    $this->assertEquals($template->toArray(), $this->templatePersistence->retrieve($template->templateId));
+    $this->assertNotEmpty($this->compiledTemplatePersistence->retrieve($template->templateId));
+  }
+
+  public function testAddTemplateWithInvalidSyntaxDoesNotSaveTemplate(): void {
+    try {
+      $request = $this->createAddRequestWithBody('{{#if noendif }}');
+      $this->useCase->addTemplate($request);
+    } catch (CompilationException $e) {
+      $this->assertEmpty($this->templatePersistence->find([
+              'docType' => $request->docType,
+              'templateKey' => $request->templateKey]
+      ));
+    }
   }
 
   public function testAddTemplateWithPartials(): void {
@@ -59,8 +71,8 @@ class AddTemplateTest extends TestCase {
     $request = $this->createAddRequestWithBody('{{> a_partial }} {{> another_partial }}');
     $template = $this->useCase->addTemplate($request);
 
-    Assert::assertEquals($template->toArray(), $this->templatePersistence->retrieve($template->templateId));
-    Assert::assertNotEmpty($this->compiledTemplatePersistence->retrieve($template->templateId));
+    $this->assertEquals($template->toArray(), $this->templatePersistence->retrieve($template->templateId));
+    $this->assertNotEmpty($this->compiledTemplatePersistence->retrieve($template->templateId));
   }
 
   private function createAddRequestWithBody(string $body): AddTemplateRequest {

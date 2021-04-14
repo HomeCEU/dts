@@ -34,7 +34,7 @@ class DocDataRepository {
             'docType' => $type,
             'dataKey' => $key,
             'data' => $data,
-            'createdAt' => (new DateTime())->format(DateTime::ISO8601)
+            'createdAt' => new \DateTime()
         ]
     );
   }

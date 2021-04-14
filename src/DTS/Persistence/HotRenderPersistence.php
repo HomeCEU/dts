@@ -23,7 +23,7 @@ class HotRenderPersistence extends AbstractPersistence implements Persistence {
     $this->useKeyMap($this->map);
   }
 
-  public function delete($id) {
+  public function delete(string $id): void {
     $error = sprintf(
         "%s not implemented",
         __METHOD__
