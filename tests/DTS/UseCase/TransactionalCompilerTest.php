@@ -68,9 +68,9 @@ class TransactionalCompilerTest extends TestCase {
     try {
       $this->compiler->compileAllTemplatesForDocType($docType);
     } catch (CompilationException $e) {
-      $this->assertEquals($template->templateId, $e->templateMetadata[0]['template']['id']);
-      $this->assertEquals($template->templateKey, $e->templateMetadata[0]['template']['key']);
-      $this->assertTrue(in_array('a_partial', $e->templateMetadata[0]['template']['partials']));
+      $this->assertEquals($template->templateId, $e->errors[0]['template']['id']);
+      $this->assertEquals($template->templateKey, $e->errors[0]['template']['key']);
+      $this->assertTrue(in_array('a_partial', $e->errors[0]['template']['partials']));
     }
   }
 
@@ -82,8 +82,8 @@ class TransactionalCompilerTest extends TestCase {
     try {
       $this->compiler->compileAllTemplatesForDocType($docType);
     } catch (CompilationException $e) {
-      $this->assertEquals($template->templateId, $e->templateMetadata[0]['template']['id']);
-      $this->assertEquals($template->templateKey, $e->templateMetadata[0]['template']['key']);
+      $this->assertEquals($template->templateId, $e->errors[0]['template']['id']);
+      $this->assertEquals($template->templateKey, $e->errors[0]['template']['key']);
     }
   }
 

@@ -49,7 +49,7 @@ class AddPartial {
     } catch (CompilationException $e) {
       return $response->withStatus(409)->withJson([
           'message' => $e->getMessage(),
-          'errors' => $e->templateMetadata
+          'errors' => $e->errors
       ]);
     }
   }

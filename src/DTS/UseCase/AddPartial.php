@@ -44,20 +44,15 @@ class AddPartial {
   }
 
   /**
-   * Creates a template that requires the partial,
-   * if it fails to compile, don't save it.
+   * Creates a template that requires the partial, will throw an exception on failure.
    *
    * @param PartialInterface $partial
    * @throws CompilationException
    */
   private function assertCanCompile(PartialInterface $partial) {
-    try {
-      TemplateCompiler::create()
-          ->ignoreMissingPartials()
-          ->addPartial($partial)
-          ->compile("{{> {$partial->getName()} }}");
-    } catch (CompilationException $e) {
-      throw new CompilationException('Cannot compile partial', [$e->getMessage()]);
-    }
+    TemplateCompiler::create()
+        ->ignoreMissingPartials()
+        ->addPartial($partial)
+        ->compile("{{> {$partial->getName()} }}");
   }
 }

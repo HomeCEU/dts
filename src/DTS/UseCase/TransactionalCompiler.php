@@ -50,12 +50,13 @@ class TransactionalCompiler {
       $this->templateRepository->saveCompiled($template, $ct);
     } catch (CompilationException $e) {
       $this->errors[] = [
+          'code' => $e->getCode(),
           'message' => $e->getMessage(),
           'template' => [
               'id' => $template->templateId,
               'docType' => $template->docType,
               'key' => $template->templateKey,
-              'partials' => RenderHelper::extractExpectedPartialsFromTemplate($template->body),
+              'partials' => RenderHelper::extractPartials($template->body),
           ]
       ];
     }
@@ -71,7 +72,7 @@ class TransactionalCompiler {
   private function endTransaction(): void {
     if (!empty($this->errors)) {
       $this->rollback();
-      throw new CompilationException("Error compiling templates.", $this->errors);
+      throw CompilationException::create("Error compiling templates.", 1, $this->errors);
     }
     $this->commit();
   }

@@ -61,11 +61,7 @@ class TemplateCompiler {
       ];
       return LightnCandy::compile($template, $options);
     } catch (\Exception $e) {
-      $message = $e->getMessage();
-      if (strpos($message, 'Wrong variable naming') === 0) {
-        $message = strtok($message, "\n");
-      }
-      throw new CompilationException($message);
+      throw CompilationException::fromException($e);
     }
   }
 

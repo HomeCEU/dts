@@ -53,16 +53,13 @@ class AddTemplate {
     } catch (InvalidAddTemplateRequestException $e) {
       return $response->withStatus(400)->withJson(['errors' => "Invalid Request | {$e->getMessage()}"]);
     } catch (CompilationException $e) {
-      $errors = [$e->getMessage()];
-      if (strpos($e->getMessage(), 'Can not find partial for') === 0) {
-        $errors = [[
-            'error' => 'One or more required partials cannot be found. Please check your source code or create the missing partials',
-            'required_partials' => RenderHelper::extractExpectedPartialsFromTemplate($addRequest->body)
-        ]];
+      $errors = ['message' => $e->getMessage()];
+      if ($e->getCode() === $e::ERROR_MISSING_PARTIAL) {
+        $errors['required_partials'] = RenderHelper::extractPartials($addRequest->body);
       }
       return $response->withStatus(409)->withJson([
           'message' => 'Cannot compile template',
-          'errors' => $errors
+          'errors' => [$errors]
       ]);
     }
   }
