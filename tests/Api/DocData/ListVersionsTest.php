@@ -5,16 +5,15 @@ namespace HomeCEU\Tests\Api\DocData;
 
 use DateTime;
 use HomeCEU\Tests\Api\ApiTestCase;
-use PHPUnit\Framework\Assert;
 
 class ListVersionsTest extends ApiTestCase {
   const ROUTE = "/api/v1/docdata";
 
   public function testListVersions() {
-    $dataKey = __FUNCTION__; // just in case it doesnt cleanup, you will know where it came from.
-    $this->addFixtureData($dataKey);
+    $key = __FUNCTION__; // just in case it doesnt cleanup, you will know where it came from.
+    $this->addFixtureData($key);
 
-    $uri = self::ROUTE."/{$this->docType}/{$dataKey}/history";
+    $uri = self::ROUTE."/{$this->docType}/{$key}/history";
     $response = $this->get($uri);
     $responseData = json_decode($response->getBody(), true);
 
@@ -23,19 +22,19 @@ class ListVersionsTest extends ApiTestCase {
     $this->assertTotalItems($responseData, 2);
     $this->AssertExpectedVersionItemKeys(
         $responseData,
-        ['dataId', 'docType', 'dataKey', 'createdAt']
+        ['id', 'docType', 'key', 'createdAt']
     );
   }
 
   public function testResponseFormat() {
     // load fixture
-    $key = self::faker()->colorName;
-    $id = self::faker()->uuid;
+    $key = uniqid();
+    $id = uniqid();
 
     $this->docDataPersistence()->persist([
-        'dataId' => $id,
+        'id' => $id,
         'docType' => $this->docType,
-        'dataKey' => $key,
+        'key' => $key,
         "createdAt" => new DateTime("2020-10-13 23:47:07"),
         'data' => ['name'=>'Fred']
     ]);
@@ -43,10 +42,10 @@ class ListVersionsTest extends ApiTestCase {
         'total' => 1,
         'items' => [
             [
-                'dataId' => $id,
+                'id' => $id,
                 'docType' => $this->docType,
-                'dataKey' => $key,
-                "createdAt" => "2020-10-13T23:47:07+00:00",
+                'key' => $key,
+                "createdAt" => new DateTime("2020-10-13 23:47:07"),
                 "link" => self::ROUTE."/{$id}"
             ]
         ]
@@ -55,16 +54,16 @@ class ListVersionsTest extends ApiTestCase {
     $uri = self::ROUTE."/{$this->docType}/{$key}/history";
     $response = $this->get($uri);
     $responseData = json_decode($response->getBody(), true);
-    Assert::assertEquals($expected, $responseData);
+    $this->assertEquals(json_decode(json_encode($expected), true), $responseData);
   }
 
   /**
-   * @param string $dataKey
+   * @param string $key
    */
-  private function addFixtureData(string $dataKey): void {
-    $this->addDocDataFixture($dataKey);
+  private function addFixtureData(string $key): void {
+    $this->addDocDataFixture($key);
     $this->addDocDataFixture(uniqid());
-    $this->addDocDataFixture($dataKey);
+    $this->addDocDataFixture($key);
   }
 
   /**
@@ -73,13 +72,10 @@ class ListVersionsTest extends ApiTestCase {
    */
   private function AssertExpectedVersionItemKeys($responseData, array $expectedResponseKeys): void {
     foreach ($expectedResponseKeys as $key) {
-      Assert::assertFalse(empty($responseData['items'][0][$key]));
+      $this->assertFalse(empty($responseData['items'][0][$key]));
     }
 
-    Assert::assertFalse(
-        array_key_exists('data', $responseData['items'][0]),
-        "ERROR: get docdata history should not respond with the data"
-    );
+    $this->assertArrayNotHasKey('data', $responseData['items'][0]);
   }
 
   /**
@@ -87,7 +83,7 @@ class ListVersionsTest extends ApiTestCase {
    * @param $total int
    */
   private function assertTotalItems($responseData, $total): void {
-    Assert::assertCount($total, $responseData['items']);
-    Assert::assertEquals($total, $responseData['total']);
+    $this->assertCount($total, $responseData['items']);
+    $this->assertEquals($total, $responseData['total']);
   }
 }

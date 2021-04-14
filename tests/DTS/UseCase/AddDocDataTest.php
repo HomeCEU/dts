@@ -46,16 +46,16 @@ class AddDocDataTest extends TestCase {
     $fake = Faker::generator();
     $inputs = [
         'docType' => self::ENTITY_TYPE,
-        'dataKey' => $fake->md5,
+        'key' => $fake->md5,
         'data' => $this->profileData()
     ];
     $uc = new AddDocData($this->repository);
     $docData = $uc->add(
         $inputs['docType'],
-        $inputs['dataKey'],
+        $inputs['key'],
         $inputs['data']
     );
-    $savedDocData = $this->persistence->retrieve($docData['dataId']);
+    $savedDocData = $this->persistence->retrieve($docData['id']);
     Assert::assertEquals($docData, $savedDocData);
   }
 

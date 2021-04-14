@@ -36,9 +36,9 @@ class DocDataTest extends TestCase {
   protected function fakeEntity() {
     $fake = Faker::generator();
     return [
-        'dataId'   => $fake->uuid,
+        'id'   => $fake->uuid,
         'docType'  => 'courseCompletionCertificate',
-        'dataKey'  => $fake->md5,
+        'key'  => $fake->md5,
         'createdAt'  => new \DateTime($this->iso8601),
         'data'       => [
             "firstName" => $fake->firstName,
