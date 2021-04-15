@@ -9,28 +9,20 @@ use PHPUnit\Framework\Assert;
 class TemplateVersionsTest extends TestCase {
   const ROUTE = '/api/v1/template';
 
-  protected $type = 'TemplateVersionsTest';
-  protected $key;
-  protected $data = [];
-  protected $expectedResults = [];
-  /**
-   * @var array
-   */
-  private $expectedExampleResponse;
-  /**
-   * @var string
-   */
-  private $exampleKey;
+  protected string $type = 'TemplateVersionsTest';
+  protected string $key;
+  protected array $data = [];
+  protected array $expectedResults = [];
+  private array $expectedExampleResponse;
+  private string $exampleKey;
 
   protected function setUp(): void {
     parent::setUp();
     $this->loadFixtureData();
-    // parent is handling db transaction...
   }
 
   protected function tearDown(): void {
     parent::tearDown();
-    // parent is handling db transaction rollback...
   }
 
   // test GET /template/{type}/{key}/history
@@ -111,14 +103,16 @@ class TemplateVersionsTest extends TestCase {
         ]
     ];
 
-    $this->expectedExampleResponse = [
+    // php \DateTime doesn't compare to a \DateTime object that's been converted to JSON and back
+    // the expected response will have been a decoded json string
+    $this->expectedExampleResponse = json_decode(json_encode([
         "id" => $exampleId,
         "docType" => $this->type,
         "key" => $this->exampleKey,
         "author" => "Robert Martin",
-        "createdAt" => "2020-10-13T23:47:07+00:00",
+        "createdAt" => new DateTime("2020-10-13 23:47:07"),
         "bodyUri" => self::ROUTE."/{$exampleId}"
-    ];
+    ]), true);
 
     foreach ($this->data as $row) {
       $this->templatePersistence()->persist($row);

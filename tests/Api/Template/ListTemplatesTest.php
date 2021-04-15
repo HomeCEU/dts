@@ -32,19 +32,17 @@ use PHPUnit\Framework\Assert;
 class ListTemplatesTest extends TestCase {
   const ROUTE = '/api/v1/template';
 
-  protected $data = [];
-  protected $expectedResults = [];
-  private $expectedExampleResponse = [];
+  protected array $data = [];
+  protected array $expectedResults = [];
+  private array $expectedExampleResponse = [];
 
   protected function setUp(): void {
     parent::setUp();
     $this->loadFixtureData();
-    // parent is handling db transaction...
   }
 
   protected function tearDown(): void {
     parent::tearDown();
-    // parent is handling db transaction rollback...
   }
 
   public function testListAllTemplates() {
@@ -191,14 +189,14 @@ class ListTemplatesTest extends TestCase {
         ]
     ];
 
-    $this->expectedExampleResponse = [
+    $this->expectedExampleResponse = json_decode(json_encode([
         "id" => $exampleId,
         "docType" => "example",
         "key" => "default-ce",
         "author" => "Robert Martin",
-        "createdAt" => "2020-10-13T23:47:07+00:00",
+        "createdAt" => new DateTime("2020-10-13 23:47:07"),
         "bodyUri" => self::ROUTE."/{$exampleId}"
-    ];
+    ]), true);
 
     $p = $this->templatePersistence();
     foreach ($this->data as $row) {

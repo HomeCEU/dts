@@ -17,7 +17,7 @@ class ResponseHelper {
         'key' => $t->key,
         'docType' => $t->docType,
         'author' => $t->author,
-        'createdAt' => $t->createdAt->format(\DateTime::W3C),
+        'createdAt' => $t->createdAt,
         'bodyUri' => self::ROUTE . "/template/{$t->id}"
     ];
   }
