@@ -98,7 +98,7 @@ class ApiTestCase extends HomeCEUTestCase {
     $this->partialPersistence()->persist([
         'id' => uniqid(),
         'docType' => $docType,
-        'name' => $key,
+        'key' => $key,
         'author'=>'author',
         'body'=> 'this is a partial',
         'metadata' => [],

@@ -54,7 +54,7 @@ class ListPartialsTest extends ApiTestCase {
         'id' => uniqid(),
         'docType' => $docType,
         'body' => '{{ name }}',
-        'name' => $key,
+        'key' => $key,
         'createdAt' => new \DateTime(),
         'author' => 'Test Author',
         'metadata' => []
