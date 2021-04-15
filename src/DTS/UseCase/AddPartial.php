@@ -35,7 +35,7 @@ class AddPartial {
 
   private function createPartialFromRequest(AddPartialRequest $request): PartialInterface {
     return PartialBuilder::create()
-        ->withName($request->name)
+        ->withKey($request->key)
         ->withBody($request->body)
         ->withDocType($request->docType)
         ->withAuthor($request->author)
@@ -53,6 +53,6 @@ class AddPartial {
     TemplateCompiler::create()
         ->ignoreMissingPartials()
         ->addPartial($partial)
-        ->compile("{{> {$partial->getName()} }}");
+        ->compile("{{> {$partial->getKey()} }}");
   }
 }

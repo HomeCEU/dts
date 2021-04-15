@@ -8,10 +8,10 @@ use HomeCEU\DTS\Entity\PartialBuilder;
 use HomeCEU\DTS\Render\PartialInterface;
 
 trait PartialTestTrait {
-  protected function createSamplePartial(string $docType, string $name): PartialInterface {
+  protected function createSamplePartial(string $docType, string $key): PartialInterface {
     return PartialBuilder::create()
         ->withMetadata(['type' => 'standard'])
-        ->withName($name)
+        ->withKey($key)
         ->withDocType($docType)
         ->withAuthor('Test Author')
         ->withBody('body')

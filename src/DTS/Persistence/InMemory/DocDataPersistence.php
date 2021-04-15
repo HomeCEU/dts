@@ -12,6 +12,6 @@ class DocDataPersistence extends InMemory {
   }
 
   public function idColumns(): array {
-    return ['dataId'];
+    return ['id'];
   }
 }

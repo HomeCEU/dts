@@ -22,7 +22,7 @@ class FindTemplateTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->templatePersistence = $this->fakePersistence('template', 'templateId');
+    $this->templatePersistence = $this->fakePersistence('template', 'id');
     $compiledTemplatePersistence = $this->fakePersistence('compiled_template', 'templateId');
     $this->useCase = new GetTemplate(
         new TemplateRepository($this->templatePersistence, $compiledTemplatePersistence)
@@ -55,7 +55,7 @@ class FindTemplateTest extends TestCase {
     $this->persistTemplates($t1, $t2);
 
     $result = $this->useCase->findTemplates(
-        $this->createRequest(self::DOC_TYPE_ENROLLMENT, $t1->templateKey)
+        $this->createRequest(self::DOC_TYPE_ENROLLMENT, $t1->key)
     );
 
     Assert::assertContainsEquals($t1, $result);

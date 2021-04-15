@@ -84,12 +84,12 @@ class ApiTestCase extends HomeCEUTestCase {
     return $this->partialPersistence;
   }
 
-  protected function addDocDataFixture($dataKey, $id = null): void {
+  protected function addDocDataFixture($key, $id = null): void {
     $this->docDataPersistence()->persist([
         'docType' => $this->docType,
-        'dataKey' => $dataKey,
+        'key' => $key,
         'createdAt' => $this->createdAtDateTime(),
-        'dataId' => $id ?? uniqid(),
+        'id' => $id ?? uniqid(),
         'data' => ['name'=>'Fred']
     ]);
   }
@@ -98,7 +98,7 @@ class ApiTestCase extends HomeCEUTestCase {
     $this->partialPersistence()->persist([
         'id' => uniqid(),
         'docType' => $docType,
-        'name' => $key,
+        'key' => $key,
         'author'=>'author',
         'body'=> 'this is a partial',
         'metadata' => [],
@@ -106,14 +106,14 @@ class ApiTestCase extends HomeCEUTestCase {
     ]);
   }
 
-  protected function addTemplateFixture($templateKey, $id = null, $body = null): void {
+  protected function addTemplateFixture($key, $id = null, $body = null): void {
     $id = $id ?? uniqid();
     $body = $body ?? 'Hi {{name}}';
     $this->templatePersistence()->persist([
         'docType' => $this->docType,
-        'templateKey' => $templateKey,
+        'key' => $key,
         'createdAt' => $this->createdAtDateTime(),
-        'templateId' => $id,
+        'id' => $id,
         'body'=> $body,
         'author'=>'author',
         'name'=>'name'
@@ -124,9 +124,9 @@ class ApiTestCase extends HomeCEUTestCase {
     ]);
   }
 
-  protected function addHotRenderRequestFixture($requestId, $value): void {
+  protected function addHotRenderRequestFixture($id, $value): void {
     $this->hotRenderPersistence()->persist([
-        'requestId' => $requestId,
+        'id' => $id,
         'template' => TemplateCompiler::create()->compile('{{ value }}'),
         'data' => ['value' => $value],
         'createdAt' => new DateTime()

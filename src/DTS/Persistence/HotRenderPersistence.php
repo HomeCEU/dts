@@ -12,7 +12,7 @@ class HotRenderPersistence extends AbstractPersistence implements Persistence {
   const ID_COL = 'request_id';
 
   private array $map = [
-      'requestId' => 'request_id',
+      'id' => 'request_id',
       'template' => 'template',
       'data' => 'data',
       'createdAt' => 'created_at'

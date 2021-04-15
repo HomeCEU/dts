@@ -48,12 +48,12 @@ class TemplateVersionListTest extends TestCase {
       $ids[$key][] = $id;
     }
 
-    // ensure we get the correct templateIds for each key
+    // ensure we get the correct ids for each key
     foreach ([$key1, $key2] as $k) {
       $results = $this->useCase->getVersions($this->docType, $k);
       Assert::assertSameSize($ids[$k], $results);
       foreach ($results as $t) {
-        Assert::assertContains($t->templateId, $ids[$k]);
+        Assert::assertContains($t->id, $ids[$k]);
       }
     }
   }
@@ -66,10 +66,10 @@ class TemplateVersionListTest extends TestCase {
     }
     $t = $this->newTemplate([
         'docType' => $this->docType,
-        'templateKey' => $key
+        'key' => $key
     ]);
     $this->p->persist($t->toArray());
-    return $t->templateId;
+    return $t->id;
   }
 
   protected function compiledTemplatePersistence(): Persistence {

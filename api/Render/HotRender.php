@@ -28,7 +28,7 @@ class HotRender {
     try {
       $qp = $request->getQueryParams();
       $r = HotRenderRequest::fromState([
-          'requestId' => $args['requestId'],
+          'id' => $args['requestId'],
           'format' => empty($qp['format']) ? 'html' : $qp['format']
       ]);
       $renderResponse = $this->useCase->render($r);

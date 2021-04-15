@@ -82,8 +82,8 @@ class MigratePartials {
     $partialType = $splitTypes[1];
 
     $this->partialRepository->save(Partial::fromState([
-        'id' => $template->templateId,
-        'name' => $template->templateKey,
+        'id' => $template->id,
+        'name' => $template->key,
         'docType' => $baseType,
         'body' => $template->body,
         'author' => $template->author,
@@ -93,6 +93,6 @@ class MigratePartials {
   }
 
   protected function deleteTemplate(Template $template): void {
-    $this->templatePersistence->delete($template->templateId);
+    $this->templatePersistence->delete($template->id);
   }
 }

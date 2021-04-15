@@ -37,6 +37,7 @@ class TransactionalCompiler {
 
   public function compileAllTemplatesForDocType(string $type): void {
     $this->beginTransaction();
+    $ps = $this->partialRepository->findByDocType($type);
     $this->compiler->setPartials($this->partialRepository->findByDocType($type));
     foreach ($this->templateRepository->findByDocType($type) as $template) {
       $this->compileTemplate($template);
@@ -53,9 +54,9 @@ class TransactionalCompiler {
           'code' => $e->getCode(),
           'message' => $e->getMessage(),
           'template' => [
-              'id' => $template->templateId,
+              'id' => $template->id,
               'docType' => $template->docType,
-              'key' => $template->templateKey,
+              'key' => $template->key,
               'partials' => RenderHelper::extractPartials($template->body),
           ]
       ];

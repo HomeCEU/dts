@@ -27,15 +27,15 @@ class DocDataVersionListTest extends TestCase {
 
   public function testGetDocDataVersionsByDocTypeAndDataKey() {
     $docType = 'dataVersionListTest';
-    $dataKey = 'A';
+    $key = 'A';
     for ($i=1; $i<=3; $i++) {
       $this->persistence->persist([
-          'dataId' => Uuid::uuid1()->toString(),
+          'id' => Uuid::uuid1()->toString(),
           'docType' => $docType,
-          'dataKey' => $dataKey
+          'key' => $key
       ]);
     }
-    $versions = $this->usecase->versions($docType, $dataKey);
+    $versions = $this->usecase->versions($docType, $key);
     Assert::assertCount(3, $versions);
   }
 }

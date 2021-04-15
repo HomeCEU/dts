@@ -25,7 +25,7 @@ class AddTemplate {
   public function addTemplate(AddTemplateRequest $request): Template {
     $template = $this->repository->createNewTemplate(
         $request->docType,
-        $request->templateKey,
+        $request->key,
         $request->author,
         $request->body
     );
@@ -36,7 +36,7 @@ class AddTemplate {
 
   private function compileTemplate(Template $template): string {
     $renderPartials = array_map(function (Partial $partial) {
-      return new RenderPartial($partial->name, $partial->body);
+      return new RenderPartial($partial->key, $partial->body);
     }, $this->partialRepository->findByDocType($template->docType));
 
     $this->compiler->setPartials($renderPartials);

@@ -20,7 +20,7 @@ class AddPartialTest extends ApiTestCase {
     $request = [
         'docType' => 'DT',
         'body' => '{{ user.first_name }} {{ user.last_name }}',
-        'name' => 'user_full_name',
+        'key' => 'user_full_name',
         'author' => 'Test Author',
         'metadata' => ['type' => 'standard']
     ];

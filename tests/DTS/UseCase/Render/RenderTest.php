@@ -31,10 +31,10 @@ class RenderTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->dataPersistence = $this->fakePersistence('docdata', 'dataId');
+    $this->dataPersistence = $this->fakePersistence('docdata', 'id');
     $this->dataRepo = new DocDataRepository($this->dataPersistence);
 
-    $this->templatePersistence = $this->fakePersistence('template', 'templateId');
+    $this->templatePersistence = $this->fakePersistence('template', 'id');
     $this->compiledTemplatePersistence = $this->fakePersistence('compiled_template', 'templateId');
 
     $this->templateRepo = new TemplateRepository(
@@ -78,8 +78,8 @@ class RenderTest extends TestCase {
   protected function persistTemplate(string $templateId, string $body): void {
     $this->templatePersistence->persist([
         'docType' => 'dt',
-        'templateId' => $templateId,
-        'templateKey' => 'tk',
+        'id' => $templateId,
+        'key' => 'tk',
         'body' => $body
     ]);
   }
@@ -95,8 +95,8 @@ class RenderTest extends TestCase {
   protected function persistData(): void {
     $this->dataPersistence->persist([
         'docType' => 'dt',
-        'dataId' => 'did',
-        'dataKey' => 'dk',
+        'id' => 'did',
+        'key' => 'dk',
         'data' => ['name' => 'Fred']
     ]);
   }

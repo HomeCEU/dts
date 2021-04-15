@@ -34,7 +34,7 @@ class GetPartialTest extends ApiTestCase {
     return PartialBuilder::create()
         ->withBody('{{ student.name }}')
         ->withDocType('DT')
-        ->withName('test_partial')
+        ->withKey('test_partial')
         ->withAuthor('Dan')
         ->withMetadata([])
         ->build();

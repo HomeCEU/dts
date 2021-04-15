@@ -69,7 +69,7 @@ class RenderTest extends ApiTestCase {
   public function testRenderFromQuery_TemplateKey_DataId() {
     $fixtures = $this->loadFixtures();
     $templateKey = 'T';
-    $dataId = $fixtures['docData'][0]['dataId'];
+    $dataId = $fixtures['docData'][0]['id'];
     $uri = self::ROUTE."?docType={$this->docType}&templateKey={$templateKey}&dataId={$dataId}";
     $responseBody = $this->httpGetRender($uri);
     Assert::assertEquals("Hi Doe, Jane", $responseBody);
@@ -87,7 +87,7 @@ class RenderTest extends ApiTestCase {
   public function testRenderFromQuery_TemplateId_DataId() {
     $fixtures = $this->loadFixtures();
     $templateId = $fixtures['template'][0]['id'];
-    $dataId = $fixtures['docData'][0]['dataId'];
+    $dataId = $fixtures['docData'][0]['id'];
     $uri = self::ROUTE."?docType={$this->docType}&templateId={$templateId}&dataId={$dataId}";
     $responseBody = $this->httpGetRender($uri);
     Assert::assertEquals("Hi Jane Doe", $responseBody);
@@ -103,12 +103,10 @@ class RenderTest extends ApiTestCase {
     $this->assertContentType('application/pdf', $response);
   }
 
-
-
   public function testRenderFromQuery_404() {
     $fixtures = $this->loadFixtures();
     $templateId = $fixtures['template'][0]['id'];
-    $dataId = $fixtures['docData'][0]['dataId'];
+    $dataId = $fixtures['docData'][0]['id'];
     $templateKey = 'T';
     $dataKey = 'D';
     $fake = 'i-dont-exist';
@@ -127,7 +125,7 @@ class RenderTest extends ApiTestCase {
   public function testRenderFromQuery_InvalidRequest() {
     $fixtures = $this->loadFixtures();
     $templateId = $fixtures['template'][0]['id'];
-    $dataId = $fixtures['docData'][0]['dataId'];
+    $dataId = $fixtures['docData'][0]['id'];
     $templateKey = 'T';
     $dataKey = 'D';
     $uris = [
@@ -162,8 +160,8 @@ class RenderTest extends ApiTestCase {
 
     $data = [
         // 2 data with same key to ensure we get the newest one...
-        ['dataId' => self::faker()->uuid, 'dataKey'=>'D', 'data' => ['fname'=>'Jane', 'lname'=>'Doe']],
-        ['dataId' => self::faker()->uuid, 'dataKey'=>'D', 'data' => ['fname'=>'Jane', 'lname'=>'Smith']],
+        ['id' => self::faker()->uuid, 'key'=>'D', 'data' => ['fname'=>'Jane', 'lname'=>'Doe']],
+        ['id' => self::faker()->uuid, 'key'=>'D', 'data' => ['fname'=>'Jane', 'lname'=>'Smith']],
     ];
     foreach ($data as $r) {
       $r['docType'] = $this->docType;

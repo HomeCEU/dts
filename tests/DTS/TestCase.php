@@ -13,7 +13,7 @@ class TestCase extends \HomeCEU\Tests\TestCase {
 
   protected function fakeCompiledTemplate(array $template): array {
     return [
-        'templateId' => $template['templateId'],
+        'templateId' => $template['id'],
         'body' => 'a template body',
         'createdAt' => new DateTime('yesterday'),
     ];

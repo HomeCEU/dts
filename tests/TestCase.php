@@ -24,7 +24,7 @@ class TestCase extends \PHPUnit\Framework\TestCase {
   protected function fakeTemplateArray($docType = null, $key = null) {
     return $this->templateArray([
         'docType' => $docType ?: __FUNCTION__,
-        'templateKey' => $key ?: uniqid()
+        'key' => $key ?: uniqid()
     ]);
   }
 
@@ -34,9 +34,9 @@ class TestCase extends \PHPUnit\Framework\TestCase {
 
   protected function templateArray(array $overwrite=[]) {
     $base = [
-        'templateId' => self::faker()->uuid,
+        'id' => self::faker()->uuid,
         'docType' => __FUNCTION__.'-'.time(),
-        'templateKey' => uniqid(__FUNCTION__),
+        'key' => uniqid(__FUNCTION__),
         'name' => self::faker()->monthName,
         'author' => self::faker()->name,
         'createdAt' => new DateTime('yesterday'),
@@ -51,9 +51,9 @@ class TestCase extends \PHPUnit\Framework\TestCase {
 
   protected function docDataArray(array $overwrite=[]) {
     $base = [
-        'dataId'     => self::faker()->uuid,
+        'id'     => self::faker()->uuid,
         'docType'    => uniqid(__FUNCTION__),
-        'dataKey'    => self::faker()->colorName,
+        'key'    => self::faker()->colorName,
         'createdAt'  => $this->createdAtDateTime(),
         'data'       => [
             "firstName" => self::faker()->firstName,

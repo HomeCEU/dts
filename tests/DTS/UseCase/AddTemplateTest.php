@@ -27,7 +27,7 @@ class AddTemplateTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->templatePersistence = $this->fakePersistence('template', 'templateId');
+    $this->templatePersistence = $this->fakePersistence('template', 'id');
     $this->compiledTemplatePersistence = $this->fakePersistence('compiled_template', 'templateId');
     $this->partialPersistence = $this->fakePersistence('partial', 'id');
 
@@ -48,8 +48,8 @@ class AddTemplateTest extends TestCase {
     $request = $this->createAddRequestWithBody('Hi, {{ name }}!');
     $template = $this->useCase->addTemplate($request);
 
-    $this->assertEquals($template->toArray(), $this->templatePersistence->retrieve($template->templateId));
-    $this->assertNotEmpty($this->compiledTemplatePersistence->retrieve($template->templateId));
+    $this->assertEquals($template->toArray(), $this->templatePersistence->retrieve($template->id));
+    $this->assertNotEmpty($this->compiledTemplatePersistence->retrieve($template->id));
   }
 
   public function testAddTemplateWithInvalidSyntaxDoesNotSaveTemplate(): void {
@@ -59,7 +59,7 @@ class AddTemplateTest extends TestCase {
     } catch (CompilationException $e) {
       $this->assertEmpty($this->templatePersistence->find([
               'docType' => $request->docType,
-              'templateKey' => $request->templateKey]
+              'key' => $request->key]
       ));
     }
   }
@@ -71,14 +71,14 @@ class AddTemplateTest extends TestCase {
     $request = $this->createAddRequestWithBody('{{> a_partial }} {{> another_partial }}');
     $template = $this->useCase->addTemplate($request);
 
-    $this->assertEquals($template->toArray(), $this->templatePersistence->retrieve($template->templateId));
-    $this->assertNotEmpty($this->compiledTemplatePersistence->retrieve($template->templateId));
+    $this->assertEquals($template->toArray(), $this->templatePersistence->retrieve($template->id));
+    $this->assertNotEmpty($this->compiledTemplatePersistence->retrieve($template->id));
   }
 
   private function createAddRequestWithBody(string $body): AddTemplateRequest {
     return AddTemplateRequest::fromState([
         'docType' => self::TEST_DOCTYPE,
-        'templateKey' => uniqid('key_'),
+        'key' => uniqid('key_'),
         'author' => 'Author',
         'body' => $body
     ]);

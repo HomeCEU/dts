@@ -53,7 +53,7 @@ class TemplateRepositoryTest extends TestCase {
     $body = 'body';
 
     $template = $this->repo->createNewTemplate($type, $key, $author, $body);
-    $this->assertNotEmpty($template->templateId);
+    $this->assertNotEmpty($template->id);
     $this->assertNotEmpty($template->createdAt);
   }
 
@@ -63,7 +63,7 @@ class TemplateRepositoryTest extends TestCase {
 
     $compiled = $this->repo->createNewCompiledTemplate($template, $body);
 
-    $this->assertSame($template->templateId, $compiled->templateId);
+    $this->assertSame($template->id, $compiled->templateId);
     $this->assertNotEmpty($compiled->createdAt);
   }
 
@@ -72,7 +72,7 @@ class TemplateRepositoryTest extends TestCase {
     $this->repo->save($template);
 
     $this->repo->saveCompiled($template, "<?php /* compiled template */ ?>");
-    $this->assertEquals("<?php /* compiled template */ ?>", $this->ctp->retrieve($template->templateId)['body']);
+    $this->assertEquals("<?php /* compiled template */ ?>", $this->ctp->retrieve($template->id)['body']);
   }
 
   public function testUpdateCompiledTemplate(): void {
@@ -80,7 +80,7 @@ class TemplateRepositoryTest extends TestCase {
     $this->repo->save($template);
     $this->repo->saveCompiled($template, "<?php /* compiled template */ ?>");
     $this->repo->saveCompiled($template, "<?php /* compiled template updated */ ?>");
-    $this->assertEquals("<?php /* compiled template updated */ ?>", $this->ctp->retrieve($template->templateId)['body']);
+    $this->assertEquals("<?php /* compiled template updated */ ?>", $this->ctp->retrieve($template->id)['body']);
   }
 
   public function testSaveCompiledTemplateForNonExistingTemplate(): void {
@@ -105,9 +105,9 @@ class TemplateRepositoryTest extends TestCase {
     $this->p->persist($this->fakeTemplateArray($this->docType));
     $this->p->persist($t);
     $this->p->persist($this->fakeTemplateArray($this->docType));
-    $template = $this->repo->getTemplateById($t['templateId']);
+    $template = $this->repo->getTemplateById($t['id']);
     $this->assertInstanceOf(Template::class, $template);
-    $this->assertEquals($t['templateId'], $template->templateId);
+    $this->assertEquals($t['id'], $template->id);
   }
 
   public function testGetCompiledTemplateById(): void {
@@ -115,16 +115,16 @@ class TemplateRepositoryTest extends TestCase {
     $ct = $this->fakeCompiledTemplate($t);
     $this->p->persist($t);
     $this->ctp->persist($ct);
-    $template = $this->repo->getCompiledTemplateById($t['templateId']);
-    $this->assertInstanceOf(CompiledTemplate::class, $template);
-    $this->assertEquals($t['templateId'], $template->templateId);
+    $compiled = $this->repo->getCompiledTemplateById($t['id']);
+    $this->assertInstanceOf(CompiledTemplate::class, $compiled);
+    $this->assertEquals($t['id'], $compiled->templateId);
   }
 
   public function testSave(): void {
     $templateArray = $this->fakeTemplateArray($this->docType, __FUNCTION__);
     $template = Template::fromState($templateArray);
     $this->repo->save($template);
-    $fromDb = $this->repo->getTemplateById($template->templateId);
+    $fromDb = $this->repo->getTemplateById($template->id);
     $this->assertEquals($templateArray, $fromDb->toArray());
   }
 
@@ -145,12 +145,12 @@ class TemplateRepositoryTest extends TestCase {
   }
 
   public function testLookupIdFromKey(): void {
-    $p = $this->fakePersistence('template', 'templateId');
+    $p = $this->fakePersistence('template', 'id');
     $ctp = $this->fakePersistence('compiled_template', 'templateId');
     $p->persist([
         'docType' => 'dt',
-        'templateId' => 'tid',
-        'templateKey' => 'tk',
+        'id' => 'tid',
+        'key' => 'tk',
         'body' => 'Hi {{name}}'
     ]);
     $repo = new TemplateRepository($p, $ctp);
@@ -166,7 +166,7 @@ class TemplateRepositoryTest extends TestCase {
     $this->p->persist($a);
     $this->p->persist($c);
     $id = $this->repo->lookupId($this->docType, $key);
-    $this->assertEquals($c['templateId'], $id);
+    $this->assertEquals($c['id'], $id);
   }
 
   private function buildTemplate($key, $name, $createdAt): array {

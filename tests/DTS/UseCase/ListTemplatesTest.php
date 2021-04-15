@@ -45,12 +45,12 @@ class ListTemplatesTest extends TestCase {
     for ($i=0;$i<$count;$i++) {
       $data = $this->fakeTemplateArray(__FUNCTION__);
       $this->p->persist($data);
-      array_push($ids, $data['templateId']);
+      array_push($ids, $data['id']);
     }
     $resultIds = [];
     $templates = $this->useCase->all();
     foreach ($templates as $t) {
-      array_push($resultIds, $t->templateId);
+      array_push($resultIds, $t->id);
     }
     foreach ($ids as $id) {
       Assert::assertContains($id, $resultIds);
@@ -67,7 +67,7 @@ class ListTemplatesTest extends TestCase {
           $this->fakeTemplateArray(),
           [
               'docType' => 'cert',
-              'templateKey' => 'to key or not to key '.$i,
+              'key' => 'to key or not to key '.$i,
               'name' => 'some cool name',
               'author' => 'uncle bob'
           ]

@@ -33,9 +33,9 @@ class GetTemplate {
     try {
       $template = $this->useCase->getTemplate(
           GetTemplateRequest::fromState([
-              'templateId' => $args['templateId'] ?? '',
+              'id' => $args['templateId'] ?? '',
               'docType' => $args['docType'] ?? '',
-              'templateKey' => $args['templateKey'] ?? ''
+              'key' => $args['templateKey'] ?? ''
           ])
       );
       $response->getBody()->write($template->body);

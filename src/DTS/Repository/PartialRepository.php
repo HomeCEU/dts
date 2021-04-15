@@ -31,13 +31,13 @@ class PartialRepository {
 
     return array_map(function ($key) use ($docType) {
       return $this->getPartialByKey($docType, $key);
-    }, $this->repoHelper->extractUniqueProperty($partials, 'name'));
+    }, $this->repoHelper->extractUniqueProperty($partials, 'key'));
   }
 
   protected function getPartialByKey(string $docType, string $key): PartialInterface {
     $row = $this->repoHelper->findNewest([
         'docType' => $docType,
-        'name' => $key,
+        'key' => $key,
     ]);
     return Partial::fromState($row);
   }

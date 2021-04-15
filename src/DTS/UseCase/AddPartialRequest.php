@@ -10,7 +10,7 @@ use HomeCEU\DTS\UseCase\Exception\InvalidAddPartialRequestException;
 class AddPartialRequest extends AbstractEntity {
   public string $docType;
   public string $body;
-  public string $name;
+  public string $key;
   public string $author;
   public array $metadata = [];
 
@@ -20,7 +20,7 @@ class AddPartialRequest extends AbstractEntity {
 
   protected function validate(): self {
     if (empty($this->docType)
-        || empty($this->name)
+        || empty($this->key)
         || empty($this->author)
         || !isset($this->body)) {
       throw new InvalidAddPartialRequestException('Cannot Create Partial', self::keys());

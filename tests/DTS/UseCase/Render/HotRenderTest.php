@@ -22,7 +22,7 @@ class HotRenderTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->persistence = $this->fakePersistence('hotrender_request', 'requestId');
+    $this->persistence = $this->fakePersistence('hotrender_request', 'id');
     $this->repo = new HotRenderRepository($this->persistence);
     $this->compiled = TemplateCompiler::create()->compile('Hello, {{ name }}!');
 
@@ -38,7 +38,7 @@ class HotRenderTest extends TestCase {
     $request = $this->fakeHotRenderRequest();
     $this->persistence->persist($request->toArray());
 
-    $response = $this->render($request->requestId, RenderFormat::FORMAT_HTML);
+    $response = $this->render($request->id, RenderFormat::FORMAT_HTML);
     Assert::assertEquals("Hello, World!", file_get_contents($response->path));
   }
 
@@ -46,15 +46,15 @@ class HotRenderTest extends TestCase {
     $request = $this->fakeHotRenderRequest();
     $this->persistence->persist($request->toArray());
 
-    $response = $this->render($request->requestId, RenderFormat::FORMAT_PDF);
+    $response = $this->render($request->id, RenderFormat::FORMAT_PDF);
     Assert::assertFileExists($response->path);
     Assert::assertEquals('application/pdf', $response->contentType);
     Assert::assertEquals('application/pdf', mime_content_type($response->path));
   }
 
-  protected function render($requestId, $format): RenderResponse {
+  protected function render($id, $format): RenderResponse {
     return $this->useCase->render(HotRenderRequest::fromState([
-        'requestId' => $requestId,
+        'id' => $id,
         'format' => $format,
     ]));
   }

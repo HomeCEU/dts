@@ -21,11 +21,11 @@ class GetTemplateTest extends ApiTestCase {
   }
 
   public function testGetById(): void {
-    $templateId = uniqid();
+    $id = uniqid();
     $body = "Hello, World!";
-    $this->addTemplateFixture(__FUNCTION__, $templateId, $body);
+    $this->addTemplateFixture(__FUNCTION__, $id, $body);
 
-    $response = $this->get(self::ROUTE."/{$templateId}");
+    $response = $this->get(self::ROUTE."/{$id}");
     $this->assertStatus(200, $response);
     $this->assertEquals($body, (string) $response->getBody());
   }
@@ -36,10 +36,10 @@ class GetTemplateTest extends ApiTestCase {
   }
 
   public function testGetByTypeAndKey(): void {
-    $templateId = uniqid();
+    $id = uniqid();
     $body = "Hello, World!";
     $key = __FUNCTION__;
-    $this->addTemplateFixture($key, $templateId, $body);
+    $this->addTemplateFixture($key, $id, $body);
 
     $response = $this->get(self::ROUTE."/{$this->docType}/{$key}");
     $this->assertStatus(200, $response);

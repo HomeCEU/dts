@@ -23,7 +23,7 @@ class GetTemplateTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->templatePersistence = $this->fakePersistence('template', 'templateId');
+    $this->templatePersistence = $this->fakePersistence('template', 'id');
     $compiledTemplatePersistence = $this->fakePersistence('compiled_template', 'templateId');
 
     $this->templateRepository = new TemplateRepository($this->templatePersistence, $compiledTemplatePersistence);
@@ -39,20 +39,20 @@ class GetTemplateTest extends TestCase {
     $template = $this->fakeTemplate(self::DOC_TYPE_ENROLLMENT);
     $this->persistTemplates($template);
     Assert::assertEquals($template, $this->useCase->getTemplate(
-        GetTemplateRequest::fromState(['templateId' => $template->templateId])
+        GetTemplateRequest::fromState(['id' => $template->id])
     ));
   }
 
   public function testGetTemplateByIdNotFound(): void {
     $this->expectException(RecordNotFoundException::class);
-    $this->useCase->getTemplate(GetTemplateRequest::fromState(['templateId' => uniqid()]));
+    $this->useCase->getTemplate(GetTemplateRequest::fromState(['id' => uniqid()]));
   }
 
   public function testGetTemplateByTypeAndKey(): void {
     $template = $this->fakeTemplate(self::DOC_TYPE_ENROLLMENT);
     $this->persistTemplates($template);
     Assert::assertEquals($template, $this->useCase->getTemplate(
-        GetTemplateRequest::fromState(['docType' => self::DOC_TYPE_ENROLLMENT, 'templateKey' => $template->templateKey])
+        GetTemplateRequest::fromState(['docType' => self::DOC_TYPE_ENROLLMENT, 'key' => $template->key])
     ));
   }
 

@@ -10,12 +10,12 @@ use PHPUnit\Framework\Assert;
 
 class GetTemplateRequestTest extends TestCase {
   public function testBuildFromArray(): void {
-    $state = ['templateId' => 'TID', 'docType' => 'DT', 'templateKey' => 'KEY'];
+    $state = ['id' => 'TID', 'docType' => 'DT', 'key' => 'KEY'];
     $r = GetTemplateRequest::fromState($state);
 
-    Assert::assertEquals($state['templateId'], $r->templateId);
+    Assert::assertEquals($state['id'], $r->id);
     Assert::assertEquals($state['docType'], $r->docType);
-    Assert::assertEquals($state['templateKey'], $r->templateKey);
+    Assert::assertEquals($state['key'], $r->key);
   }
 
   /** @dataProvider validStates() */
@@ -25,9 +25,9 @@ class GetTemplateRequestTest extends TestCase {
   }
 
   public function validStates(): \Generator {
-    yield [['templateId' => 'TID']];
-    yield [['templateId' => 'TID', 'docType' => 'DT', 'templateKey' => 'KEY']];
-    yield [['docType' => 'DT', 'templateKey' => 'KEY']];
+    yield [['id' => 'TID']];
+    yield [['id' => 'TID', 'docType' => 'DT', 'key' => 'KEY']];
+    yield [['docType' => 'DT', 'key' => 'KEY']];
   }
 
   /** @dataProvider invalidStates() */
@@ -38,6 +38,6 @@ class GetTemplateRequestTest extends TestCase {
 
   public function invalidStates(): \Generator {
     yield [['docType' => 'DT']];
-    yield [['templateKey' => 'KEY']];
+    yield [['key' => 'KEY']];
   }
 }

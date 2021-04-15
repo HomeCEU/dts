@@ -19,7 +19,7 @@ class Partial extends AbstractEntity implements PartialInterface {
     return ['name' => $this->name, 'body' => $this->body];
   }
 
-  public function getName(): string {
+  public function getKey(): string {
     return $this->name;
   }
 

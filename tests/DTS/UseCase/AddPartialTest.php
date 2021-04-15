@@ -26,7 +26,7 @@ class AddPartialTest extends TestCase {
     parent::setUp();
     $this->partialRepository = new PartialRepository($this->fakePersistence('partial', 'id'));
     $this->templateRepository = new TemplateRepository(
-        $this->fakePersistence('template', 'templateId'),
+        $this->fakePersistence('template', 'id'),
         $this->fakePersistence('compiled_template', 'templateId')
     );
     $this->service = new AddPartial($this->partialRepository, $this->templateRepository);
@@ -62,7 +62,7 @@ class AddPartialTest extends TestCase {
     $this->templateRepository->saveCompiled($template, 'compiled_version');
 
     $this->service->add($request);
-    $ct = $this->templateRepository->getCompiledTemplateById($template->templateId);
+    $ct = $this->templateRepository->getCompiledTemplateById($template->id);
 
     $r = RenderFactory::createHTML();
     $this->assertEquals('partial body', file_get_contents($r->render($ct->body, [])));
@@ -79,15 +79,15 @@ class AddPartialTest extends TestCase {
       $this->fail(CompilationException::class . ' not thrown');
     } catch (CompilationException $e) {
       $meta = $e->errors;
-      $this->assertEquals($template->templateId, $meta[0]['template']['id']);
-      $this->assertEquals($template->templateKey, $meta[0]['template']['key']);
+      $this->assertEquals($template->id, $meta[0]['template']['id']);
+      $this->assertEquals($template->key, $meta[0]['template']['key']);
     }
   }
 
   protected function createAddPartialRequest(string $docType, string $key, string $body): AddPartialRequest {
     $state = [
         'docType' => $docType,
-        'name' => $key,
+        'key' => $key,
         'body' => $body,
         'author' => 'an_author',
         'metadata' => [
