@@ -83,7 +83,7 @@ class MigratePartials {
 
     $this->partialRepository->save(Partial::fromState([
         'id' => $template->id,
-        'name' => $template->key,
+        'key' => $template->key,
         'docType' => $baseType,
         'body' => $template->body,
         'author' => $template->author,
