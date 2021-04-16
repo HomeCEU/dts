@@ -1,3 +1,6 @@
+## Release Notes
+These release notes are for code changes.  
+To view the API documentation: [Click Here](https://documenter.getpostman.com/view/738678/TzCP6n83)
 ## v1.1
 TBD
 ### Notes
