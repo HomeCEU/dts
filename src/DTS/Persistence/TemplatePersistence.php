@@ -4,7 +4,6 @@
 namespace HomeCEU\DTS\Persistence;
 
 
-use Exception;
 use HomeCEU\DTS\Db\Connection;
 use HomeCEU\DTS\Persistence;
 use PDO;
@@ -69,9 +68,8 @@ class TemplatePersistence extends AbstractPersistence implements Persistence {
   }
 
   public function listDocTypes(): array {
-    $sql = "SELECT doc_type AS docType, count(1) AS templateCount FROM template t1
-      WHERE {$this->isLatestVersionSQL}
-      GROUP BY doc_type";
+    $sql = "SELECT DISTINCT doc_type AS docType, count(1) AS templateCount
+                FROM (SELECT DISTINCT doc_type, template_key FROM template t1) t2 GROUP BY doc_type;";
     return $this->fetchAll($sql);
   }
 
