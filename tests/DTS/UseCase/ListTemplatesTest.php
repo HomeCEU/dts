@@ -9,6 +9,8 @@ use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Repository\TemplateRepository;
 use HomeCEU\DTS\UseCase\ListTemplates;
 use HomeCEU\Tests\DTS\TestCase;
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\DevNullStorage;
 use PHPUnit\Framework\Assert;
 
 class ListTemplatesTest extends TestCase {
@@ -22,7 +24,7 @@ class ListTemplatesTest extends TestCase {
     $this->db->beginTransaction();
     $this->p = new TemplatePersistence($this->db);
     $repo = new TemplateRepository($this->p, $this->compiledTemplatePersistence());
-    $this->useCase = new ListTemplates($repo);
+    $this->useCase = new ListTemplates($repo, new Cache(new DevNullStorage()));
   }
 
   protected function tearDown(): void {

@@ -6,13 +6,15 @@ namespace HomeCEU\DTS\UseCase;
 
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Repository\TemplateRepository;
+use Nette\Caching\Cache;
 
 class ListTemplates {
-  /** @var TemplateRepository */
-  private $repo;
+  private TemplateRepository $repo;
+  private Cache $cache;
 
-  public function __construct(TemplateRepository $repo) {
+  public function __construct(TemplateRepository $repo, Cache $cache) {
     $this->repo = $repo;
+    $this->cache = $cache;
   }
 
   /**

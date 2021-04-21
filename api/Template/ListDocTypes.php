@@ -15,13 +15,13 @@ use Slim\Http\Response;
 class ListDocTypes {
   private ListTemplatesUseCase $useCase;
 
-  public function __construct(DiContainer $di) {
-    $db = $di->dbConnection;
+  public function __construct(DiContainer $container) {
+    $db = $container->get('dbConnection');
     $repo = new TemplateRepository(
         new TemplatePersistence($db),
         new CompiledTemplatePersistence($db)
     );
-    $this->useCase = new ListTemplatesUseCase($repo);
+    $this->useCase = new ListTemplatesUseCase($repo, $container->get('cache'));
   }
 
   public function __invoke(Request $request, Response $response, $args) {
