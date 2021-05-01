@@ -2,10 +2,9 @@
 These release notes are mostly for code changes.  
 To view the API documentation: [Click Here](https://documenter.getpostman.com/view/738678/TzCP6n83)
 ## v1.1
-TBD
+MAY 01, 2021
 ### Notes
 There are breaking changes in this version. (1.0 was an MVP so breaking changes were to be expected.)
-
 ### What's New
 * Upgrade to PHP 7.4
 * Endpoints for saving and retrieving templates
@@ -16,7 +15,6 @@ There are breaking changes in this version. (1.0 was an MVP so breaking changes 
 * Hot Render endpoints have been added. This allows previewing of templates.
 * Implement monolog
 * Improved error handling
-
 ### Breaking Changes to the API
 * Template parameters `templateId` and `templateKey` have been renamed to `id` and `key` respectively
 
