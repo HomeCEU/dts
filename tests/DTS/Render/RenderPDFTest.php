@@ -1,10 +1,9 @@
 <?php declare(strict_types=1);
 
 
-namespace DTS\Render;
+namespace HomeCEU\Tests\DTS\Render;
 
 
-use HomeCEU\Tests\DTS\Render\TestCase;
 use PHPUnit\Framework\Assert;
 
 class RenderPDFTest extends TestCase {
@@ -14,7 +13,6 @@ class RenderPDFTest extends TestCase {
 
     $path = $this->renderPDF($template, $data);
     Assert::assertFileExists($path);
-    Assert::assertEquals('pdf', pathinfo($path)['extension']);
-    unlink($path);
+    Assert::assertEquals('application/pdf', mime_content_type($path));
   }
 }

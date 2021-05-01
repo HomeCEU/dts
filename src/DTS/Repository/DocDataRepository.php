@@ -3,6 +3,7 @@
 namespace HomeCEU\DTS\Repository;
 
 use DateTime;
+use HomeCEU\DTS\AbstractEntity;
 use HomeCEU\DTS\Entity\DocData;
 use HomeCEU\DTS\Persistence;
 
@@ -22,43 +23,50 @@ class DocDataRepository {
     $this->persistence->persist($docData->toArray());
   }
 
-  public function getByDocDataId($dataId): DocData {
-    return DocData::fromState($this->persistence->retrieve($dataId));
+  public function getByDocDataId($id): DocData {
+    return DocData::fromState($this->persistence->retrieve($id));
   }
 
   public function newDocData(string $type, string $key, $data): DocData {
     return DocData::fromState(
         [
-            'dataId' => $this->persistence->generateId(),
+            'id' => $this->persistence->generateId(),
             'docType' => $type,
-            'dataKey' => $key,
+            'key' => $key,
             'data' => $data,
-            'createdAt' => (new DateTime())->format(DateTime::ISO8601)
+            'createdAt' => new \DateTime()
         ]
     );
   }
 
-  public function allVersions(string $docType, string $dataKey): ?array {
+  public function allVersions(string $docType, string $key): ?array {
     $filter = [
         'docType' => $docType,
-        'dataKey' => $dataKey
+        'key' => $key
     ];
     $cols = [
-        'dataId', 'docType', 'dataKey', 'createdAt'
+        'id', 'docType', 'key', 'createdAt'
     ];
-    return $this->persistence->find($filter, $cols);
+    $rows = $this->persistence->find($filter, $cols);
+    return $this->toDocDataArray($rows);
   }
 
-  public function lookupId(string $docType, string $dataKey): string {
+  public function lookupId(string $docType, string $key): string {
     $filter = [
         'docType' => $docType,
-        'dataKey' => $dataKey
+        'key' => $key
     ];
     $cols = [
-        'dataId',
+        'id',
         'createdAt'
     ];
     $row = $this->repoHelper->findNewest($filter, $cols);
-    return $row['dataId'];
+    return $row['id'];
+  }
+
+  private function toDocDataArray(array $rows): array {
+    return array_map(function ($row) {
+      return DocData::fromState($row);
+    }, $rows);
   }
 }

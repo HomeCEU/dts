@@ -5,25 +5,22 @@ namespace HomeCEU\DTS\Entity;
 
 
 use HomeCEU\DTS\AbstractEntity;
-use HomeCEU\DTS\EntityHelperTrait;
 
 class CompiledTemplate extends AbstractEntity {
-  public $templateId;
-  public $body;
-  public $createdAt;
-
-  use EntityHelperTrait;
-
-  protected static function keys(): array {
-    return [
-        'templateId',
-        'body',
-    ];
-  }
+  public string $templateId;
+  public string $body;
+  public \DateTime $createdAt;
 
   public static function fromState(array $state): self {
-    $entity = new self();
-    self::buildFromState($entity, $state);
-    return $entity;
+    return parent::fromState($state)->validate();
+  }
+
+  protected function validate(): self {
+    if (empty($this->templateId)
+        || empty($this->body)
+        || empty($this->createdAt)) {
+      throw new IncompleteEntityException('', self::keys());
+    }
+    return $this;
   }
 }

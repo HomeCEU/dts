@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace HomeCEU\DTS\Db;
@@ -6,11 +6,13 @@ namespace HomeCEU\DTS\Db;
 use Exception;
 use HomeCEU\DTS\Db\Config as DbConfig;
 use Nette\Database\ResultSet;
+use Nette\Database\Row;
 use PDOStatement;
 
 class Connection  extends \Nette\Database\Connection {
+  public bool $inTransaction = false;
 
-  public static function buildFromConfig(DbConfig $config, array $options = null) {
+  public static function buildFromConfig(DbConfig $config, array $options = null): Connection {
     return new static(
         $config->dsn(),
         $config->user,
@@ -19,23 +21,29 @@ class Connection  extends \Nette\Database\Connection {
     );
   }
 
-  /**
-   * @param  string $sql
-   * @param  array  $binds
-   * @return PDOStatement
-   * @throws Exception
-   */
-  public function pdoQuery($sql, array $binds=[]) {
+  public function beginTransaction(): void {
+    if (!$this->inTransaction) {
+      parent::beginTransaction();
+      $this->inTransaction = true;
+    }
+  }
+
+  public function rollBack(): void {
+    parent::rollBack();
+    $this->inTransaction = false;
+  }
+
+  public function commit(): void {
+    parent::commit();
+    $this->inTransaction = false;
+  }
+
+  public function pdoQuery(string $sql, array $binds=[]): PDOStatement {
     $sth = $this->_prepare($sql);
     return $this->_execute($sth, $binds);
   }
 
-  /**
-   * @param $sql
-   * @return PDOStatement
-   * @throws Exception
-   */
-  private function _prepare($sql) {
+  private function _prepare(string $sql) {
     try {
       $sth = $this->getPdo()->prepare($sql);
       return $sth;
@@ -45,13 +53,7 @@ class Connection  extends \Nette\Database\Connection {
     }
   }
 
-  /**
-   * @param PDOStatement $sth
-   * @param array        $binds
-   * @return PDOStatement
-   * @throws Exception
-   */
-  private function _execute(PDOStatement $sth, array $binds=[]) {
+  private function _execute(PDOStatement $sth, array $binds=[]): PDOStatement {
     try {
       $this->_bindParams($sth, $binds);
 
@@ -65,7 +67,7 @@ class Connection  extends \Nette\Database\Connection {
     }
   }
 
-  private function executeFailed(PDOStatement $sth, array $binds, \PDOException $prev=null) {
+  private function executeFailed(PDOStatement $sth, array $binds, \PDOException $prev=null): Exception {
     $sql = $sth->queryString;
     $bindParams = json_encode($binds);
     return new Exception(
@@ -75,7 +77,7 @@ class Connection  extends \Nette\Database\Connection {
     );
   }
 
-  private function prepareFailed($sql, \PDOException $e) {
+  private function prepareFailed($sql, \PDOException $e): Exception {
     return new Exception(
         "Failed to prepare \"{$sql}\"\n  Error: {$e->getMessage()}",
         0,
@@ -89,13 +91,11 @@ class Connection  extends \Nette\Database\Connection {
     }
   }
 
-  private function bindParamName($name) {
+  private function bindParamName($name): string {
     return preg_match("/^:.+/", $name) ? $name : ":{$name}";
   }
 
-
-
-  public function selectFirst($table, $itemString, array $where) {
+  public function selectFirst($table, $itemString, array $where): ?Row {
     return $this->selectWhere($table, $itemString, $where)->fetch();
   }
 
@@ -103,35 +103,27 @@ class Connection  extends \Nette\Database\Connection {
     return $this->query("SELECT {$itemString} FROM {$table} WHERE", $where);
   }
 
-  public function insert($table, array ...$rows) {
+  public function insert($table, array ...$rows): string {
     $this->query("INSERT INTO {$table}", $rows);
     return $this->getInsertId();
   }
 
-  public function deleteWhere($table, array $where) {
+  public function update($table, array $setValues, array $where): void {
+    $this->query("UPDATE {$table} SET", $setValues, " WHERE", $where);
+  }
+
+  public function deleteWhere($table, array $where): ResultSet {
     return $this->query("DELETE FROM {$table} WHERE ?", $where);
   }
 
-  /**
-   * @param       $table
-   * @param       $whereString
-   * @param array $binds
-   * @return mixed
-   * @throws Exception
-   */
-  public function count($table, $whereString, $binds=[]) {
+  public function count(string $table, string $whereString, array $binds=[]) {
     return $this->pdoQuery(
         "SELECT count(1) FROM {$table} WHERE {$whereString}",
         $binds
     )->fetchColumn();
   }
 
-  /**
-   * @param       $table
-   * @param array ...$params
-   * @throws Exception
-   */
-  public function createTable($table, ...$params) {
+  public function createTable(string $table, ...$params) {
     $data = "\n  ".implode(",\n  ", $params)."\n";
     $sql = "CREATE TABLE {$table} ({$data})";
     $this->pdoQuery($sql);

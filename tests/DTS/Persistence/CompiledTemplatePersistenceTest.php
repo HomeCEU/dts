@@ -46,7 +46,7 @@ class CompiledTemplatePersistenceTest extends TestCase {
 
     $retrieved = $this->persistence->findBy(
         $this->template['docType'],
-        $this->template['templateKey']
+        $this->template['key']
     );
     Assert::assertEquals($cTemplate, $retrieved);
   }
@@ -54,7 +54,7 @@ class CompiledTemplatePersistenceTest extends TestCase {
   public function testRecordNotFound(): void {
     $this->expectException(RecordNotFoundException::class);
     $this->expectExceptionMessage('compiled template');
-    $this->persistence->retrieve(Uuid::uuid4());
+    $this->persistence->retrieve(Uuid::uuid4()->toString());
   }
 
   public function testFindByTemplateDocTypeAndKeyRecordNotFound(): void

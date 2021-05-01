@@ -3,6 +3,7 @@
 namespace HomeCEU\DTS\UseCase;
 
 use HomeCEU\DTS\Repository\DocDataRepository;
+use HomeCEU\DTS\UseCase\Exception\InvalidDocDataAddRequestException;
 
 class AddDocData {
   /** @var DocDataRepository */
@@ -24,6 +25,6 @@ class AddDocData {
       throw new InvalidDocDataAddRequestException("'docType' is missing or empty.");
 
     if (empty($key))
-      throw new InvalidDocDataAddRequestException("'dataKey' is missing or empty.");
+      throw new InvalidDocDataAddRequestException("'key' is missing or empty.");
   }
 }

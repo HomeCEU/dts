@@ -59,7 +59,7 @@ class AbstractPersistenceTest extends TestCase {
 
   protected function persistence() {
     return new class($this->fakeDb) extends AbstractPersistence {
-      public function delete($id) {}
+      public function delete(string $id): void {}
     };
   }
 }

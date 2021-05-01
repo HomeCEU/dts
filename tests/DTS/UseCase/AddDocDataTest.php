@@ -6,7 +6,7 @@ use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Persistence\InMemory\DocDataPersistence;
 use HomeCEU\DTS\Repository\DocDataRepository;
 use HomeCEU\DTS\UseCase\AddDocData;
-use HomeCEU\DTS\UseCase\InvalidDocDataAddRequestException;
+use HomeCEU\DTS\UseCase\Exception\InvalidDocDataAddRequestException;
 use HomeCEU\Tests\Faker;
 use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
@@ -46,16 +46,16 @@ class AddDocDataTest extends TestCase {
     $fake = Faker::generator();
     $inputs = [
         'docType' => self::ENTITY_TYPE,
-        'dataKey' => $fake->md5,
+        'key' => $fake->md5,
         'data' => $this->profileData()
     ];
     $uc = new AddDocData($this->repository);
     $docData = $uc->add(
         $inputs['docType'],
-        $inputs['dataKey'],
+        $inputs['key'],
         $inputs['data']
     );
-    $savedDocData = $this->persistence->retrieve($docData['dataId']);
+    $savedDocData = $this->persistence->retrieve($docData['id']);
     Assert::assertEquals($docData, $savedDocData);
   }
 

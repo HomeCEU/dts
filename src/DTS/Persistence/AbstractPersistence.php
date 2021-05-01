@@ -10,27 +10,28 @@ use HomeCEU\DTS\Repository\RecordNotFoundException;
 use Ramsey\Uuid\Uuid;
 
 abstract class AbstractPersistence implements Persistence {
-  /** @var array */
-  private $hydratedToDbMap;
-  /** @var array */
-  private $dbToHydratedMap;
-
-  /** @var Connection */
-  protected $db;
+  private array $hydratedToDbMap;
+  private array $dbToHydratedMap;
+  protected Connection $db;
 
   public function __construct(Connection $db) {
     $this->db = $db;
   }
 
-  public function generateId() {
-    return Uuid::uuid1();
+  public function generateId(): string {
+    return Uuid::uuid1()->toString();
   }
 
-  public function persist($entity) {
-    $this->db->insert(static::TABLE, $this->flatten($entity));
+  public function persist(array $data): string {
+    return $this->db->insert(static::TABLE, $this->flatten($data));
   }
 
-  public function retrieve($id, array $cols=['*']) {
+  public function update(array $data): void {
+    $data = $this->flatten($data);
+    $this->db->update(static::TABLE, $data, [static::ID_COL => $data[static::ID_COL]]);
+  }
+
+  public function retrieve(string $id, array $cols=['*']): array {
     $row = $this->db->selectWhere(
         static::TABLE,
         $this->selectColumns(...$cols),
@@ -41,7 +42,7 @@ abstract class AbstractPersistence implements Persistence {
     return $this->hydrate($row);
   }
 
-  public function find(array $filter, $cols=['*']) {
+  public function find(array $filter, $cols=['*']): array {
     $where = $this->flatten($filter); // changes keys to snake_case
     $rows = $this->db->selectWhere(
         static::TABLE,
@@ -109,7 +110,7 @@ abstract class AbstractPersistence implements Persistence {
     return $result;
   }
 
-  private function isJson($v) {
+  private function isJson($v): bool {
     return is_array(json_decode($v, true));
   }
 
@@ -117,11 +118,15 @@ abstract class AbstractPersistence implements Persistence {
     return json_decode($json, true);
   }
 
-  protected function selectColumns(...$cols) {
+  protected function selectColumns(...$cols): string {
     $selectedCols = [];
     foreach ($cols as $alias) {
       array_push($selectedCols, $this->dbKey($alias));
     }
     return implode(', ', $selectedCols);
+  }
+
+  public function delete(string $id): void {
+    $this->db->deleteWhere(static::TABLE, [static::ID_COL => $id]);
   }
 }

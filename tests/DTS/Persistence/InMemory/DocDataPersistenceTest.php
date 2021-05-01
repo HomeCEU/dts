@@ -3,6 +3,7 @@
 
 namespace HomeCEU\Tests\DTS\Persistence\InMemory;
 
+use HomeCEU\DTS\Repository\RecordNotFoundException;
 use HomeCEU\Tests\DTS\TestCase;
 use HomeCEU\DTS\Persistence\InMemory\DocDataPersistence;
 use PHPUnit\Framework\Assert;
@@ -12,7 +13,7 @@ class DocDataPersistenceTest extends TestCase {
   /** @var  DocDataPersistence */
   private $sut;
   
-  private $idCol = 'dataId';
+  private $idCol = 'id';
 
   public function testGetTable() {
     $this->assertSame(
@@ -60,12 +61,12 @@ class DocDataPersistenceTest extends TestCase {
     ];
     $this->persistence()->persist($data);
     $this->persistence()->delete($data[$this->idCol]);
-    $this->expectException(\OutOfBoundsException::class);
+    $this->expectException(RecordNotFoundException::class);
     $this->persistence()->retrieve($data[$this->idCol]);
   }
 
   public function testDeleteIdThatDoesNotExistThrowsException() {
-    $this->expectException(\OutOfBoundsException::class);
+    $this->expectException(RecordNotFoundException::class);
     $this->persistence()->delete(99);
   }
 
@@ -75,13 +76,13 @@ class DocDataPersistenceTest extends TestCase {
 
   public function testFind() {
     $p = $this->persistence();
-    $p->persist(['dataId'=>'a','lname'=>'smith']);
-    $p->persist(['dataId'=>'b','lname'=>'doe']);
-    $p->persist(['dataId'=>'c','lname'=>'smith']);
+    $p->persist(['id'=>'a','lname'=>'smith']);
+    $p->persist(['id'=>'b','lname'=>'doe']);
+    $p->persist(['id'=>'c','lname'=>'smith']);
     $results = $p->find(['lname'=>'smith']);
     $expected = [
-        ['dataId'=>'a','lname'=>'smith'],
-        ['dataId'=>'c','lname'=>'smith']
+        ['id'=>'a','lname'=>'smith'],
+        ['id'=>'c','lname'=>'smith']
     ];
     Assert::assertEquals($expected, $results);
   }

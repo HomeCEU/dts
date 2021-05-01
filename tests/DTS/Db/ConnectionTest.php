@@ -7,11 +7,9 @@ use Exception;
 use HomeCEU\DTS\Db\Connection;
 use HomeCEU\DTS\Db\Config as DbConfig;
 
-class ConnectionTest  extends TestCase {
-  private $table;
-
-  /** @var Connection */
-  private $connection;
+class ConnectionTest extends TestCase {
+  private string $table;
+  private Connection $connection;
 
   /** @throws Exception */
   protected function setUp(): void {
@@ -20,32 +18,26 @@ class ConnectionTest  extends TestCase {
   }
 
   /** @throws Exception */
-  public function testPdoQueryPrepareFailure() {
+  public function testPdoQueryPrepareFailure(): void {
     $this->expectException(Exception::class);
     $this->connection->pdoQuery("select * from {$this->table} where foo=:foo", ['foo' => 'bar']);
   }
 
   /** @throws Exception */
-  public function testPdoQueryExecuteFailure() {
+  public function testPdoQueryExecuteFailure(): void {
     $this->expectException(Exception::class);
     $this->connection->pdoQuery("select * from {$this->table} where role=:foo", ['a' => 'bar']);
   }
 
   /** @throws Exception */
-  public function testSqlite() {
-    $this->selectFirstTest();
-    $this->deleteTest();
-  }
-
-  /** @throws Exception */
-  private function deleteTest() {
-    $this->connection->deleteWhere($this->table, ['role'=>'admin']);
-    $count = $this->connection->count($this->table, "role=:role", ['role'=>'admin']);
+  public function testDelete(): void {
+    $this->connection->deleteWhere($this->table, ['role' => 'admin']);
+    $count = $this->connection->count($this->table, "role=:role", ['role' => 'admin']);
 
     $this->assertEquals(0, $count);
   }
 
-  private function selectFirstTest() {
+  public function testSelectFirst(): void {
     $this->connection->insert(
         $this->table,
         ['role' => 'admin', 'description' => 'system administrator'],
@@ -62,8 +54,20 @@ class ConnectionTest  extends TestCase {
     $this->assertEquals('system administrator', $row->description);
   }
 
+  public function testUpdate(): void {
+    $this->connection->insert($this->table, ['role' => 'admin', 'description' => 'system administrator']);
+    $this->connection->update($this->table, ['description' => 'sys admin'], ['role' => 'admin']);
+
+    $row = $this->connection->selectWhere(
+        $this->table,
+        'role, description',
+        ['role' => 'admin']
+    )->fetch();
+    $this->assertEquals('sys admin', $row->description);
+  }
+
   /** @throws Exception */
-  private function initRolesTable() {
+  private function initRolesTable(): void {
     $this->table = 'roles';
     $fields = [
         'role VARCHAR(32)',

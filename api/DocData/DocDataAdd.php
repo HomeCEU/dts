@@ -8,28 +8,20 @@ use HomeCEU\DTS\Persistence;
 use HomeCEU\DTS\Persistence\DocDataPersistence;
 use HomeCEU\DTS\Repository\DocDataRepository;
 use HomeCEU\DTS\UseCase\AddDocData;
-use HomeCEU\DTS\UseCase\InvalidDocDataAddRequestException;
+use HomeCEU\DTS\UseCase\Exception\InvalidDocDataAddRequestException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response;
 
 
 class DocDataAdd {
-  /** @var  Persistence */
-  private $persistence;
+  private Persistence $persistence;
+  private DocDataRepository $repository;
+  private AddDocData $useCase;
+  private ContainerInterface $di;
 
-  /** @var  DocDataRepository */
-  private $repository;
-
-  /** @var AddDocData */
-  private $useCase;
-
-  /** @var ContainerInterface */
-  private $di;
-
-  public function __construct(ContainerInterface $diContainer) {
-    $this->di = $diContainer;
-    $this->persistence = new DocDataPersistence($this->di->dbConnection);
+  public function __construct(ContainerInterface $container) {
+    $this->persistence = new DocDataPersistence($container->get('dbConnection'));
     $this->repository = new DocDataRepository($this->persistence);
     $this->useCase = new AddDocData($this->repository);
   }
@@ -39,18 +31,19 @@ class DocDataAdd {
       $reqData = $request->getParsedBody();
       $docData = $this->useCase->add(
           $reqData['docType'],
-          $reqData['dataKey'],
+          $reqData['key'],
           $reqData['data']
       );
       $savedDocData = $this->persistence->retrieve(
-          $docData['dataId'],
+          $docData['id'],
           [
-              'dataId',
+              'id',
               'docType',
-              'dataKey',
+              'key',
               'createdAt'
           ]
       );
+      $savedDocData['bodyUri'] = '/api/v1/docdata/' . $docData['id'];
       return $response->withStatus(201)->withJson($savedDocData);
     } catch (InvalidDocDataAddRequestException $e) {
       return $response->withStatus(400)->withJson(

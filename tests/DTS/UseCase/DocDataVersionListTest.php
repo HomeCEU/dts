@@ -9,13 +9,11 @@ use HomeCEU\DTS\Repository\DocDataRepository;
 use HomeCEU\DTS\UseCase\DocDataVersionList;
 use HomeCEU\Tests\DTS\TestCase;
 use PHPUnit\Framework\Assert;
+use Ramsey\Uuid\Uuid;
 
 class DocDataVersionListTest extends TestCase {
   /** @var DocDataPersistence */
   private $persistence;
-
-  /** @var DocDataRepository */
-  private $repo;
 
   /** @var DocDataVersionList */
   private $usecase;
@@ -23,21 +21,21 @@ class DocDataVersionListTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->persistence = new DocDataPersistence();
-    $this->repo = new DocDataRepository($this->persistence);
-    $this->usecase = new DocDataVersionList($this->repo);
+    $repo = new DocDataRepository($this->persistence);
+    $this->usecase = new DocDataVersionList($repo);
   }
 
   public function testGetDocDataVersionsByDocTypeAndDataKey() {
     $docType = 'dataVersionListTest';
-    $dataKey = 'A';
+    $key = 'A';
     for ($i=1; $i<=3; $i++) {
       $this->persistence->persist([
-          'dataId' => $i,
+          'id' => Uuid::uuid1()->toString(),
           'docType' => $docType,
-          'dataKey' => $dataKey
+          'key' => $key
       ]);
     }
-    $versions = $this->usecase->versions($docType, $dataKey);
+    $versions = $this->usecase->versions($docType, $key);
     Assert::assertCount(3, $versions);
   }
 }

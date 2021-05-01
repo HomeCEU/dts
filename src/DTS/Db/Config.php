@@ -5,26 +5,25 @@ namespace HomeCEU\DTS\Db;
 
 
 class Config {
-
   const DEFAULT_DRIVER          = 'mysql';
   const DEFAULT_MYSQL_PORT      = 3306;
   const DEFAULT_PG_PORT         = 5432;
   const DEFAULT_SQLITE_LOCATION = ':memory:';
 
-  public $driver;
-  public $location;
-  public $host;
-  public $user;
-  public $pass;
-  public $name;
-  public $port;
+  public string $driver='';
+  public string $location = '';
+  public string $host = '';
+  public string $user = '';
+  public string $pass = '';
+  public string $name = '';
+  public string $port = '';
 
   public function __construct(array $config) {
     foreach ($config as $k=>$v)
       $this->{$k} = $v;
   }
 
-  public static function fromEnv() {
+  public static function fromEnv(): self {
     return new self(
         [
             'driver' => getenv('DB_DRIVER') ?: self::DEFAULT_DRIVER,
@@ -37,7 +36,7 @@ class Config {
     );
   }
 
-  public static function sqlite($location = self::DEFAULT_SQLITE_LOCATION) {
+  public static function sqlite($location = self::DEFAULT_SQLITE_LOCATION): self {
     return new self(
         [
             'driver'   => 'sqlite',
@@ -46,7 +45,7 @@ class Config {
     );
   }
 
-  public static function mysql($host, $name, $user, $pass, $port = self::DEFAULT_MYSQL_PORT) {
+  public static function mysql($host, $name, $user, $pass, $port = self::DEFAULT_MYSQL_PORT): self {
     return new self(
         [
             'driver' => 'mysql',
@@ -59,7 +58,7 @@ class Config {
     );
   }
 
-  public function dsn() {
+  public function dsn(): string {
     if ($this->isSqlite()) {
       return $this->sqliteDsn();
     }
@@ -70,7 +69,7 @@ class Config {
     return substr($this->driver, 0, 6) == 'sqlite';
   }
 
-  private function sqliteDsn() {
+  private function sqliteDsn(): string {
     return sprintf(
         "%s:%s",
         $this->driver,
@@ -78,7 +77,7 @@ class Config {
     );
   }
 
-  private function otherDsn() {
+  private function otherDsn(): string {
     return sprintf(
         "%s:host=%s;port=%s;dbname=%s",
         $this->driver,

@@ -3,16 +3,17 @@
 
 namespace HomeCEU\Tests\Api\DocData;
 
-use HomeCEU\Tests\Api\TestCase;
+use Generator;
+use HomeCEU\Tests\Api\ApiTestCase;
 use PHPUnit\Framework\Assert;
 
-class DocDataAddTest extends TestCase {
-
-  const EXPECTED_KEYS = ['dataId', 'docType', 'dataKey', 'createdAt'];
+class DocDataAddTest extends ApiTestCase {
+  const EXPECTED_KEYS = ['id', 'docType', 'key', 'createdAt'];
+  const ROUTE = '/api/v1/docdata';
 
   public function testPostNewDocData(): void {
     $requestArray = $this->makeRequestArray($this->docType, __FUNCTION__, ['someid'=>uniqid()]);
-    $response = $this->post('/docdata', $requestArray);
+    $response = $this->post(self::ROUTE, $requestArray);
     $this->assertStatus(201, $response);
     $this->assertContentType('application/json', $response);
     $responseData = json_decode($response->getBody(), true);
@@ -28,13 +29,13 @@ class DocDataAddTest extends TestCase {
    */
   public function testPostNewDocDataInvalidData($type, $key): void {
     $requestArray = $this->makeRequestArray($type, $key, '');
-    $response = $this->post('/docdata', $requestArray);
+    $response = $this->post(self::ROUTE, $requestArray);
     $this->assertStatus(400, $response);
   }
 
-  public function invalidDataProvider(): \Generator {
-    yield [$this->docType, null];
-    yield [$this->docType, ''];
+  public function invalidDataProvider(): Generator {
+    yield ['DT', null];
+    yield ['DT', ''];
     yield [null, uniqid()];
     yield ['', uniqid()];
   }
@@ -42,7 +43,7 @@ class DocDataAddTest extends TestCase {
   protected function makeRequestArray($type, $key, $data): array {
     return [
         'docType' => $type,
-        'dataKey' => $key,
+        'key' => $key,
         'data' => $data
     ];
   }

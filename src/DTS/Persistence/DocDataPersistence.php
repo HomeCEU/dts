@@ -11,10 +11,10 @@ class DocDataPersistence extends AbstractPersistence implements Persistence {
   const TABLE = 'docdata';
   const ID_COL = 'data_id';
 
-  private $map = [
-      'dataId' => 'data_id',
+  private array $map = [
+      'id' => 'data_id',
       'docType' => 'doc_type',
-      'dataKey' => 'data_key',
+      'key' => 'data_key',
       'createdAt' => 'created_at'
   ];
 
@@ -23,7 +23,7 @@ class DocDataPersistence extends AbstractPersistence implements Persistence {
     $this->useKeyMap($this->map);
   }
 
-  public function delete($id) {
+  public function delete(string $id): void {
     $error = sprintf(
         "%s not implemented",
         __METHOD__

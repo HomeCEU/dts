@@ -4,12 +4,22 @@
 namespace HomeCEU\DTS\Render;
 
 
-class Partial {
-  public $name;
-  public $template;
+use HomeCEU\DTS\AbstractEntity;
 
-  public function __construct(string $name, string $template) {
+class Partial extends AbstractEntity implements PartialInterface {
+  public string $name;
+  public string $body;
+
+  public function __construct(string $name, string $body) {
     $this->name = $name;
-    $this->template = $template;
+    $this->body = $body;
+  }
+
+  public function getKey(): string {
+    return $this->name;
+  }
+
+  public function getBody(): string {
+    return $this->body;
   }
 }
