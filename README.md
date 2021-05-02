@@ -1,4 +1,4 @@
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/HomeCEU/dts.svg?include_prereleases)](https://github.com/HomeCEU/dts/releases/tag/v1.1-rc1)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/HomeCEU/dts.svg?include_prereleases)](https://github.com/HomeCEU/dts/releases)
 [![Travis CI](https://img.shields.io/travis/homeceu/dts/master.svg)](https://travis-ci.com/github/HomeCEU/dts)
 [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/logikostech/util/master/LICENSE)
 
