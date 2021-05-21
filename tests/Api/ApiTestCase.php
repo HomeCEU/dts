@@ -16,12 +16,13 @@ use HomeCEU\DTS\Persistence\PartialPersistence;
 use HomeCEU\DTS\Persistence\TemplatePersistence;
 use HomeCEU\DTS\Render\TemplateCompiler;
 use HomeCEU\Tests\TestCase as HomeCEUTestCase;
-use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 
 class ApiTestCase extends HomeCEUTestCase {
+  use ApiAssertions;
+
   private Persistence $templatePersistence;
   private Persistence $compiledTemplatePersistence;
   private Persistence $partialPersistence;
@@ -35,6 +36,7 @@ class ApiTestCase extends HomeCEUTestCase {
 
   protected function setUp(): void {
     parent::setUp();
+    putenv('ACCEPT_ORIGIN=localhost');
     $this->di = new DiContainer();
     $this->db = $this->di->get('dbConnection');
     $this->db->beginTransaction();
@@ -133,6 +135,16 @@ class ApiTestCase extends HomeCEUTestCase {
     ]);
   }
 
+  protected function options($uri, array $options): ResponseInterface {
+    $env = Environment::mock([
+        'REQUEST_METHOD' => 'OPTIONS',
+        'REQUEST_URI' => $uri,
+    ]);
+    $req = Request::createFromEnvironment($env);
+    $this->app->getContainer()['request'] = $req;
+    return $this->app->run(true);
+  }
+
   protected function post($uri, array $data): ResponseInterface {
     $method = 'POST';
     $env = Environment::mock([
@@ -188,23 +200,5 @@ class ApiTestCase extends HomeCEUTestCase {
 
   protected function getResponseJsonAsArray(ResponseInterface $response): ?array {
     return json_decode((string) $response->getBody(), $associative = true);
-  }
-
-  protected function assertContentType($contentType, ResponseInterface $response): void {
-    $headers = $response->getHeaders();
-    Assert::assertStringContainsString($contentType, $headers['Content-Type'][0]);
-  }
-
-  protected function assertStatus(int $code, ResponseInterface $response): void {
-    Assert::assertEquals(
-        $code,
-        $response->getStatusCode(),
-        sprintf(
-            "Status %s does not match %s\n Reason: %s",
-            $response->getStatusCode(),
-            $code,
-            $response->getReasonPhrase()
-        )
-    );
   }
 }
