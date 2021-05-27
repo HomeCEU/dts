@@ -8,6 +8,7 @@ use HomeCEU\DTS\Db;
 use HomeCEU\DTS\Db\Connection;
 use HomeCEU\DTS\Entity\Template;
 use HomeCEU\DTS\Render\CompilationException;
+use HomeCEU\DTS\Render\PartialInterface;
 use HomeCEU\DTS\Render\RenderHelper;
 use HomeCEU\DTS\Render\TemplateCompiler;
 use HomeCEU\DTS\Repository\PartialRepository;
@@ -37,10 +38,30 @@ class TransactionalCompiler {
 
   public function compileAllTemplatesForDocType(string $type): void {
     $this->beginTransaction();
-    $ps = $this->partialRepository->findByDocType($type);
+
     $this->compiler->setPartials($this->partialRepository->findByDocType($type));
     foreach ($this->templateRepository->findByDocType($type) as $template) {
       $this->compileTemplate($template);
+    }
+    $this->endTransaction();
+  }
+
+  /**
+   * Only compile the template if it expects the partial
+   * this should save time and calls to the DB
+   *
+   * @param PartialInterface $partial
+   */
+  public function compileTemplatesForPartial(PartialInterface $partial): void {
+    $this->beginTransaction();
+
+    $type = $partial->get('docType');
+    $this->compiler->setPartials($this->partialRepository->findByDocType($type));
+
+    foreach ($this->templateRepository->findByDocType($type) as $template) {
+      if ($this->templateExpectsPartial($template, $partial)) {
+        $this->compileTemplate($template);
+      }
     }
     $this->endTransaction();
   }
@@ -88,5 +109,10 @@ class TransactionalCompiler {
     if ($this->connection->inTransaction) {
       $this->connection->rollBack();
     }
+  }
+
+  private function templateExpectsPartial(Template $template, PartialInterface $partial): bool {
+    $ps = RenderHelper::extractPartials($template->body);
+    return in_array($partial->getKey(), RenderHelper::extractPartials($template->body));
   }
 }

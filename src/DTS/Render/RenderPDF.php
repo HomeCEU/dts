@@ -16,7 +16,7 @@ class RenderPDF extends Render {
       'commandOptions' => ['enableXvfb' => true]
   ];
 
-  private $pdf;
+  private Pdf $pdf;
 
   private function __construct() {
     $this->pdf = new Pdf(self::PDF_OPTIONS);

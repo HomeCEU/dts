@@ -4,19 +4,24 @@
 namespace HomeCEU\DTS\Api;
 
 
+use HomeCEU\DTS\Api\Middleware\Loader as MiddlewareLoader;
 use Psr\Container\ContainerInterface;
 
 class App extends \Slim\App {
   private const ROUTES_V1 = APP_ROOT . '/api/routes_v1.php';
+
   private DiContainer $_di;
+  public bool $isDevMode = false;
 
   public function __construct(ContainerInterface $diContainer = null) {
     $this->_di = $diContainer ?: $this->diContainer();
     if (getenv('APP_ENV') == 'dev') {
+      $this->isDevMode = true;
       $this->devMode();
     }
     parent::__construct($this->_di);
     $this->loadRoutesForVersion('v1', self::ROUTES_V1);
+    MiddlewareLoader::load($this);
   }
 
   private function devMode() {
