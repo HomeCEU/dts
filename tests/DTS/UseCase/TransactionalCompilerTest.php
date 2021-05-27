@@ -49,11 +49,14 @@ class TransactionalCompilerTest extends TestCase {
   public function testWithPartials(): void {
     $docType = 'DT';
     $template = $this->createSampleTemplate($docType, uniqid(), '{{> a_partial }}');
+    $template2 = $this->createSampleTemplate($docType, uniqid(), '{{> another_partial }}');
     $partial = $this->createSamplePartial($docType, 'a_partial');
+
     $this->templateRepository->save($template);
+    $this->templateRepository->save($template2);
     $this->partialRepository->save($partial);
 
-    $this->compiler->compileAllTemplatesForDocType($docType);
+    $this->compiler->compileTemplatesForPartial($partial);
     $compiledTemplate = $this->findCompiled($template);
     $rendered = RenderFactory::createHTML()->render($compiledTemplate->body, []);
 

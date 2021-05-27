@@ -13,7 +13,6 @@ use HomeCEU\DTS\UseCase\Render\AddHotRender;
 use HomeCEU\DTS\UseCase\Render\AddHotRenderRequest;
 use HomeCEU\Tests\DTS\PartialTestTrait;
 use HomeCEU\Tests\DTS\TestCase;
-use PHPUnit\Framework\Assert;
 
 class AddHotRenderTest extends TestCase {
   use PartialTestTrait;
@@ -40,7 +39,7 @@ class AddHotRenderTest extends TestCase {
     $renderRequest = $this->useCase->add($addRequest);
 
     $this->assertRequestPersisted($renderRequest);
-    Assert::assertEquals("test", $this->renderHtml($renderRequest['template'], $renderRequest['data']));
+    $this->assertEquals("test", $this->renderHtml($renderRequest['template'], $renderRequest['data']));
   }
 
   public function testAddTemplateMissingPartialAndNoDocTypeProvided(): void {
@@ -48,18 +47,17 @@ class AddHotRenderTest extends TestCase {
     $renderRequest = $this->useCase->add($addRequest);
 
     $this->assertRequestPersisted($renderRequest);
-    Assert::assertEquals("Hello, !", $this->renderHtml($renderRequest['template']));
+    $this->assertEquals("Hello, !", $this->renderHtml($renderRequest['template']));
   }
 
   public function testAddTemplateWithPartials(): void {
     $partial = $this->createSamplePartial(self::EXAMPLE_DOCTYPE, 'a_partial');
-    $partial->body = 'world';
     $this->partialPersistence->persist($partial->toArray());
     $addRequest = $this->fakeAddRequest('Hello, {{> a_partial }}!', [], self::EXAMPLE_DOCTYPE);
     $renderRequest = $this->useCase->add($addRequest);
 
     $this->assertRequestPersisted($renderRequest);
-    Assert::assertEquals("Hello, world!", $this->renderHtml($renderRequest['template']));
+    $this->assertEquals("Hello, {$partial->getBody()}!", $this->renderHtml($renderRequest['template']));
   }
 
   public function testAddTemplateMissingPartials(): void {
@@ -81,6 +79,6 @@ class AddHotRenderTest extends TestCase {
   }
 
   private function assertRequestPersisted(array $renderRequest) {
-    Assert::assertEquals($renderRequest, $this->hotRenderRequestPersistence->retrieve($renderRequest['id']));
+    $this->assertEquals($renderRequest, $this->hotRenderRequestPersistence->retrieve($renderRequest['id']));
   }
 }

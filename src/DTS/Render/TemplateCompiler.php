@@ -43,7 +43,7 @@ class TemplateCompiler {
   }
 
   public function addPartial(PartialInterface $partial): self {
-    $this->partials[$partial->getKey()] = $partial->body;
+    $this->partials[$partial->getKey()] = $partial->getBody();
     return $this;
   }
 
