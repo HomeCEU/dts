@@ -13,7 +13,7 @@ class Db {
     return self::$connection ?? self::newConnection();
   }
 
-  public static function newConnection(array $options = null):  Connection {
+  public static function newConnection(array $options = []):  Connection {
     self::$connection = Connection::buildFromConfig(static::dbConfig(), $options);
     return self::$connection;
   }

@@ -12,7 +12,7 @@ use PDOStatement;
 class Connection  extends \Nette\Database\Connection {
   public bool $inTransaction = false;
 
-  public static function buildFromConfig(DbConfig $config, array $options = null): Connection {
+  public static function buildFromConfig(DbConfig $config, array $options = []): Connection {
     return new static(
         $config->dsn(),
         $config->user,
