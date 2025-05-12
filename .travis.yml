@@ -1,6 +1,6 @@
 language: php
 os: linux
-dist: bionic
+dist: focal
 
 env:
   - DB_ADAPTER=mysql DB_NAME=dts DB_USER=root DB_HOST=127.0.0.1
